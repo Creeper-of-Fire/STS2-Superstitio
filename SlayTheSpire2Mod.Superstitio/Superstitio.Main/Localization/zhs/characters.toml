@@ -1,0 +1,39 @@
+[MASO_CHARACTER]
+# --- 基础信息 ---
+title = "苦行者"
+titleObject = "苦行者"
+description = """
+一名寻找痛苦真谛的受难者。
+她在伤痕中汲取力量，将每一次受创转化为对敌人的致命回响。
+"""
+unlockText = "用 [pink]{Prerequisite}[/pink] 进行一局游戏来解锁这个角色。"
+
+# --- 动态文本与代词 (用于事件和描述) ---
+# 主语: 他
+pronounSubject = "她"
+# 宾语: 他
+pronounObject = "她"
+# 所有格: 他的
+pronounPossessive = "她的"
+# 物主形容词: 他的
+possessiveAdjective = "她的"
+
+# --- 事件独白 (Monologues) ---
+# 混沌香气事件
+aromaPrinciple = "[sine][red]痛苦……即是存在……[/red][/sine]"
+# 沉没宝库金币独白
+goldMonologue = "[sine]这些金属能否打造出更锋利的刑具？[/sine]"
+# 触发死亡防止时的对白
+eventDeathPrevention = "这点程度的痛楚……还不足以终结我……"
+
+# --- 自定义模式 (Custom Mode) 文本 ---
+cardsModifierTitle = "苦行者卡牌"
+cardsModifierDescription = "苦行者的卡牌现在会出现在奖励和商店中。"
+
+# --- 多人模式互动 (Banter) ---
+# 使用嵌套 Table 处理多级键名: MASO_CHARACTER.banter.alive.endTurnPing
+[MASO_CHARACTER.banter.alive]
+endTurnPing = "轮到你了，别让我等太久。"
+
+[MASO_CHARACTER.banter.dead]
+endTurnPing = "即便身处暗影，我依然在注视着。"

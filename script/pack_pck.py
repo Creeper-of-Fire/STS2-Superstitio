@@ -9,6 +9,55 @@ import re
 import tomllib
 import json
 
+class LocalizationProcessor:
+    def __init__(self, mod_id):
+        self.mod_id = mod_id.upper()
+        self.merged_data = {} # { "zh_CN": { "KEY": "VALUE" } }
+
+    def process_toml(self, file_path, lang):
+        with open(file_path, "rb") as f:
+            data = tomllib.load(f)
+
+        file_stem = file_path.stem.upper()
+        if lang not in self.merged_data:
+            self.merged_data[lang] = {}
+
+        # 规则解析
+        for section_or_key, content in data.items():
+            if isinstance(content, dict):
+                # 模式 3: [Section] 内部区块模式
+                # [{chara_name}] -> MODID-{chara_name}.key
+                prefix = f"{self.mod_id}-{section_or_key.upper()}"
+                for k, v in content.items():
+                    self.merged_data[lang][f"{prefix}.{k}"] = v
+            else:
+                # 模式 1 & 2: 扁平键值对
+                if file_stem == "CHARACTER":
+                    # 通用 character.toml，直接使用 key (假设 key 已包含完整前缀)
+                    self.merged_data[lang][section_or_key] = content
+                else:
+                    # {chara_name}.toml -> 自动前缀
+                    prefix = f"{self.mod_id}-{file_stem}"
+                    self.merged_data[lang][f"{prefix}.{section_or_key}"] = content
+
+    def collect_from_projects(self, solution_dir):
+        # 扫描所有子项目下的 Localization 文件夹
+        for lang_dir in Path(solution_dir).rglob("Localization/*"):
+            if lang_dir.is_dir():
+                lang = lang_dir.name
+                for toml_file in lang_dir.glob("*.toml"):
+                    self.process_toml(toml_file, lang)
+
+    def save_to_pck_src(self, pck_src_dir):
+        for lang, kv_pairs in self.merged_data.items():
+            # 这里的路径必须符合 STS2 的规范
+            output_path = Path(pck_src_dir) / self.mod_id.lower() / "localization" / lang / "characters.json"
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(kv_pairs, f, ensure_ascii=False, indent=2)
+            print(f"  合并本地化 [{lang}]: {len(kv_pairs)} 条词条 -> {output_path}")
+
 def filter_godot_output(process):
     """实时过滤 GodotPCKExplorer 的输出"""
     while True:

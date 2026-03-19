@@ -12,6 +12,12 @@
             <HintPath>$(Sts2LibPath)sts2.dll</HintPath>
             <Private>false</Private>
         </Reference>
+        
+        <!-- GodotSharp -->
+        <Reference Include="GodotSharp">
+            <HintPath>$(Sts2LibPath)/GodotSharp.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
 
         <!-- BaseLib基础库 -->
         <Reference Include="BaseLib">

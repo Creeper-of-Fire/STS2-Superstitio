@@ -77,5 +77,11 @@ BenchmarkDotNet.Artifacts/
 /lib/
 /lib
 
+# 编译出来的素材库
+SlayTheSpire2Mod.Superstitio/pck_content/
+
+# Godot部分
+/Godot/
+
 # 快捷方式
 *.lnk

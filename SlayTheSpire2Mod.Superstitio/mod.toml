@@ -6,7 +6,7 @@ version = "0.0.1"
 description = "Superstitio 模组"
 affects_gameplay = true
 
-# 依赖项（可选）
+# 依赖项
 dependencies = [
-    # "OtherMod@1.0.0"
+    "BaseLib",
 ]

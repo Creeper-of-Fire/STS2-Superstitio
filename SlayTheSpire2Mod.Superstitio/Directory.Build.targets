@@ -9,46 +9,58 @@
         <ModName>Superstitio</ModName>
         <!-- 定义主项目名称 -->
         <MainProjectName>Superstitio.Main</MainProjectName>
+
+        <!-- 定义共享路径 -->
+        <OutputDir>$(OutputPath)</OutputDir>
+        <MergedDllPath>$(OutputDir)$(ModName).dll</MergedDllPath>
+        <PckContentDir>$(MSBuildThisFileDirectory)pck_content/</PckContentDir>
+        <GeneratedLocalizationDir>$(PckContentDir)</GeneratedLocalizationDir>
     </PropertyGroup>
 
     <!--
-      自定义 Target：打包 PCK
-      在项目构建完成后自动执行，但只在主项目中执行
+        打包 PCK
     -->
-    <Target Name="PackModPCK"
-            AfterTargets="Build"
+
+    <!-- ================================================================== -->
+    <!-- == 处理 TOML 本地化文件 == -->
+    <!-- ================================================================== -->
+    <Target Name="ProcessLocalization"
+            BeforeTargets="PackModPCK"
             Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
+
         <Message Text=" " Importance="high"/>
         <Message Text="[Superstitio2] ========================================" Importance="high"/>
-        <Message Text="[Superstitio2] 正在打包 PCK for $(MSBuildProjectName)..." Importance="high"/>
-        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+        <Message Text="[Superstitio2] 正在处理 TOML 本地化文件..." Importance="high"/>
 
-        <!-- 调试信息：显示实际路径 -->
-        <Message Text="[Superstitio2] 调试信息:" Importance="high"/>
-        <Message Text="[Superstitio2]   MSBuildProjectName: $(MSBuildProjectName)" Importance="high"/>
-        <Message Text="[Superstitio2]   OutputPath: $(OutputPath)" Importance="high"/>
-        <Message Text="[Superstitio2]   TargetDir: $(TargetDir)" Importance="high"/>
-        <Message Text="[Superstitio2]   TargetPath: $(TargetPath)" Importance="high"/>
-        <Message Text="[Superstitio2]   OutDir: $(OutDir)" Importance="high"/>
-        <Message Text="[Superstitio2] ========================================" Importance="high"/>
-
-        <!-- 获取 Python 脚本路径（在 script 目录） -->
         <PropertyGroup>
-            <PythonScriptPath>$(MSBuildThisFileDirectory)..\script\pack_pck.py</PythonScriptPath>
-            <ModTomlPath>$(MSBuildThisFileDirectory)\mod.toml</ModTomlPath>
-
-            <OutputDir>$(OutputPath)</OutputDir>
-            
-            <!-- ILMerge 相关路径 -->
-            <MergedDllPath>$(OutputDir)$(ModName).dll</MergedDllPath>
+            <LocalizationScriptPath>$(MSBuildThisFileDirectory)..\script\process_localization.py</LocalizationScriptPath>
         </PropertyGroup>
+        <Error Text="找不到本地化处理脚本: $(LocalizationScriptPath)" Condition="!Exists('$(LocalizationScriptPath)')"/>
 
-        <!-- 检查脚本是否存在 -->
-        <Error Text="找不到打包脚本: $(PythonScriptPath)" Condition="!Exists('$(PythonScriptPath)')"/>
+        <!-- 调用 Python 脚本 (使用语义化参数) -->
+        <Exec Command="python &quot;$(LocalizationScriptPath)&quot; --solution-dir &quot;$(SolutionDir.TrimEnd('\'))&quot; --mod-id &quot;$(ModName)&quot; --output-dir &quot;$(GeneratedLocalizationDir.TrimEnd('\'))&quot;"
+              ContinueOnError="false"
+              IgnoreExitCode="false"/>
 
-        <!-- 检查 mod.toml 是否存在（必需） -->
-        <Error Text="找不到 mod.toml: $(ModTomlPath)" Condition="!Exists('$(ModTomlPath)')"/>
+        <Message Text="[Superstitio2] ✅ TOML 本地化处理完成。" Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+    </Target>
 
+    <!-- ================================================================== -->
+    <!-- == 合并所有模组 DLL == -->
+    <!-- ================================================================== -->
+    <Target Name="MergeModDlls"
+            BeforeTargets="PackModPCK"
+            Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
+
+        <Message Text=" " Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+        <Message Text="[Superstitio2] 正在合并 DLL..." Importance="high"/>
+
+        <!-- 步骤0：删除旧的合并 DLL，强制重新生成 -->
+        <Delete Files="$(MergedDllPath)" Condition="Exists('$(MergedDllPath)')"/>
+        <Message Text="[Superstitio2] 已删除旧的合并 DLL: $(MergedDllPath)" Importance="high"/>
+        
         <!-- 步骤1：收集所有需要合并的 DLL -->
         <Message Text="[Superstitio2] 步骤1：扫描需要合并的 DLL..." Importance="high"/>
 
@@ -103,16 +115,44 @@
         <!-- 如果没有依赖 DLL 或合并失败，直接复制主 DLL -->
         <Copy Condition="!Exists('$(MergedDllPath)')"
               SourceFiles="@(MainDll)"
-              DestinationFiles="$(MergedDllPath)" />
+              DestinationFiles="$(MergedDllPath)"/>
 
-        <!-- 步骤3：构建打包命令参数 -->
+        <Message Text="[Superstitio2] ✅ DLL 合并完成。输出: $(MergedDllPath)" Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+    </Target>
+
+
+    <!-- ================================================================== -->
+    <!-- == 打包 PCK 并安装模组 == -->
+    <!-- ================================================================== -->
+    <Target Name="PackModPCK"
+            AfterTargets="Build"
+            Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
+        <Message Text=" " Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+        <Message Text="[Superstitio2] 正在打包 PCK for $(MSBuildProjectName)..." Importance="high"/>
+
+        <!-- 获取 Python 脚本路径（在 script 目录） -->
         <PropertyGroup>
-            <PckSrcArg Condition="Exists('$(MSBuildThisFileDirectory)\pck_src')">--pck-src &quot;$(MSBuildThisFileDirectory)\pck_src&quot;</PckSrcArg>
+            <PythonScriptPath>$(MSBuildThisFileDirectory)..\script\pack_pck.py</PythonScriptPath>
+            <ModTomlPath>$(MSBuildThisFileDirectory)\mod.toml</ModTomlPath>
+        </PropertyGroup>
+
+        <!-- 检查脚本是否存在 -->
+        <Error Text="找不到打包脚本: $(PythonScriptPath)" Condition="!Exists('$(PythonScriptPath)')"/>
+
+        <!-- 检查 mod.toml 是否存在（必需） -->
+        <Error Text="找不到 mod.toml: $(ModTomlPath)" Condition="!Exists('$(ModTomlPath)')"/>
+
+
+        <!-- 构建打包命令参数 -->
+        <PropertyGroup>
+            <PckContentArg Condition="Exists('$(PckContentDir)')">--pck-src &quot;$(PckContentDir)&quot;</PckContentArg>
             <!-- 传递合并后的 DLL 路径给 Python 脚本 -->
             <DllPathArg>--dll-path &quot;$(MergedDllPath)&quot;</DllPathArg>
         </PropertyGroup>
 
-        <Exec Command="python &quot;$(PythonScriptPath)&quot; --mod-toml &quot;$(ModTomlPath)&quot; --output-pck &quot;$(OutputDir)$(ModName).pck&quot; $(DllPathArg) --copy-to-game $(PckSrcArg)"
+        <Exec Command="python &quot;$(PythonScriptPath)&quot; --mod-toml &quot;$(ModTomlPath)&quot; --output-pck &quot;$(OutputDir)$(ModName).pck&quot; $(DllPathArg) --copy-to-game $(PckContentArg)"
               ContinueOnError="WarnAndContinue"
               IgnoreExitCode="false">
             <Output TaskParameter="ExitCode" PropertyName="PythonExitCode"/>
