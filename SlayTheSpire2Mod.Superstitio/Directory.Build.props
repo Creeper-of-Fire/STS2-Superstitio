@@ -1,0 +1,67 @@
+﻿<Project>
+    <!-- 
+      这个文件中的所有内容都会被自动应用到
+      当前目录及所有子目录下的所有 C# 项目中。
+    -->
+    <PropertyGroup>
+        <!-- 目标框架版本 -->
+        <TargetFramework>net10.0</TargetFramework>
+
+        <!-- 启用 C# 的预览功能 -->
+        <!--<LangVersion>preview</LangVersion>-->
+
+        <!-- 启用隐式全局 using -->
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <!-- 启用可空引用类型 -->
+        <Nullable>enable</Nullable>
+
+        <!-- 启用中央包版本管理 -->
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+        <!-- 为项目生成的 NuGet 包指定许可证 -->
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <!-- 为项目生成 XML 文档文件，用于智能提示等 -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- 将警告视为错误，强制保持代码高质量 -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+        <!-- 配置 ConfigureAwait 检测 -->
+        <AnalysisModeConfigureAwait>Library</AnalysisModeConfigureAwait>
+
+        <!-- 输出路径统一到根目录的bin文件夹 -->
+        <OutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+
+    </PropertyGroup>
+
+    <!-- 游戏DLL的公共引用路径 (通过符号链接) -->
+    <PropertyGroup>
+        <GameLibPath>$(MSBuildThisFileDirectory)..\lib\</GameLibPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- 
+          1. 启用确定性构建
+          确保只要源代码和依赖不变，编译出的 DLL 哈希值就不变。
+        -->
+        <Deterministic>true</Deterministic>
+
+        <!-- 
+          2. 映射源代码路径
+          将 PDB 文件中所有对本项目源代码的引用路径，
+          从类似 'C:\Users\YourUser\...' 的本地绝对路径，
+          重写为一个通用的、匿名的相对路径，例如 '/src/MyProject/...'。
+          '$(MSBuildThisFileDirectory)' 是一个内置变量，代表这个 Directory.Build.props 文件所在的目录，
+          也就是你的解决方案根目录。
+        -->
+        <PathMap>$(MSBuildThisFileDirectory)=/src/Superstitio2/</PathMap>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ILRepack" PrivateAssets="all"/>
+        <PackageReference Include="JetBrains.Annotations" PrivateAssets="all"/>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,128 @@
+<!-- YAESandBox\Directory.Build.targets -->
+<Project>
+    <!-- ================================================================== -->
+    <!-- == 模组打包自动化 == -->
+    <!-- ================================================================== -->
+
+    <PropertyGroup>
+        <!-- 硬编码为 Superstitio -->
+        <ModName>Superstitio</ModName>
+        <!-- 定义主项目名称 -->
+        <MainProjectName>Superstitio.Main</MainProjectName>
+    </PropertyGroup>
+
+    <!--
+      自定义 Target：打包 PCK
+      在项目构建完成后自动执行，但只在主项目中执行
+    -->
+    <Target Name="PackModPCK"
+            AfterTargets="Build"
+            Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
+        <Message Text=" " Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+        <Message Text="[Superstitio2] 正在打包 PCK for $(MSBuildProjectName)..." Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+
+        <!-- 调试信息：显示实际路径 -->
+        <Message Text="[Superstitio2] 调试信息:" Importance="high"/>
+        <Message Text="[Superstitio2]   MSBuildProjectName: $(MSBuildProjectName)" Importance="high"/>
+        <Message Text="[Superstitio2]   OutputPath: $(OutputPath)" Importance="high"/>
+        <Message Text="[Superstitio2]   TargetDir: $(TargetDir)" Importance="high"/>
+        <Message Text="[Superstitio2]   TargetPath: $(TargetPath)" Importance="high"/>
+        <Message Text="[Superstitio2]   OutDir: $(OutDir)" Importance="high"/>
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+
+        <!-- 获取 Python 脚本路径（在 script 目录） -->
+        <PropertyGroup>
+            <PythonScriptPath>$(MSBuildThisFileDirectory)..\script\pack_pck.py</PythonScriptPath>
+            <ModTomlPath>$(MSBuildThisFileDirectory)\mod.toml</ModTomlPath>
+
+            <OutputDir>$(OutputPath)</OutputDir>
+            
+            <!-- ILMerge 相关路径 -->
+            <MergedDllPath>$(OutputDir)$(ModName).dll</MergedDllPath>
+        </PropertyGroup>
+
+        <!-- 检查脚本是否存在 -->
+        <Error Text="找不到打包脚本: $(PythonScriptPath)" Condition="!Exists('$(PythonScriptPath)')"/>
+
+        <!-- 检查 mod.toml 是否存在（必需） -->
+        <Error Text="找不到 mod.toml: $(ModTomlPath)" Condition="!Exists('$(ModTomlPath)')"/>
+
+        <!-- 步骤1：收集所有需要合并的 DLL -->
+        <Message Text="[Superstitio2] 步骤1：扫描需要合并的 DLL..." Importance="high"/>
+
+        <ItemGroup>
+            <!-- 排除系统 DLL 和已知的不需要合并的 DLL -->
+            <AllDllsInOutput Include="$(OutputDir)*.dll"
+                             Exclude="$(OutputDir)System*.dll;
+                                  $(OutputDir)Microsoft*.dll;
+                                  $(OutputDir)netstandard.dll;
+                                  $(OutputDir)mscorlib.dll;
+                                  $(OutputDir)Mono*.dll;
+                                  $(OutputDir)$(ModName).dll"/>  <!-- 排除之前合并的版本 -->
+
+            <!-- 提取主 DLL（项目自身） -->
+            <MainDll Include="$(TargetPath)"/>
+
+            <!-- 其他 DLL 作为依赖 -->
+            <OtherDlls Include="@(AllDllsInOutput)"
+                       Exclude="@(MainDll)"/>
+        </ItemGroup>
+
+        <Message Text="[Superstitio2]   主 DLL: @(MainDll)" Importance="high"/>
+        <Message Text="[Superstitio2]   依赖 DLL 数量: @(OtherDlls->Count())" Importance="high"/>
+        <Message Text="[Superstitio2]   依赖 DLL 列表:" Importance="high" Condition="@(OtherDlls->Count()) &gt; 0"/>
+        <Message Text="[Superstitio2]     %(OtherDlls.Filename)%(OtherDlls.Extension)" Importance="high" Condition="@(OtherDlls->Count()) &gt; 0"/>
+
+        <!-- 步骤2：如果有依赖 DLL，执行合并 -->
+        <Message Text="[Superstitio2] 步骤2：合并 DLL..." Importance="high"/>
+
+        <!-- 检查 ILMerge/ILRepack 是否可用 -->
+        <Exec Command="dotnet tool list -g | findstr ilmerge"
+              ConsoleToMsBuild="true"
+              IgnoreExitCode="true"
+              Condition="@(OtherDlls->Count()) &gt; 0">
+            <Output TaskParameter="ConsoleOutput" PropertyName="ILMergeInstalled"/>
+        </Exec>
+
+        <!-- 使用 ILMerge (全局工具) -->
+        <Exec Condition="'$(ILMergeInstalled)' != '' and @(OtherDlls->Count()) &gt; 0"
+              Command="ilmerge /target:library /out:&quot;$(MergedDllPath)&quot; @(MainDll) @(OtherDlls->'&quot;%(Identity)&quot;', ' ')"
+              ContinueOnError="WarnAndContinue"
+              IgnoreExitCode="false">
+            <Output TaskParameter="ExitCode" PropertyName="ILMergeExitCode"/>
+        </Exec>
+
+        <!-- 尝试使用 ILRepack (NuGet 包) -->
+        <Exec Condition="'$(ILMergeInstalled)' == '' and Exists('$(OutputDir)ILRepack.exe') and @(OtherDlls->Count()) &gt; 0"
+              Command="&quot;$(OutputDir)ILRepack.exe&quot; /target:library /out:&quot;$(MergedDllPath)&quot; @(MainDll) @(OtherDlls->'&quot;%(Identity)&quot;', ' ')"
+              ContinueOnError="WarnAndContinue"
+              IgnoreExitCode="false"/>
+
+        <!-- 如果没有依赖 DLL 或合并失败，直接复制主 DLL -->
+        <Copy Condition="!Exists('$(MergedDllPath)')"
+              SourceFiles="@(MainDll)"
+              DestinationFiles="$(MergedDllPath)" />
+
+        <!-- 步骤3：构建打包命令参数 -->
+        <PropertyGroup>
+            <PckSrcArg Condition="Exists('$(MSBuildThisFileDirectory)\pck_src')">--pck-src &quot;$(MSBuildThisFileDirectory)\pck_src&quot;</PckSrcArg>
+            <!-- 传递合并后的 DLL 路径给 Python 脚本 -->
+            <DllPathArg>--dll-path &quot;$(MergedDllPath)&quot;</DllPathArg>
+        </PropertyGroup>
+
+        <Exec Command="python &quot;$(PythonScriptPath)&quot; --mod-toml &quot;$(ModTomlPath)&quot; --output-pck &quot;$(OutputDir)$(ModName).pck&quot; $(DllPathArg) --copy-to-game $(PckSrcArg)"
+              ContinueOnError="WarnAndContinue"
+              IgnoreExitCode="false">
+            <Output TaskParameter="ExitCode" PropertyName="PythonExitCode"/>
+        </Exec>
+
+        <!-- 根据 Python 脚本的退出代码显示结果 -->
+        <Message Text="[Superstitio2] ✅ 打包完成（退出代码: $(PythonExitCode)）" Importance="high" Condition="'$(PythonExitCode)' == '0'"/>
+        <Message Text="[Superstitio2] ❌ 打包失败（退出代码: $(PythonExitCode)）" Importance="high" Condition="'$(PythonExitCode)' != '0'"/>
+
+        <Message Text="[Superstitio2] ========================================" Importance="high"/>
+        <Message Text=" " Importance="high"/>
+    </Target>
+</Project>

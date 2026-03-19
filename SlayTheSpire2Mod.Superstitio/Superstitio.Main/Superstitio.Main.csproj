@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <!-- 通用的游戏DLL引用 -->
+    <ItemGroup>
+        <!-- Harmony (Mod核心库) -->
+        <Reference Include="0Harmony">
+            <HintPath>$(GameLibPath)0Harmony.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <!-- 游戏主程序集 -->
+        <Reference Include="sts2">
+            <HintPath>$(GameLibPath)sts2.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <!-- 如果需要更多DLL，可以继续添加 -->
+    </ItemGroup>
+</Project>

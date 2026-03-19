@@ -1,0 +1,12 @@
+# mod.toml
+id = "Superstitio"
+name = "Superstitio Mod"
+author = "Creeper_of_Fire"
+version = "0.0.1"
+description = "Superstitio 模组"
+affects_gameplay = true
+
+# 依赖项（可选）
+dependencies = [
+    # "OtherMod@1.0.0"
+]

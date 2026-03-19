@@ -1,0 +1,81 @@
+## .NET 项目核心忽略文件
+
+# 编译输出目录
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Pp]ublish/
+
+# .NET Core 相关
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nettrace
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet 包
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+
+# Others
+~$*
+*~
+CodeCoverage/
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+# 测试结果
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# 敏感信息
+.env
+/githubtoken.txt
+
+# Python
+*.pyc
+
+# IDE
+*/.vs/
+/.vs/
+*/.idea/
+/.idea/
+
+# 常见的用户文件
+*.user
+*.userosscache
+*.suo
+*.userpreferences
+*.DotSettings.user
+
+# 游戏需要的库
+/lib/
+/lib
+
+# 快捷方式
+*.lnk
