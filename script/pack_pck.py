@@ -1,6 +1,9 @@
 ﻿#!/usr/bin/env python3
 import os
 import sys
+
+sys.dont_write_bytecode = True
+
 import subprocess
 import argparse
 import shutil
@@ -12,7 +15,7 @@ import json
 class LocalizationProcessor:
     def __init__(self, mod_id):
         self.mod_id = mod_id.upper()
-        self.merged_data = {} # { "zh_CN": { "KEY": "VALUE" } }
+        self.merged_data = {}  # { "zh_CN": { "KEY": "VALUE" } }
 
     def process_toml(self, file_path, lang):
         with open(file_path, "rb") as f:
@@ -57,6 +60,7 @@ class LocalizationProcessor:
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(kv_pairs, f, ensure_ascii=False, indent=2)
             print(f"  合并本地化 [{lang}]: {len(kv_pairs)} 条词条 -> {output_path}")
+
 
 def filter_godot_output(process):
     """实时过滤 GodotPCKExplorer 的输出"""
@@ -114,6 +118,7 @@ def filter_godot_output(process):
         except:
             pass
 
+
 def find_env_file(start_path):
     """递归向上查找 .env 文件"""
     current = Path(start_path).absolute()
@@ -125,6 +130,7 @@ def find_env_file(start_path):
             break
         current = current.parent
     return None
+
 
 def load_env_file(env_path):
     """加载 .env 文件"""
@@ -142,10 +148,12 @@ def load_env_file(env_path):
                     env_vars[key] = value
     return env_vars
 
+
 def load_mod_toml(toml_path):
     """加载 mod.toml 配置文件"""
     with open(toml_path, 'rb') as f:
         return tomllib.load(f)
+
 
 def generate_mod_json(project_name, output_dir, toml_data):
     """根据 toml 数据生成模组 JSON 文件"""
@@ -175,28 +183,9 @@ def generate_mod_json(project_name, output_dir, toml_data):
     print(f"  生成: {json_path.name}")
     return json_path
 
-def main():
-    parser = argparse.ArgumentParser(description='打包 PCK 并安装模组')
-    parser.add_argument('--game-dir', help='游戏目录（可选，会从.env读取）')
-    parser.add_argument('--pck-tool', help='GodotPCKExplorer路径（可选，会从.env读取）')
-    parser.add_argument('--copy-to-game', action='store_true', help='是否复制到游戏目录')
-    parser.add_argument('--output-pck', required=True, help='输出的PCK文件路径')
-    parser.add_argument('--mod-toml', required=True, help='mod.toml 配置文件路径')
-    parser.add_argument('--dll-path', help='DLL文件的完整路径（可选）')
-    parser.add_argument('--pck-src', help='PCK源目录路径（可选）')
 
-    args = parser.parse_args()
-
-    # 查找并加载 .env
-    script_dir = Path(__file__).parent
-    env_file = find_env_file(script_dir)
-    env_vars = load_env_file(env_file) if env_file else {}
-
-    # 获取配置（命令行参数优先，其次是.env）
-    game_dir = args.game_dir or env_vars.get('STS2_GAME_DIR')
-    pck_tool = args.pck_tool or env_vars.get('GODOT_PCK_EXPLORER')
-    copy_to_game = args.copy_to_game or env_vars.get('COPY_TO_GAME', '').lower() == 'true'
-
+def build_mod_pack(mod_toml, output_pck, dll_path=None, pck_src=None,
+                   pck_tool=None, game_dir=None, copy_to_game=False):
     # 检查必要参数
     if not pck_tool:
         print("错误: 未指定 GodotPCKExplorer 路径", file=sys.stderr)
@@ -209,8 +198,8 @@ def main():
 
     # 处理 PCK 源目录（可选的）
     pck_src_path = None
-    if args.pck_src:
-        pck_src_path = Path(args.pck_src)
+    if pck_src:
+        pck_src_path = Path(pck_src)
         if not pck_src_path.exists():
             print(f"错误: PCK源目录不存在: {pck_src_path}", file=sys.stderr)
             sys.exit(1)
@@ -218,14 +207,14 @@ def main():
         print("没有指定 PCK 源目录，跳过 PCK 打包")
 
     # 创建输出目录
-    output_pck = Path(args.output_pck)
+    output_pck = Path(output_pck)
     output_pck.parent.mkdir(parents=True, exist_ok=True)
 
     # 项目名称（用于 JSON 和 DLL 文件名）
     project_name = output_pck.stem
 
     # 查找并加载 mod.toml
-    mod_toml_path = Path(args.mod_toml)
+    mod_toml_path = Path(mod_toml)
     if not mod_toml_path.exists():
         print(f"错误: 找不到 mod.toml 文件: {mod_toml_path}", file=sys.stderr)
         sys.exit(1)
@@ -247,25 +236,25 @@ def main():
     if pck_src_path:
         print(f"正在打包 PCK: {output_pck.name}")
         print("-" * 50)
-    
+
         # 调用 GodotPCKExplorer 并实时过滤输出
         cmd = [str(pck_tool_path), "-p", str(pck_src_path), str(output_pck), "3.4.5.1"]
-    
+
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True
         )
-    
+
         # 过滤输出
         filter_godot_output(process)
         process.wait()
-    
+
         if process.returncode != 0:
             print(f"PCK打包失败，错误码: {process.returncode}", file=sys.stderr)
             sys.exit(1)
-    
+
         print("-" * 50)
         print(f"PCK打包成功: {output_pck}")
 
@@ -281,7 +270,7 @@ def main():
             mod_dir.mkdir(parents=True, exist_ok=True)
 
             # 复制 DLL - 检查是否存在
-            dll_file = Path(args.dll_path)
+            dll_file = Path(dll_path)
             if dll_file.exists():
                 shutil.copy2(dll_file, mod_dir)
                 print(f"  复制: {dll_file.name}")
@@ -298,7 +287,46 @@ def main():
 
             print(f"模组已安装到: {mod_dir}")
 
+
+def get_env_config(args=None):
+    # 查找并加载 .env
+    script_dir = Path(__file__).parent
+    env_file = find_env_file(script_dir)
+    env_vars = load_env_file(env_file) if env_file else {}
+
+    # 获取配置（命令行参数优先，其次是.env）
+    game_dir = args and args.game_dir or env_vars.get('STS2_GAME_DIR')
+    pck_tool = args and args.pck_tool or env_vars.get('GODOT_PCK_EXPLORER')
+    copy_to_game = args and args.copy_to_game or env_vars.get('COPY_TO_GAME', '').lower() == 'true'
+
+    return game_dir, pck_tool, copy_to_game
+
+
+def main():
+    parser = argparse.ArgumentParser(description='打包 PCK 并安装模组')
+    parser.add_argument('--game-dir', help='游戏目录（可选，会从.env读取）')
+    parser.add_argument('--pck-tool', help='GodotPCKExplorer路径（可选，会从.env读取）')
+    parser.add_argument('--copy-to-game', action='store_true', help='是否复制到游戏目录')
+    parser.add_argument('--output-pck', required=True, help='输出的PCK文件路径')
+    parser.add_argument('--mod-toml', required=True, help='mod.toml 配置文件路径')
+    parser.add_argument('--dll-path', help='DLL文件的完整路径（可选）')
+    parser.add_argument('--pck-src', help='PCK源目录路径（可选）')
+
+    args = parser.parse_args()
+
+    game_dir, pck_tool, copy_to_game = get_env_config(args)
+
+    build_mod_pack(
+        mod_toml=args.mod_toml,
+        output_pck=args.output_pck,
+        dll_path=args.dll_path,
+        pck_src=args.pck_src,
+        pck_tool=pck_tool,
+        game_dir=game_dir,
+        copy_to_game=copy_to_game
+    )
     print("完成！")
+
 
 if __name__ == "__main__":
     main()

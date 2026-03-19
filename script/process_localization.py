@@ -1,9 +1,13 @@
 import os
 import sys
+
+sys.dont_write_bytecode = True
+
 import json
 from pathlib import Path
 import tomllib
 import argparse
+
 
 def flatten_dict(d, parent_key='', sep='.'):
     """将嵌套字典扁平化"""
@@ -16,9 +20,10 @@ def flatten_dict(d, parent_key='', sep='.'):
             items.append((new_key, v))
     return dict(items)
 
-def main(solution_dir, mod_id, output_dir_base):
+
+def process_localization(solution_dir, mod_id, output_dir):
     solution_path = Path(solution_dir)
-    output_path_base = Path(output_dir_base)
+    output_path = Path(output_dir)
     print(f"扫描解决方案: {solution_path}")
     print(f"Mod ID: {mod_id}")
 
@@ -29,7 +34,7 @@ def main(solution_dir, mod_id, output_dir_base):
         return
 
     # 2. 按 语言 -> 分类 聚合所有 TOML 文件
-    aggregated_data = {} # {lang: {category: {merged_toml_data}}}
+    aggregated_data = {}  # {lang: {category: {merged_toml_data}}}
 
     for loc_dir in localization_dirs:
         print(f"处理目录: {loc_dir}")
@@ -72,13 +77,13 @@ def main(solution_dir, mod_id, output_dir_base):
                 final_json_data[f"{mod_id.upper()}-{key}"] = value
 
             # 确定输出路径并写入文件
-            output_dir = output_path_base / mod_id / "localization" / lang
+            output_dir = output_path / mod_id / "localization" / lang
             output_dir.mkdir(parents=True, exist_ok=True)
             output_file = output_dir / f"{category}.json"
 
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(final_json_data, f, ensure_ascii=False, indent=2)
-            print(f"已生成: {output_file.relative_to(output_path_base)}")
+            print(f"已生成: {output_file.relative_to(output_path)}")
 
     print("\n本地化处理完成！")
 
@@ -99,4 +104,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # 使用解析后的参数调用 main 函数
-    main(args.solution_dir, args.mod_id, args.output_dir)
+    process_localization(args.solution_dir, args.mod_id, args.output_dir)
