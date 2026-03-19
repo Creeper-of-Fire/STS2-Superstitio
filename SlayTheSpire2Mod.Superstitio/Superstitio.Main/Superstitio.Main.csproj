@@ -3,16 +3,20 @@
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->
         <Reference Include="0Harmony">
-            <HintPath>$(GameLibPath)0Harmony.dll</HintPath>
+            <HintPath>$(Sts2LibPath)0Harmony.dll</HintPath>
             <Private>false</Private>
         </Reference>
 
         <!-- 游戏主程序集 -->
         <Reference Include="sts2">
-            <HintPath>$(GameLibPath)sts2.dll</HintPath>
+            <HintPath>$(Sts2LibPath)sts2.dll</HintPath>
             <Private>false</Private>
         </Reference>
 
-        <!-- 如果需要更多DLL，可以继续添加 -->
+        <!-- BaseLib基础库 -->
+        <Reference Include="BaseLib">
+            <HintPath>$(ModsPath)/BaseLib/BaseLib.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
 </Project>

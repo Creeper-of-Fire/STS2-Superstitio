@@ -39,7 +39,10 @@
 
     <!-- 游戏DLL的公共引用路径 (通过符号链接) -->
     <PropertyGroup>
-        <GameLibPath>$(MSBuildThisFileDirectory)..\lib\</GameLibPath>
+        <!-- 游戏DLL路径 -->
+        <Sts2LibPath>$(MSBuildThisFileDirectory)..\lib\sts2\</Sts2LibPath>
+        <!-- 游戏模组路径 -->
+        <ModsPath>$(MSBuildThisFileDirectory)..\lib\mods\</ModsPath>
     </PropertyGroup>
 
     <PropertyGroup>
