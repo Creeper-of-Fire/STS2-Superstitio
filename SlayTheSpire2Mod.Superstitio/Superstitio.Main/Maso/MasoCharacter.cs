@@ -1,7 +1,11 @@
-﻿using BaseLib.Abstracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using BaseLib.Abstracts;
 using Godot;
+using JetBrains.Annotations;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Maso.Cards.Base;
+using Superstitio.Main.Maso.Cards.Kongfu;
 using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso;
@@ -12,30 +16,41 @@ namespace Superstitio.Main.Maso;
 public class MasoCharacter : SuperstitioCharacter
 {
     /// <inheritdoc />
-    protected override CharacterColorAssets ColorsConfig { get; } = new()
+    [field: AllowNull, CanBeNull]
+    protected override CharacterColorAssets ColorsConfig => field ??= new()
     {
         NameColor = new Color(0.5f, 0.5f, 1f)
     };
 
     /// <inheritdoc />
-    protected override CharacterStatsAssets StatsConfig { get; } = new()
+    [field: AllowNull, CanBeNull]
+    protected override CharacterStatsAssets StatsConfig => field ??= new()
     {
         StartingHp = 70,
         Gender = CharacterGender.Feminine,
     };
 
     /// <inheritdoc />
-    protected override CharacterLoadoutAssets LoadoutConfig { get; } = new()
+    [field: AllowNull, CanBeNull]
+    protected override CharacterLoadoutAssets LoadoutConfig => field ??= new()
     {
-        CardPool = ModelDb.CardPool<MonkCardPool>(),
+        CardPool = ModelDb.CardPool<MasoCardPool>(),
         RelicPool = ModelDb.RelicPool<MonkRelicPool>(),
         PotionPool = ModelDb.PotionPool<MonkPotionPool>(),
-        StartingDeck = [
-            ModelDb.Card<MonkCard>(),
-            ModelDb.Card<MonkCard>(),
-            ModelDb.Card<MonkCard>(),
+        StartingDeck =
+        [
+            ModelDb.Card<StrikeMaso>(),
+            ModelDb.Card<StrikeMaso>(),
+            ModelDb.Card<StrikeMaso>(),
+            ModelDb.Card<StrikeMaso>(),
+            // ModelDb.Card<DefendMaso>(),
+            // ModelDb.Card<DefendMaso>(),
+            // ModelDb.Card<DefendMaso>(),
+            // ModelDb.Card<DefendMaso>(),
+            ModelDb.Card<SuspendingStrike>(),
         ],
-        StartingRelics = [
+        StartingRelics =
+        [
             ModelDb.Relic<MonkRelic>()
         ],
     };
@@ -74,5 +89,3 @@ public class MasoRelicPool : CustomRelicPoolModel
     /// </summary>
     public override string EnergyColorName => "ironclad";
 }
-
-

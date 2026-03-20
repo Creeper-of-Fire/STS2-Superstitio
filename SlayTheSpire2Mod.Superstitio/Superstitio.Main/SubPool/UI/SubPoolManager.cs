@@ -29,9 +29,10 @@ public static class SubPoolManager
 
         foreach (var type in poolTypes)
         {
+            // 注意！！！这是因为 SubPool 不是 AbstractModel，因此才可以直接创建实例，而非使用 Model.DB
             var poolInstance = (SubPool?)Activator.CreateInstance(type);
 
-            if (poolInstance == null)
+            if (poolInstance is null)
             {
                 Log.Warn($"[MasoMod] 创建子池实例失败：{type.Name}。");
                 continue;
@@ -101,7 +102,7 @@ public static class SubPoolManager
         /// </summary>
         public IEnumerable<CardModel> AllSubPoolCards =>
             GetEnabledSubPools<TCardPool>().SelectMany(x => x.PoolCards);
-        
+
         /// <summary>
         /// 
         /// </summary>

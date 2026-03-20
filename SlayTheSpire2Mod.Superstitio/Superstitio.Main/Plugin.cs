@@ -24,19 +24,22 @@ public static class Plugin
     public static void Initialize()
     {
         Log.Info("[Superstitio] 已加载！");
+        
         Harmony harmony = new Harmony(ModName);
         harmony.PatchAll();
+
         RegisterSubPools();
     }
-    
+
     /// <summary>
     /// 扫描当前程序集中的 SubPool 并注册
     /// </summary>
     private static void RegisterSubPools()
     {
         var assembly = Assembly.GetExecutingAssembly();
+
         SubPoolMemberRegistry.RegisterSubPoolsFromAssembly(assembly);
-        
+
         SubPoolManager.Initialize(assembly);
     }
 

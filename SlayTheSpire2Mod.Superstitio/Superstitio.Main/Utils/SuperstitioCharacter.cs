@@ -8,12 +8,12 @@ namespace Superstitio.Main.Utils;
 /// <summary>
 /// 角色全套色彩配置。
 /// </summary>
-public record struct CharacterColorAssets
+public record CharacterColorAssets
 {
     /// <summary>
     /// 角色名称颜色。
     /// </summary>
-    public Color NameColor { get; init; }
+    public required Color NameColor { get; init; }
 
     /// <summary>
     /// 能量图标/表盘的轮廓颜色。
@@ -44,12 +44,12 @@ public record struct CharacterColorAssets
 /// <summary>
 /// 角色的基础数值与身份属性。
 /// </summary>
-public record struct CharacterStatsAssets
+public record CharacterStatsAssets
 {
     /// <summary>
     /// 人物性别。
     /// </summary>
-    public CharacterGender Gender { get; init; }
+    public required CharacterGender Gender { get; init; }
 
     /// <summary>
     /// 初始血量。
@@ -80,32 +80,32 @@ public record struct CharacterStatsAssets
 /// <summary>
 /// 角色战斗资源与初始配置。
 /// </summary>
-public record struct CharacterLoadoutAssets
+public record CharacterLoadoutAssets
 {
     /// <summary>
     /// 卡牌池。
     /// </summary>
-    public CardPoolModel CardPool { get; init; }
+    public required CardPoolModel CardPool { get; init; }
 
     /// <summary>
     /// 遗物池。
     /// </summary>
-    public RelicPoolModel RelicPool { get; init; }
+    public required RelicPoolModel RelicPool { get; init; }
 
     /// <summary>
     /// 药水池。
     /// </summary>
-    public PotionPoolModel PotionPool { get; init; }
+    public required PotionPoolModel PotionPool { get; init; }
 
     /// <summary>
     /// 初始卡组。
     /// </summary>
-    public IEnumerable<CardModel> StartingDeck { get; init; }
+    public required IEnumerable<CardModel> StartingDeck { get; init; }
 
     /// <summary>
     /// 初始遗物。
     /// </summary>
-    public IReadOnlyList<RelicModel> StartingRelics { get; init; }
+    public required IReadOnlyList<RelicModel> StartingRelics { get; init; }
 
     /// <summary>
     /// 初始药水。
@@ -116,7 +116,7 @@ public record struct CharacterLoadoutAssets
 /// <summary>
 /// 角色视觉与动画资源配置
 /// </summary>
-public record struct CharacterVisualAssets
+public record CharacterVisualAssets
 {
     /// <summary>
     /// 攻击动画延迟。
@@ -167,7 +167,7 @@ public record struct CharacterVisualAssets
 /// <summary>
 /// 角色 UI 与图标资源配置
 /// </summary>
-public record struct CharacterUiAssets
+public record CharacterUiAssets
 {
     /// <summary>
     /// 人物头像路径。
@@ -203,7 +203,7 @@ public record struct CharacterUiAssets
 /// <summary>
 /// 角色音效资源配置
 /// </summary>
-public record struct CharacterSfxAssets
+public record CharacterSfxAssets
 {
     /// <summary>
     /// 攻击音效
@@ -234,7 +234,7 @@ public record struct CharacterSfxAssets
 /// <summary>
 /// 角色多人模式资源配置
 /// </summary>
-public record struct CharacterMultiplayerAssets
+public record CharacterMultiplayerAssets
 {
     /// <summary>
     /// 多人模式 - 手指。

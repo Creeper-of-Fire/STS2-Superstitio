@@ -1,4 +1,5 @@
 ﻿using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Extension;
 
 namespace Superstitio.Main.SubPool;
 
@@ -29,39 +30,23 @@ public abstract class SubPool
 /// <typeparam name="TSelf">子类自身类型</typeparam>
 public abstract class SubPool<TSelf> : SubPool where TSelf : SubPool<TSelf>
 {
-    private IEnumerable<CardModel>? CachedCards { get; set; }
-
     /// <summary>
     /// 获取此池中包含的所有卡牌实例。
     /// 结果会被缓存，多次调用不会重复创建实例。
     /// </summary>
-    public override IEnumerable<CardModel> PoolCards => this.CachedCards ??=
+    public override IEnumerable<CardModel> PoolCards => field ??=
     [
         ..SubPoolMemberRegistry.GetSubTypes<TSelf>()
-            .Select(type =>
-            {
-                // 获取该卡牌类在 StS2 中的 ModelId
-                var id = ModelDb.GetId(type);
-                // 从 ModelDb 缓存中获取单例实例（这些实例已由 ModelDb.Init 初始化）
-                return ModelDb.GetById<CardModel>(id);
-            })
+            .Select(ModelDb.Card)
     ];
-
-    private IEnumerable<PotionModel>? CachedPotions { get; set; }
 
     /// <summary>
     /// 获取此池中包含的所有药水实例。
     /// 结果会被缓存，多次调用不会重复创建实例。
     /// </summary>
-    public override IEnumerable<PotionModel> PoolPotions => this.CachedPotions ??=
+    public override IEnumerable<PotionModel> PoolPotions => field ??=
     [
         ..SubPoolMemberRegistry.GetSubTypes<TSelf>()
-            .Select(type =>
-            {
-                // 获取该药水类在 StS2 中的 ModelId
-                var id = ModelDb.GetId(type);
-                // 从 ModelDb 缓存中获取单例实例（这些实例已由 ModelDb.Init 初始化）
-                return ModelDb.GetById<PotionModel>(id);
-            })
+            .Select(ModelDb.Potion)
     ];
 }
