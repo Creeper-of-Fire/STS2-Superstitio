@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using BaseLib.Abstracts;
+using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Utils;
@@ -51,4 +52,27 @@ public class MasoCharacter : SuperstitioCharacter
     /// <inheritdoc />
     protected override CharacterSfxAssets? SfxAssets => null;
 }
+
+/// <summary>
+/// 职业的药水池模型。
+/// </summary>
+public class MasoPotionPool : CustomPotionPoolModel
+{
+    /// <summary>
+    /// 能量图标。
+    /// </summary>
+    public override string EnergyColorName => "ironclad";
+}
+
+/// <summary>
+/// 职业的遗物池模型。
+/// </summary>
+public class MasoRelicPool : CustomRelicPoolModel
+{
+    /// <summary>
+    /// 能量图标。
+    /// </summary>
+    public override string EnergyColorName => "ironclad";
+}
+
 

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using BaseLib.Abstracts;
+using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 
@@ -260,7 +261,7 @@ public record struct CharacterMultiplayerAssets
 /// 自定义角色基类。
 /// 继承此类需要提供各个资源结构体的具体实现。
 /// </summary>
-public abstract class SuperstitioCharacter : RealPlaceholderCharacterModel
+public abstract class SuperstitioCharacter : PlaceholderCharacterModel
 {
     #region 强制子类实现的结构体
 
@@ -449,7 +450,13 @@ public abstract class SuperstitioCharacter : RealPlaceholderCharacterModel
     public sealed override string CharacterSelectSfx => this.SfxAssets?.CharacterSelectSfx ?? base.CharacterSelectSfx;
 
     /// <inheritdoc cref="CharacterSfxAssets.CharacterTransitionSfx"/>
-    public sealed override string CharacterTransitionSfx => this.SfxAssets?.CharacterTransitionSfx ?? base.CharacterTransitionSfx;
+    public sealed override string CharacterTransitionSfx => this.SfxAssets?.CharacterTransitionSfx ?? PlaceholderCharacterTransitionSfx;
+
+    /// <summary>
+    /// 获取角色的过渡音效
+    /// 从角色配置中读取，若未配置则使用默认值
+    /// </summary>
+    private const string PlaceholderCharacterTransitionSfx = "event:/sfx/ui/wipe_ironclad";
 
     #endregion
 }

@@ -1,6 +1,9 @@
-﻿using HarmonyLib;
+﻿using System.Reflection;
+using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
+using Superstitio.Main.SubPool;
+using Superstitio.Main.SubPool.UI;
 
 namespace Superstitio.Main;
 
@@ -23,6 +26,18 @@ public static class Plugin
         Log.Info("[Superstitio] 已加载！");
         Harmony harmony = new Harmony(ModName);
         harmony.PatchAll();
+        RegisterSubPools();
+    }
+    
+    /// <summary>
+    /// 扫描当前程序集中的 SubPool 并注册
+    /// </summary>
+    private static void RegisterSubPools()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        SubPoolMemberRegistry.RegisterSubPoolsFromAssembly(assembly);
+        
+        SubPoolManager.Initialize(assembly);
     }
 
     /// <summary>
