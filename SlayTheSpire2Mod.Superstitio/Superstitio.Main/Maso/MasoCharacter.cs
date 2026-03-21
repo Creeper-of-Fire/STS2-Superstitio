@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Godot;
-using JetBrains.Annotations;
+﻿using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Extensions;

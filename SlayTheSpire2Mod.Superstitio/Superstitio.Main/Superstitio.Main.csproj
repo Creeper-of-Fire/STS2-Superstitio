@@ -25,7 +25,4 @@
             <Private>false</Private>
         </Reference>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Features\" />
-    </ItemGroup>
 </Project>
