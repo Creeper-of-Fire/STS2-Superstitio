@@ -1,5 +1,5 @@
 ﻿using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.Extension;
+using Superstitio.Main.Extensions;
 
 namespace Superstitio.Main.SubPool;
 

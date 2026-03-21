@@ -1,7 +1,7 @@
 ﻿using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-namespace Superstitio.Main.Maso.HangingCard;
+namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 增强版挂起令牌 - 响应即减少计数，提供触发时和结束时两个钩子
@@ -40,7 +40,7 @@ public abstract record AutoHangingCardToken : HangingCardToken
     public sealed override async Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
         // 打出自身（不是复制）的那次，忽略。
-        if (cardPlay.Card == HangingCard)
+        if (cardPlay.Card == this.HangingCard)
             return;
         
         // 1. 过滤检查

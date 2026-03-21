@@ -1,15 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MegaCrit.Sts2.Core.Entities.Cards;
+﻿using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Extension;
+namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 触发次数动态变量
 /// </summary>
-public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.DefaultName) : DynamicVar(name, triggers)
+public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.DefaultName) : MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar(name, triggers)
 {
     /// <summary>
     /// 名称
@@ -54,33 +52,5 @@ public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.Def
 
         this.PreviewTriggers = currentTriggers;
         this.PreviewValue = currentTriggers;
-    }
-}
-
-/// <summary>
-/// 动态变量集的扩展方法
-/// </summary>
-public static class DynamicVarSetExtensions
-{
-    /// <summary>
-    /// 动态变量集的扩展方法
-    /// </summary>
-    extension(DynamicVarSet dynamicVarSet)
-    {
-        /// <summary>
-        /// 获取指定类型的动态变量
-        /// </summary>
-        public bool TryGetVar<TVar>(string key, [MaybeNullWhen(false)] out TVar value) where TVar : DynamicVar
-        {
-            bool result = dynamicVarSet.TryGetValue(key, out var dynamicVar);
-            value = dynamicVar as TVar;
-            return result;
-        }
-
-        /// <summary>
-        /// 获取触发次数动态变量
-        /// </summary>
-        public HangingTriggerVar? TriggerCount =>
-            dynamicVarSet.TryGetVar<HangingTriggerVar>(HangingTriggerVar.DefaultName, out var triggerVar) ? triggerVar : null;
     }
 }

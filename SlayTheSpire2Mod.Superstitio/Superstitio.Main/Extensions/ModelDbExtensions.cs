@@ -1,11 +1,11 @@
 ﻿using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Extension;
+namespace Superstitio.Main.Extensions;
 
 /// <summary>
 /// 模型库的扩展方法
 /// </summary>
-public static class ModelDbExtension
+public static class ModelDbExtensions
 {
     /// <summary>
     /// 将规范的 Card 模型转换为可变的实例

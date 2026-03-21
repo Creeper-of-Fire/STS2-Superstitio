@@ -3,9 +3,10 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.Maso.Pools;
 using Superstitio.Main.SubPool;
 
-namespace Superstitio.Main.Maso;
+namespace Superstitio.Main.Maso.Cards;
 
 /// <summary>
 /// 用于初始化卡牌基本属性的记录类型。

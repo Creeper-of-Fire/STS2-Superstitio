@@ -3,15 +3,15 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Extension;
-using Superstitio.Main.Maso.HangingCard;
+using Superstitio.Main.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
+using Superstitio.Main.Features.HangingCard;
 
 namespace Superstitio.Main.Maso.Cards.Kongfu;
 
 /// <summary>
 /// 悬刃 - 打出后挂起自身，后续每次打出攻击牌时抽1张牌（可触发2/3次）
 /// </summary>
-
 public sealed class SuspendingStrike() : MasoBaseCard(new()
 {
     BaseCost = 1,
@@ -49,6 +49,27 @@ public sealed class SuspendingStrike() : MasoBaseCard(new()
         return PileType.None;
     }
 
+
+    /// <summary>
+    /// 挂起令牌：记录被挂起的卡牌及其触发次数
+    /// </summary>
+    public record SuspendingStrikeToken : AutoHangingCardToken
+    {
+        /// <summary>
+        /// 只响应攻击牌
+        /// </summary>
+        /// <inheritdoc />
+        protected override bool ShouldRespond(PlayerChoiceContext context, CardPlay cardPlay) =>
+            cardPlay.Card.Type == CardType.Attack;
+
+        /// <inheritdoc />
+        protected override async Task OnTrigger(PlayerChoiceContext context, CardPlay cardPlay)
+        {
+            // 抽一张牌
+            await CardPileCmd.Draw(context, 1, this.OriginalOwner, fromHandDraw: true);
+        }
+    }
+
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -74,26 +95,6 @@ public sealed class SuspendingStrike() : MasoBaseCard(new()
     {
         this.DynamicVars.Damage.UpgradeValueBy(2M);
         // 升级后触发次数增加，需要更新动态变量
-        this.DynamicVars.TriggerCount?.UpgradeValueBy(UpgradeTriggerCount);
-    }
-}
-
-/// <summary>
-/// 挂起令牌：记录被挂起的卡牌及其触发次数
-/// </summary>
-public record SuspendingStrikeToken : AutoHangingCardToken
-{
-    /// <summary>
-    /// 只响应攻击牌
-    /// </summary>
-    /// <inheritdoc />
-    protected override bool ShouldRespond(PlayerChoiceContext context, CardPlay cardPlay) =>
-        cardPlay.Card.Type == CardType.Attack;
-
-    /// <inheritdoc />
-    protected override async Task OnTrigger(PlayerChoiceContext context, CardPlay cardPlay)
-    {
-        // 抽一张牌
-        await CardPileCmd.Draw(context, 1, this.OriginalOwner, fromHandDraw: true);
+        this.DynamicVars.TriggerCount.UpgradeValueBy(UpgradeTriggerCount);
     }
 }

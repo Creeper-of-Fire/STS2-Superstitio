@@ -1,0 +1,88 @@
+﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.ValueProps;
+
+namespace Superstitio.Main.Features.Corruptus;
+
+/// <summary>
+/// 腐朽缓冲组件。
+/// 负责将生物受到的伤害转换为腐朽能力层数，并处理腐朽伤害的触发逻辑。
+/// </summary>
+public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
+{
+    private ICorruptusBuffer CorruptusBuffer { get; } = corruptusBuffer;
+    
+    /// <summary>
+    /// 标记是否正在处理腐朽伤害，防止递归触发。
+    /// </summary>
+    private bool IsProcessingCorruptusDamage { get; set; } = false;
+
+    /// <summary>
+    /// 获取拥有该组件的生物实体。
+    /// </summary>
+    private Creature OwnerCreature => this.CorruptusBuffer.OwnerCreature;
+
+    /// <summary>
+    /// 在伤害结算后期修改损失的生命值。
+    /// 如果目标是拥有者且未在处理中，则将伤害量转换为腐朽层数，并抵消原伤害。
+    /// </summary>
+    /// <remarks>
+    /// 推荐挂载点：和缓冲 <see cref="Buffer"/> 使用相同的钩子，即 <see cref="AbstractModel.ModifyHpLostAfterOstyLate"/>。
+    /// </remarks>
+    public decimal ModifyHpLostAfterOstyLate(
+        Creature target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource)
+    {
+        if (this.IsProcessingCorruptusDamage)
+            return amount;
+
+        if (target != this.OwnerCreature)
+            return amount;
+
+        PowerCmd.Apply<CorruptusPower>(
+            target,
+            amount,
+            dealer,
+            null
+        );
+
+        return 0M;
+    }
+
+    /// <summary>
+    /// 触发腐朽伤害。
+    /// 对拥有者造成等同于当前腐朽层数的不可阻挡伤害，随后移除腐朽效果。
+    /// </summary>
+    public async Task TriggerCorruptusDamage(PlayerChoiceContext choiceContext)
+    {
+        var power = this.OwnerCreature.GetPower<CorruptusPower>();
+        if (power is not { Amount: > 0 })
+            return;
+
+        this.IsProcessingCorruptusDamage = true;
+
+        try
+        {
+            // 对自身造成等同于腐朽层数的伤害
+            await CreatureCmd.Damage(
+                choiceContext,
+                this.OwnerCreature,
+                power.Amount,
+                ValueProp.Unblockable,
+                this.OwnerCreature
+            );
+
+            // 伤害结算后移除腐朽效果
+            await PowerCmd.Remove<CorruptusPower>(this.OwnerCreature);
+        }
+        finally
+        {
+            this.IsProcessingCorruptusDamage = false;
+        }
+    }
+}

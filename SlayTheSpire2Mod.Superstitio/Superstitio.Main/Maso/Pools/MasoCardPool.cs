@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.SubPool;
 using Superstitio.Main.SubPool.UI;
 
-namespace Superstitio.Main.Maso;
+namespace Superstitio.Main.Maso.Pools;
 
 /// <summary>
 /// 职业的卡牌池模型。

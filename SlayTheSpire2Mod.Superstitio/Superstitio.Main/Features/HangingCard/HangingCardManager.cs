@@ -1,8 +1,8 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.Extension;
+using Superstitio.Main.Extensions;
 
-namespace Superstitio.Main.Maso.HangingCard;
+namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 在这里做一层抽象，实际上我们用 power 或者其他类似物实现功能，但是我们通过一个专门的悬挂 API 调用。

@@ -1,0 +1,39 @@
+﻿using MegaCrit.Sts2.Core.Localization.DynamicVars;
+
+namespace Superstitio.Main.DynamicVars.Extensions;
+
+/// <summary>
+/// 动态变量集的扩展方法
+/// </summary>
+public static class DynamicVarSetExtensions
+{
+    /// <summary>
+    /// 动态变量集的扩展方法
+    /// </summary>
+    extension(DynamicVarSet dynamicVarSet)
+    {
+        /// <summary>
+        /// 获取指定类型的动态变量，若不存在或类型不匹配则抛出异常
+        /// </summary>
+        public TVar GetVarOrThrow<TVar>(string key) where TVar : MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar
+        {
+            if (!dynamicVarSet.TryGetValue(key, out var dynamicVar))
+                throw new ArgumentException($"未能找到键为 '{key}' 的动态变量。");
+
+            if (dynamicVar is not TVar typedValue)
+                throw new ArgumentException($"键为 '{key}' 的动态变量存在，但其类型不是 '{typeof(TVar).Name}'。");
+
+            return typedValue;
+        }
+
+        /// <summary>
+        /// 获取触发次数动态变量
+        /// </summary>
+        public HangingTriggerVar TriggerCount => dynamicVarSet.GetVarOrThrow<HangingTriggerVar>(HangingTriggerVar.DefaultName);
+
+        /// <summary>
+        /// 获取怒火动态变量
+        /// </summary>
+        public RageVar Rage => dynamicVarSet.GetVarOrThrow<RageVar>(RageVar.DefaultName);
+    }
+}

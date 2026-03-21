@@ -5,7 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Maso.HangingCard;
+namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 一次挂起对应的令牌。它会主动遥控对应的载体，载体只需要实现 <see cref="IHangingCarrier"/> 接口并接受遥控即可。

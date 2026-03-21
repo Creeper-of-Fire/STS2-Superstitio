@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Maso;
+using Superstitio.Main.Maso.Pools;
 
 namespace Superstitio.Main.SubPool.UI;
 

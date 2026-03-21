@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Maso.HangingCard;
+namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 挂起卡牌
