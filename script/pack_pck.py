@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import tomllib
 import json
+from dotenv import load_dotenv
 
 class LocalizationProcessor:
     def __init__(self, mod_id):
@@ -117,37 +118,6 @@ def filter_godot_output(process):
                     sys.stderr.flush()
         except:
             pass
-
-
-def find_env_file(start_path):
-    """递归向上查找 .env 文件"""
-    current = Path(start_path).absolute()
-    while True:
-        env_file = current / '.env'
-        if env_file.exists():
-            return env_file
-        if current.parent == current:
-            break
-        current = current.parent
-    return None
-
-
-def load_env_file(env_path):
-    """加载 .env 文件"""
-    env_vars = {}
-    if env_path and env_path.exists():
-        with open(env_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith('#'):
-                    continue
-                if '=' in line:
-                    key, value = line.split('=', 1)
-                    key = key.strip()
-                    value = value.strip().strip('\'"')  # 去掉可能的引号
-                    env_vars[key] = value
-    return env_vars
-
 
 def load_mod_toml(toml_path):
     """加载 mod.toml 配置文件"""
@@ -289,15 +259,12 @@ def build_mod_pack(mod_toml, output_pck, dll_path=None, pck_src=None,
 
 
 def get_env_config(args=None):
-    # 查找并加载 .env
-    script_dir = Path(__file__).parent
-    env_file = find_env_file(script_dir)
-    env_vars = load_env_file(env_file) if env_file else {}
+    load_dotenv()
 
     # 获取配置（命令行参数优先，其次是.env）
-    game_dir = args and args.game_dir or env_vars.get('STS2_GAME_DIR')
-    pck_tool = args and args.pck_tool or env_vars.get('GODOT_PCK_EXPLORER')
-    copy_to_game = args and args.copy_to_game or env_vars.get('COPY_TO_GAME', '').lower() == 'true'
+    game_dir = args and args.game_dir or os.environ.get('STS2_GAME_DIR')
+    pck_tool = args and args.pck_tool or os.environ.get('GODOT_PCK_EXPLORER')
+    copy_to_game = args and args.copy_to_game or os.environ.get('COPY_TO_GAME', '').lower() == 'true'
 
     return game_dir, pck_tool, copy_to_game
 
