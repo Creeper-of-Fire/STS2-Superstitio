@@ -245,6 +245,20 @@ def build_mod_pack(mod_toml, output_pck, dll_path=None, pck_src=None,
                 shutil.copy2(dll_file, mod_dir)
                 print(f"  复制: {dll_file.name}")
 
+            # 复制所有 pdb 文件（调试用）
+            # TODO 这里全部复制可能会有点乱，不过我觉得无所谓。
+            pdb_files = list(dll_file.parent.glob("*.pdb"))
+            for pdb_file in pdb_files:
+                shutil.copy2(pdb_file, mod_dir)
+                print(f"  复制: {pdb_file.name}")
+    
+            # 复制所有 xml 文件（调试用）
+            # TODO 这里全部复制可能会有点乱，不过我觉得无所谓。
+            xml_files = list(dll_file.parent.glob("*.xml"))
+            for xml_file in xml_files:
+                shutil.copy2(xml_file, mod_dir)
+                print(f"  复制: {xml_file.name}")
+
             # 复制 PCK - 检查是否存在
             if output_pck.exists():
                 shutil.copy2(output_pck, mod_dir)

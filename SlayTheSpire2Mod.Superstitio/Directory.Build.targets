@@ -13,6 +13,10 @@
         <OutputDir>$(OutputPath)</OutputDir>
         <!-- 定义合并 DLL 路径 -->
         <MergedDllPath>$(OutputDir)$(ModName).dll</MergedDllPath>
+        <!-- 定义合并 PDB 路径 -->
+        <MergedPdbPath>$(OutputDir)$(ModName).pdb</MergedPdbPath>
+        <!-- 定义合并 XML 路径 -->
+        <MergedXmlPath>$(OutputDir)$(ModName).xml</MergedXmlPath>
     </PropertyGroup>
 
     <!-- ================================================================== -->
@@ -26,9 +30,11 @@
         <Message Text="[Superstitio2] ========================================" Importance="high"/>
         <Message Text="[Superstitio2] 正在合并 DLL..." Importance="high"/>
 
-        <!-- 步骤0：删除旧的合并 DLL，强制重新生成 -->
+        <!-- 步骤0：删除旧的合并文件，强制重新生成 -->
         <Delete Files="$(MergedDllPath)" Condition="Exists('$(MergedDllPath)')"/>
-        <Message Text="[Superstitio2] 已删除旧的合并 DLL: $(MergedDllPath)" Importance="high"/>
+        <Delete Files="$(MergedPdbPath)" Condition="Exists('$(MergedPdbPath)')"/>
+        <Delete Files="$(MergedXmlPath)" Condition="Exists('$(MergedXmlPath)')"/>
+        <Message Text="[Superstitio2] 已删除旧的合并文件" Importance="high"/>
         
         <!-- 步骤1：收集所有需要合并的 DLL -->
         <Message Text="[Superstitio2] 步骤1：扫描需要合并的 DLL..." Importance="high"/>
@@ -69,7 +75,7 @@
 
         <!-- 使用 ILMerge (全局工具) -->
         <Exec Condition="'$(ILMergeInstalled)' != '' and @(OtherDlls->Count()) &gt; 0"
-              Command="ilmerge /target:library /out:&quot;$(MergedDllPath)&quot; @(MainDll) @(OtherDlls->'&quot;%(Identity)&quot;', ' ')"
+              Command="ilmerge /target:library /out:&quot;$(MergedDllPath)&quot; /debug /xmldocs @(MainDll) @(OtherDlls->'&quot;%(Identity)&quot;', ' ')"
               ContinueOnError="WarnAndContinue"
               IgnoreExitCode="false">
             <Output TaskParameter="ExitCode" PropertyName="ILMergeExitCode"/>
@@ -86,7 +92,19 @@
               SourceFiles="@(MainDll)"
               DestinationFiles="$(MergedDllPath)"/>
 
+        <!-- 复制对应的 PDB 文件（如果存在） -->
+        <Copy Condition="!Exists('$(MergedPdbPath)') and Exists('$(TargetDir)$(MainProjectName).pdb')"
+              SourceFiles="$(TargetDir)$(MainProjectName).pdb"
+              DestinationFiles="$(MergedPdbPath)"/>
+
+        <!-- 复制对应的 XML 文件（如果存在） -->
+        <Copy Condition="!Exists('$(MergedXmlPath)') and Exists('$(TargetDir)$(MainProjectName).xml')"
+              SourceFiles="$(TargetDir)$(MainProjectName).xml"
+              DestinationFiles="$(MergedXmlPath)"/>
+
         <Message Text="[Superstitio2] ✅ DLL 合并完成。输出: $(MergedDllPath)" Importance="high"/>
+        <Message Text="[Superstitio2]    PDB: $(MergedPdbPath)" Importance="high" Condition="Exists('$(MergedPdbPath)')"/>
+        <Message Text="[Superstitio2]    XML: $(MergedXmlPath)" Importance="high" Condition="Exists('$(MergedXmlPath)')"/>
         <Message Text="[Superstitio2] ========================================" Importance="high"/>
     </Target>
 </Project>
