@@ -37,7 +37,7 @@ public class MasoCardPool : CustomCardPoolModel, IWithSubPool<MasoCardPool>
     // /// <summary>
     // /// 完全可以替换这里，达成卡池选择的效果。
     // /// </summary>
-    // public override IEnumerable<CardModel> AllCards => this.AllSubPoolCards;
+    // public override IEnumerable<CardModel> AllCards => this.GetAllSubPoolCards;
 }
 
 /// <summary>

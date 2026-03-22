@@ -307,150 +307,150 @@ public abstract class SuperstitioCharacter : PlaceholderCharacterModel
     // --- 色彩 ---
 
     /// <inheritdoc cref="CharacterColorAssets.NameColor"/>
-    public sealed override Color NameColor => this.ColorsConfig.NameColor;
+    public override Color NameColor => this.ColorsConfig.NameColor;
 
     /// <inheritdoc cref="CharacterColorAssets.EnergyLabelOutlineColor"/>
-    public sealed override Color EnergyLabelOutlineColor => this.ColorsConfig.EnergyLabelOutlineColor ?? base.EnergyLabelOutlineColor;
+    public override Color EnergyLabelOutlineColor => this.ColorsConfig.EnergyLabelOutlineColor ?? base.EnergyLabelOutlineColor;
 
     /// <inheritdoc cref="CharacterColorAssets.DialogueColor"/>
-    public sealed override Color DialogueColor => this.ColorsConfig.DialogueColor ?? base.DialogueColor;
+    public override Color DialogueColor => this.ColorsConfig.DialogueColor ?? base.DialogueColor;
 
     /// <inheritdoc cref="CharacterColorAssets.MapDrawingColor"/>
-    public sealed override Color MapDrawingColor => this.ColorsConfig.MapDrawingColor ?? base.MapDrawingColor;
+    public override Color MapDrawingColor => this.ColorsConfig.MapDrawingColor ?? base.MapDrawingColor;
 
     /// <inheritdoc cref="CharacterColorAssets.RemoteTargetingLineColor"/>
-    public sealed override Color RemoteTargetingLineColor => this.ColorsConfig.RemoteTargetingLineColor ?? base.RemoteTargetingLineColor;
+    public override Color RemoteTargetingLineColor => this.ColorsConfig.RemoteTargetingLineColor ?? base.RemoteTargetingLineColor;
 
     /// <inheritdoc cref="CharacterColorAssets.RemoteTargetingLineOutline"/>
-    public sealed override Color RemoteTargetingLineOutline =>
+    public override Color RemoteTargetingLineOutline =>
         this.ColorsConfig.RemoteTargetingLineOutline ?? base.RemoteTargetingLineOutline;
 
     // --- 数值与身份 ---
 
     /// <inheritdoc cref="CharacterStatsAssets.Gender"/>
-    public sealed override CharacterGender Gender => this.StatsConfig.Gender;
+    public override CharacterGender Gender => this.StatsConfig.Gender;
 
     /// <inheritdoc cref="CharacterStatsAssets.StartingHp"/>
-    public sealed override int StartingHp => this.StatsConfig.StartingHp;
+    public override int StartingHp => this.StatsConfig.StartingHp;
 
     /// <inheritdoc cref="CharacterStatsAssets.StartingGold"/>
-    public sealed override int StartingGold => this.StatsConfig.StartingGold ?? base.StartingGold;
+    public override int StartingGold => this.StatsConfig.StartingGold ?? base.StartingGold;
 
     /// <inheritdoc cref="CharacterStatsAssets.MaxEnergy"/>
-    public sealed override int MaxEnergy => this.StatsConfig.MaxEnergy ?? base.MaxEnergy;
+    public override int MaxEnergy => this.StatsConfig.MaxEnergy ?? base.MaxEnergy;
 
     /// <inheritdoc cref="CharacterStatsAssets.BaseOrbSlotCount"/>
-    public sealed override int BaseOrbSlotCount => this.StatsConfig.BaseOrbSlotCount ?? base.BaseOrbSlotCount;
+    public override int BaseOrbSlotCount => this.StatsConfig.BaseOrbSlotCount ?? base.BaseOrbSlotCount;
 
     /// <inheritdoc cref="CharacterStatsAssets.ShouldAlwaysShowStarCounter"/>
-    public sealed override bool ShouldAlwaysShowStarCounter =>
+    public override bool ShouldAlwaysShowStarCounter =>
         this.StatsConfig.ShouldAlwaysShowStarCounter ?? base.ShouldAlwaysShowStarCounter;
 
     // --- 加载项与池 ---
 
     /// <inheritdoc cref="CharacterLoadoutAssets.CardPool"/>
-    public sealed override CardPoolModel CardPool => this.LoadoutConfig.CardPool;
+    public override CardPoolModel CardPool => this.LoadoutConfig.CardPool;
 
     /// <inheritdoc cref="CharacterLoadoutAssets.RelicPool"/>
-    public sealed override RelicPoolModel RelicPool => this.LoadoutConfig.RelicPool;
+    public override RelicPoolModel RelicPool => this.LoadoutConfig.RelicPool;
 
     /// <inheritdoc cref="CharacterLoadoutAssets.PotionPool"/>
-    public sealed override PotionPoolModel PotionPool => this.LoadoutConfig.PotionPool;
+    public override PotionPoolModel PotionPool => this.LoadoutConfig.PotionPool;
 
     /// <inheritdoc cref="CharacterLoadoutAssets.StartingDeck"/>
-    public sealed override IEnumerable<CardModel> StartingDeck => this.LoadoutConfig.StartingDeck;
+    public override IEnumerable<CardModel> StartingDeck => this.LoadoutConfig.StartingDeck;
 
     /// <inheritdoc cref="CharacterLoadoutAssets.StartingRelics"/>
-    public sealed override IReadOnlyList<RelicModel> StartingRelics => this.LoadoutConfig.StartingRelics;
+    public override IReadOnlyList<RelicModel> StartingRelics => this.LoadoutConfig.StartingRelics;
 
     /// <inheritdoc cref="CharacterLoadoutAssets.StartingPotions"/>
-    public sealed override IReadOnlyList<PotionModel> StartingPotions => this.LoadoutConfig.StartingPotions ?? base.StartingPotions;
+    public override IReadOnlyList<PotionModel> StartingPotions => this.LoadoutConfig.StartingPotions ?? base.StartingPotions;
 
     // --- 视觉与动画 ---
 
     /// <inheritdoc cref="CharacterVisualAssets.AttackAnimDelay"/>
-    public sealed override float AttackAnimDelay => this.VisualAssets?.AttackAnimDelay ?? base.AttackAnimDelay;
+    public override float AttackAnimDelay => this.VisualAssets?.AttackAnimDelay ?? base.AttackAnimDelay;
 
     /// <inheritdoc cref="CharacterVisualAssets.CastAnimDelay"/>
-    public sealed override float CastAnimDelay => this.VisualAssets?.CastAnimDelay ?? base.CastAnimDelay;
+    public override float CastAnimDelay => this.VisualAssets?.CastAnimDelay ?? base.CastAnimDelay;
 
     /// <inheritdoc cref="CharacterVisualAssets.VisualPath"/>
-    public sealed override string CustomVisualPath => this.VisualAssets?.VisualPath ?? base.CustomVisualPath;
+    public override string CustomVisualPath => this.VisualAssets?.VisualPath ?? base.CustomVisualPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.TrailPath"/>
-    public sealed override string CustomTrailPath => this.VisualAssets?.TrailPath ?? base.CustomTrailPath;
+    public override string CustomTrailPath => this.VisualAssets?.TrailPath ?? base.CustomTrailPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.EnergyCounterPath"/>
-    public sealed override string CustomEnergyCounterPath => this.VisualAssets?.EnergyCounterPath ?? base.CustomEnergyCounterPath;
+    public override string CustomEnergyCounterPath => this.VisualAssets?.EnergyCounterPath ?? base.CustomEnergyCounterPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.RestSiteAnimPath"/>
-    public sealed override string CustomRestSiteAnimPath => this.VisualAssets?.RestSiteAnimPath ?? base.CustomRestSiteAnimPath;
+    public override string CustomRestSiteAnimPath => this.VisualAssets?.RestSiteAnimPath ?? base.CustomRestSiteAnimPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.MerchantAnimPath"/>
-    public sealed override string CustomMerchantAnimPath => this.VisualAssets?.MerchantAnimPath ?? base.CustomMerchantAnimPath;
+    public override string CustomMerchantAnimPath => this.VisualAssets?.MerchantAnimPath ?? base.CustomMerchantAnimPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.CharacterSelectTransitionPath"/>
-    public sealed override string CustomCharacterSelectTransitionPath =>
+    public override string CustomCharacterSelectTransitionPath =>
         this.VisualAssets?.CharacterSelectTransitionPath ?? base.CustomCharacterSelectTransitionPath;
 
     /// <inheritdoc cref="CharacterVisualAssets.ArchitectAttackVfx"/>
-    public sealed override List<string> GetArchitectAttackVfx() => this.VisualAssets?.ArchitectAttackVfx ?? base.GetArchitectAttackVfx();
+    public override List<string> GetArchitectAttackVfx() => this.VisualAssets?.ArchitectAttackVfx ?? base.GetArchitectAttackVfx();
 
     // --- UI 与图标 ---
 
     /// <inheritdoc cref="CharacterUiAssets.IconTexturePath"/>
-    public sealed override string? CustomIconTexturePath => this.UiAssets?.IconTexturePath ?? base.CustomIconTexturePath;
+    public override string? CustomIconTexturePath => this.UiAssets?.IconTexturePath ?? base.CustomIconTexturePath;
 
     /// <inheritdoc cref="CharacterUiAssets.IconPath"/>
-    public sealed override string CustomIconPath => this.UiAssets?.IconPath ?? base.CustomIconPath;
+    public override string CustomIconPath => this.UiAssets?.IconPath ?? base.CustomIconPath;
 
     /// <inheritdoc cref="CharacterUiAssets.CharacterSelectBg"/>
-    public sealed override string CustomCharacterSelectBg => this.UiAssets?.CharacterSelectBg ?? base.CustomCharacterSelectBg;
+    public override string CustomCharacterSelectBg => this.UiAssets?.CharacterSelectBg ?? base.CustomCharacterSelectBg;
 
     /// <inheritdoc cref="CharacterUiAssets.CharacterSelectIconPath"/>
-    public sealed override string? CustomCharacterSelectIconPath =>
+    public override string? CustomCharacterSelectIconPath =>
         this.UiAssets?.CharacterSelectIconPath ?? base.CustomCharacterSelectIconPath;
 
     /// <inheritdoc cref="CharacterUiAssets.CharacterSelectLockedIconPath"/>
-    public sealed override string? CustomCharacterSelectLockedIconPath =>
+    public override string? CustomCharacterSelectLockedIconPath =>
         this.UiAssets?.CharacterSelectLockedIconPath ?? base.CustomCharacterSelectLockedIconPath;
 
     /// <inheritdoc cref="CharacterUiAssets.MapMarkerPath"/>
-    public sealed override string? CustomMapMarkerPath => this.UiAssets?.MapMarkerPath ?? base.CustomMapMarkerPath;
+    public override string? CustomMapMarkerPath => this.UiAssets?.MapMarkerPath ?? base.CustomMapMarkerPath;
 
     // --- 多人模式 ---
 
     /// <inheritdoc cref="CharacterMultiplayerAssets.ArmPointingTexturePath"/>
-    public sealed override string CustomArmPointingTexturePath =>
+    public override string CustomArmPointingTexturePath =>
         this.MultiplayerAssets?.ArmPointingTexturePath ?? base.CustomArmPointingTexturePath;
 
     /// <inheritdoc cref="CharacterMultiplayerAssets.ArmRockTexturePath"/>
-    public sealed override string CustomArmRockTexturePath => this.MultiplayerAssets?.ArmRockTexturePath ?? base.CustomArmRockTexturePath;
+    public override string CustomArmRockTexturePath => this.MultiplayerAssets?.ArmRockTexturePath ?? base.CustomArmRockTexturePath;
 
     /// <inheritdoc cref="CharacterMultiplayerAssets.ArmPaperTexturePath"/>
-    public sealed override string CustomArmPaperTexturePath =>
+    public override string CustomArmPaperTexturePath =>
         this.MultiplayerAssets?.ArmPaperTexturePath ?? base.CustomArmPaperTexturePath;
 
     /// <inheritdoc cref="CharacterMultiplayerAssets.ArmScissorsTexturePath"/>
-    public sealed override string CustomArmScissorsTexturePath =>
+    public override string CustomArmScissorsTexturePath =>
         this.MultiplayerAssets?.ArmScissorsTexturePath ?? base.CustomArmScissorsTexturePath;
 
     // --- 音效 ---
 
     /// <inheritdoc cref="CharacterSfxAssets.AttackSfx"/>
-    public sealed override string CustomAttackSfx => this.SfxAssets?.AttackSfx ?? base.CustomAttackSfx;
+    public override string CustomAttackSfx => this.SfxAssets?.AttackSfx ?? base.CustomAttackSfx;
 
     /// <inheritdoc cref="CharacterSfxAssets.CastSfx"/>
-    public sealed override string CustomCastSfx => this.SfxAssets?.CastSfx ?? base.CustomCastSfx;
+    public override string CustomCastSfx => this.SfxAssets?.CastSfx ?? base.CustomCastSfx;
 
     /// <inheritdoc cref="CharacterSfxAssets.DeathSfx"/>
-    public sealed override string CustomDeathSfx => this.SfxAssets?.DeathSfx ?? base.CustomDeathSfx;
+    public override string CustomDeathSfx => this.SfxAssets?.DeathSfx ?? base.CustomDeathSfx;
 
     /// <inheritdoc cref="CharacterSfxAssets.CharacterSelectSfx"/>
-    public sealed override string CharacterSelectSfx => this.SfxAssets?.CharacterSelectSfx ?? base.CharacterSelectSfx;
+    public override string CharacterSelectSfx => this.SfxAssets?.CharacterSelectSfx ?? base.CharacterSelectSfx;
 
     /// <inheritdoc cref="CharacterSfxAssets.CharacterTransitionSfx"/>
-    public sealed override string CharacterTransitionSfx => this.SfxAssets?.CharacterTransitionSfx ?? PlaceholderCharacterTransitionSfx;
+    public override string CharacterTransitionSfx => this.SfxAssets?.CharacterTransitionSfx ?? PlaceholderCharacterTransitionSfx;
 
     /// <summary>
     /// 获取角色的过渡音效

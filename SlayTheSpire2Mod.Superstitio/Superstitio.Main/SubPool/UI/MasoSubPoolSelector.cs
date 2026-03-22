@@ -40,7 +40,7 @@ public class MasoSubPoolSelector : VBoxContainer
         foreach (var pool in allPools)
         {
             var checkBox = new CheckButton();
-            checkBox.Text = pool.GetType().Name; // 你可以后续给 SubCardPool 加个 DisplayName
+            checkBox.Text = pool.Id; // 可以后续给 SubCardPool 加个 DisplayName，但是本地化相关现在还没有弄
             
             checkBox.ButtonPressed = SubPoolManager.IsPoolEnabled<MasoCardPool>(pool);
 

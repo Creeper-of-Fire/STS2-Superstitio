@@ -6,6 +6,7 @@ using Superstitio.Main.Maso.Cards.Base;
 using Superstitio.Main.Maso.Cards.Kongfu;
 using Superstitio.Main.Maso.Pools;
 using Superstitio.Main.Maso.Relics;
+using Superstitio.Main.SubPool;
 using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso;
@@ -44,6 +45,7 @@ public class MasoCharacter : SuperstitioCharacter
         StartingRelics =
         [
             MasoStartRelic.Relic(),
+            CardPoolSelectionRelic.Relic(),
         ],
     };
 

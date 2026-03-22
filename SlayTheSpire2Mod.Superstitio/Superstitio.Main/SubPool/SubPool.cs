@@ -12,6 +12,11 @@ namespace Superstitio.Main.SubPool;
 public abstract class SubPool
 {
     /// <summary>
+    /// 子池的唯一标识符，用于序列化和查找
+    /// </summary>
+    public abstract string Id { get; }
+
+    /// <summary>
     /// 这个池中包含的所有卡牌。
     /// </summary>
     public abstract IEnumerable<CardModel> PoolCards { get; }
@@ -30,6 +35,11 @@ public abstract class SubPool
 /// <typeparam name="TSelf">子类自身类型</typeparam>
 public abstract class SubPool<TSelf> : SubPool where TSelf : SubPool<TSelf>
 {
+    /// <summary>
+    /// 使用类型名作为唯一标识符
+    /// </summary>
+    public override string Id => typeof(TSelf).Name;
+    
     /// <summary>
     /// 获取此池中包含的所有卡牌实例。
     /// 结果会被缓存，多次调用不会重复创建实例。

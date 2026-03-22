@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Maso;
 using Superstitio.Main.Maso.Pools;
 
 namespace Superstitio.Main.SubPool.UI;
@@ -62,6 +63,18 @@ public static class SubPoolManager
     }
 
     /// <summary>
+    /// 供 主池/UI 使用：检查或获取状态
+    /// </summary>
+    public static IEnumerable<SubPool> GetEnabledSubPools(Type typeCardPool)
+    {
+        if (!typeof(CardPoolModel).IsAssignableFrom(typeCardPool))
+            throw new ArgumentException($"[MasoMod] 获取子池状态失败：类型不是 {nameof(CardPoolModel)}，而是 {typeCardPool.Name}。");
+        if (EnabledStateMap.TryGetValue(typeCardPool, out var enabledPools))
+            return enabledPools;
+        return [];
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="pool"></param>
@@ -90,24 +103,11 @@ public static class SubPoolManager
     /// <summary>
     /// 
     /// </summary>
-    /// <remarks>
-    /// 是的，超级帅气的，C#14的拓展语法！
-    /// </remarks>
-    /// <param name="cardPool"></param>
-    /// <typeparam name="TCardPool"></typeparam>
-    extension<TCardPool>(IWithSubPool<TCardPool> cardPool) where TCardPool : CardPoolModel
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public static SubPool? GetSubPoolById(string id)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<CardModel> AllSubPoolCards =>
-            GetEnabledSubPools<TCardPool>().SelectMany(x => x.PoolCards);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<PotionModel> AllSubPoolPotions =>
-            GetEnabledSubPools<TCardPool>().SelectMany(x => x.PoolPotions);
+        return AllUniversalSubPools.FirstOrDefault(p => p.Id == id);
     }
 }
 
