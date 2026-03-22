@@ -1,3 +1,6 @@
+# Contributed by: Creeper-of-Fire
+# GitHub: https://github.com/Creeper-of-Fire
+
 import os
 import sys
 

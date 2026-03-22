@@ -1,5 +1,7 @@
 ﻿#!/usr/bin/env python3
 # build_mod.py - 统一的模组构建脚本
+# Contributed by: Creeper-of-Fire
+# GitHub: https://github.com/Creeper-of-Fire
 
 import os
 import sys
