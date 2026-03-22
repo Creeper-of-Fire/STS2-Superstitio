@@ -7,13 +7,29 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace Superstitio.Main.Features.Corruptus;
 
 /// <summary>
+/// 定义拥有腐朽缓冲组件的实体接口。
+/// </summary>
+public interface ICorruptusBuffer
+{
+    /// <summary>
+    /// 获取腐朽缓冲组件实例。
+    /// </summary>
+    public CorruptusBufferComponent CorruptusBufferComponent { get; }
+
+    /// <summary>
+    /// 获取拥有该缓冲的生物实体。
+    /// </summary>
+    public Creature OwnerCreature { get; }
+}
+
+/// <summary>
 /// 腐朽缓冲组件。
 /// 负责将生物受到的伤害转换为腐朽能力层数，并处理腐朽伤害的触发逻辑。
 /// </summary>
 public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
 {
     private ICorruptusBuffer CorruptusBuffer { get; } = corruptusBuffer;
-    
+
     /// <summary>
     /// 标记是否正在处理腐朽伤害，防止递归触发。
     /// </summary>
