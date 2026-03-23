@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.Maso;
 using Superstitio.Main.Maso.Pools;
 
 namespace Superstitio.Main.SubPool.UI;
@@ -108,6 +108,40 @@ public static class SubPoolManager
     public static SubPool? GetSubPoolById(string id)
     {
         return AllUniversalSubPools.FirstOrDefault(p => p.Id == id);
+    }
+    
+    
+    /// <summary>
+    /// 统一过滤逻辑
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="cards"></param>
+    /// <returns></returns>
+    public static IEnumerable<CardModel> FilterCardList(Player player, IEnumerable<CardModel> cards)
+    {
+        // 获取玩家启用的子池（可以从遗物获取，也可以从其他配置）
+        if (player.Relics.FirstOrDefault(r => r is IHoldCardPoolSelection) is not IHoldCardPoolSelection relic) 
+            return cards;
+
+        // 获取启用的子池ID列表
+        var enabledSubPoolIds = relic.SelectedSubPoolIds;
+        
+        // 过滤卡牌：只要卡牌属于任意一个启用的子池
+        return cards.Where(c => IsInAnySelectedPool(c, enabledSubPoolIds));
+    }
+
+    private static bool IsInAnySelectedPool(CardModel card, IEnumerable<string> subPoolIds)
+    {
+        var canonicalCard = card.CanonicalInstance;
+    
+        foreach (var poolId in subPoolIds)
+        {
+            var subPool = GetSubPoolById(poolId);
+            if (subPool != null && subPool.PoolCards.Any(pc => pc.CanonicalInstance == canonicalCard))
+                return true;
+        }
+    
+        return false;
     }
 }
 

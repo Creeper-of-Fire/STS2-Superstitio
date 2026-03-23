@@ -1,0 +1,32 @@
+﻿[DEFEND_MASO]
+description = "获得{Block:diff()}点[gold]格挡[/gold]。"
+flavor = "痛苦是最好的盾牌。"
+title = "防御"
+
+[ECHOING_BLADE]
+description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+flavor = "每一次挥击，都会在敌人的伤口上留下回响。"
+title = "回响之刃"
+hanging_effect = "造成{Damage:diff()}点伤害"
+
+[MASO_BASE_CARD_TEST]
+description = "测试卡牌。"
+flavor = "用于调试。"
+title = "测试卡牌"
+
+[RAGE_CHARGE]
+description = "获得{RageVar:diff()}点[gold]怒火[/gold]。\n{CardHangingDescription}"
+flavor = "蓄势待发，只待一击。"
+title = "蓄势待发"
+hanging_effect = "抽1张牌"
+
+[STRIKE_MASO]
+description = "造成{Damage:diff()}点伤害。"
+flavor = "简单的攻击，却蕴含着苦行者的力量。"
+title = "打击"
+
+[SUSPENDING_STRIKE]
+description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+flavor = "刀刃悬于空中，随时准备再次落下。"
+title = "悬刃"
+hanging_effect = "抽1张牌"

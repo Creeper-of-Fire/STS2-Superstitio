@@ -1,4 +1,5 @@
 ﻿using BaseLib.Abstracts;
+using JetBrains.Annotations;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -27,8 +28,21 @@ public class HangingCardPower : CustomPowerModel, IHangingCarrier
     /// 在 hover 提示中显示被吸收的卡牌
     /// </summary>
     /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        this.HangingCard is null ? [] : [HoverTipFactory.FromCard(this.HangingCard)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            if (this.HangingCard is null)
+                return base.ExtraHoverTips;
+
+            return
+            [
+                HoverTipFactory.FromCard(this.HangingCard),
+                // TODO 这样子的显示效果不佳。另外，power的动态效果有限，并且没有预留复杂的Description.Add的方便的位置，可能要之后研究一下。
+                ..this.HangingCardToken?.ExtraHoverTips ?? [],
+            ];
+        }
+    }
 
     /// <summary>
     /// 挂起卡牌的挂起者
@@ -44,7 +58,7 @@ public class HangingCardPower : CustomPowerModel, IHangingCarrier
     /// 卡牌的原始拥有者
     /// </summary>
     public Player? OriginalOwner => this.HangingCardToken?.OriginalOwner;
-    
+
     /// <summary>
     /// 挂起卡牌
     /// </summary>

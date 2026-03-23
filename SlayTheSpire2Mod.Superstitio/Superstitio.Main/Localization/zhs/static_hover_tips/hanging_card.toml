@@ -1,0 +1,26 @@
+﻿[Hanging]
+general_description = "打出后，送入[orange]{SequenceName}[/orange]而非牌堆，直到效果耗尽。"
+card_description_frame = "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
+keyword_title = "{HangingKeyword}效果"
+
+[Hanging.Sequence]
+name = "合力序列"
+#description = "合力序列中的牌会显示在屏幕上方，这是一个新的牌组空间，其中的卡牌会在满足条件时发动效果。（所有合力序列中的卡牌正常受力量等效果影响。）"
+description = "[orange]合力序列[/orange]中的卡牌会在满足条件时发动效果。"
+
+[Hanging.Follow]
+keyword = "伴随"
+description = "后续{HangingTriggerVar:diff()}次打出{CardType}时，{HangingEffect}。"
+
+[Hanging.Delay]
+keyword = "延缓"
+description = "直到打出{HangingTriggerVar:diff()}次{CardType}后，{HangingEffect}。"
+
+[CardType]
+any = "[purple]任意牌[/purple]"
+attack = "[red]攻击牌[/red]"
+power = "[blue]能力牌[/blue]"
+skill = "[green]技能牌[/green]"
+curse = "诅咒牌"
+quest = "任务牌"
+status = "状态牌"

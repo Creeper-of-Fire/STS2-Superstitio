@@ -25,7 +25,7 @@ public static class Plugin
     {
         Log.Info("[Superstitio] 已加载！");
         
-        Harmony harmony = new Harmony(ModName);
+        var harmony = new Harmony(ModName);
         harmony.PatchAll();
 
         RegisterSubPools();

@@ -1,12 +1,22 @@
-﻿using MegaCrit.Sts2.Core.Entities.Cards;
+﻿using System.Diagnostics.CodeAnalysis;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 
 namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 增强版挂起令牌 - 响应即减少计数，提供触发时和结束时两个钩子
 /// </summary>
-public abstract record AutoHangingCardToken : HangingCardToken
+[method: SetsRequiredMembers]
+public abstract record AutoHangingCardToken(
+    int RemainCount,
+    int InitialCount,
+    CardModel HangingCard,
+    Player OriginalOwner,
+    PileType ReturnPileType
+) : HangingCardToken(RemainCount, InitialCount, HangingCard, OriginalOwner, ReturnPileType)
 {
     /// <summary>
     /// 过滤条件：判断是否应该响应这次卡牌打出
@@ -42,7 +52,7 @@ public abstract record AutoHangingCardToken : HangingCardToken
         // 打出自身（不是复制）的那次，忽略。
         if (cardPlay.Card == this.HangingCard)
             return;
-        
+
         // 1. 过滤检查
         if (!this.ShouldRespond(context, cardPlay))
             return;

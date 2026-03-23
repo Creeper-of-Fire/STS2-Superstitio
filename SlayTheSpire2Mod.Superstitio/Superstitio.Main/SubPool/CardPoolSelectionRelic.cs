@@ -1,4 +1,5 @@
-﻿using BaseLib.Utils;
+﻿using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
@@ -7,22 +8,20 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Saves.Runs;
 using Superstitio.Main.Maso.Pools;
 using Superstitio.Main.SubPool.UI;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.SubPool;
 
-#pragma warning disable CS1591
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 /// <summary>
 /// 卡池选择遗物
 /// </summary>
-[Pool(typeof(MasoRelicPool))]
-public class CardPoolSelectionRelic : RelicModel, IHoldCardPoolSelection
+public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSelection
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
-    public override bool ShouldReceiveCombatHooks => false;
-
     [SavedProperty]
-    public List<string> SelectedSubPoolIds
+    public virtual string SelectedSubPoolIdsRaw
     {
         get;
         set
@@ -30,21 +29,42 @@ public class CardPoolSelectionRelic : RelicModel, IHoldCardPoolSelection
             this.AssertMutable();
             field = value;
         }
-    } = [];
+    } = string.Empty;
+    
+    
+    [SavedProperty] public virtual bool IsInitialized { get; set; } = false;
+
+    public List<string> SelectedSubPoolIds
+    {
+        get => string.IsNullOrEmpty(this.SelectedSubPoolIdsRaw) 
+            ? []
+            : this.SelectedSubPoolIdsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+        set =>
+            // 当修改列表时，自动将其拍扁成字符串存入 Raw 属性
+            this.SelectedSubPoolIdsRaw = (value.Count == 0) ? string.Empty : string.Join(",", value);
+    }
+
 
     // 在遗物被添加到玩家时，如果是新游戏（不是读档），就从 SubPoolManager 读取配置
     public override async Task AfterObtained()
     {
         await base.AfterObtained();
 
-        if (this.SelectedSubPoolIds.Count == 0)
+        if (!this.IsInitialized)
         {
             var enabledSubPools = SubPoolManager.GetEnabledSubPools(this.Owner.Character.CardPool.GetType());
             this.SelectedSubPoolIds = enabledSubPools
                 .Select(pool => pool.Id)
                 .ToList();
 
-            Log.Info($"[MasoMod] 遗物 {this.Id.Entry} 初始化，读取了 {this.SelectedSubPoolIds.Count} 个子池选择");
+            // 3. 初始化完成后，立刻设为 true
+            this.IsInitialized = true;
+
+            Log.Info($"[MasoMod] 遗物 {this.Id.Entry} 首次获得，完成初始化。");
+        }
+        else
+        {
+            Log.Info($"[MasoMod] 遗物 {this.Id.Entry} 从存档加载，跳过初始化。数量: {this.SelectedSubPoolIds.Count}");
         }
     }
 
@@ -52,21 +72,24 @@ public class CardPoolSelectionRelic : RelicModel, IHoldCardPoolSelection
     {
         get
         {
-            if (this.SelectedSubPoolIds.Count == 0) yield break;
+            if (this.SelectedSubPoolIds.Count == 0)
+                return base.ExtraHoverTips;
 
-            var poolList = string.Join("\n", this.SelectedSubPoolIds.Select(id => $"• {GetSubPoolName(id)}"));
-            yield return new HoverTip(
-                this.Title,
-                poolList
-            );
+            string poolList = string.Join("\n", this.SelectedSubPoolIds.Select(id => $"• {GetSubPoolName(id)}"));
+            return
+            [
+                new HoverTip(
+                    SuperstitioLocStringFactory.ExtendLocString("CARD_POOL", "tip", "subpool_list_tip", "title"),
+                    poolList
+                )
+            ];
         }
     }
 
     private static string GetSubPoolName(string poolId)
     {
-        return poolId;
-        // var loc = new LocString("superstitio", $"subpool_{poolId}.name");
-        // return loc.Exists() ? loc.GetFormattedText() : poolId;
+        var loc = SuperstitioLocStringFactory.ExtendLocString($"SUBPOOL_{poolId}", "name");
+        return loc.Exists() ? loc.GetFormattedText() : poolId;
     }
 }
 

@@ -50,7 +50,7 @@ public class RagePower : CustomPowerModel
             // for 循环的次数在进入时已经确定，不存在死循环风险
             for (int i = 0; i < triggersNeeded; i++)
             {
-                await TriggerAngry(this, applier, cardSource);
+                await this.TriggerAngry(this, applier, cardSource);
             }
         }
 
@@ -71,7 +71,7 @@ public class RagePower : CustomPowerModel
         // 调用怒火阈值达到后的钩子方法
         await Hook.AfterRageThresholdReached(runState, combatState, this.Owner, ragePower, applier, cardSource);
         // 可以在这里添加视觉和音效反馈
-        if (Owner.IsPlayer)
+        if (this.Owner.IsPlayer)
         {
             // 触发特效
         }
@@ -127,7 +127,7 @@ public static class HookExtension
         public static async Task AfterRageThresholdReached(IRunState runState, CombatState? combatState, Creature owner,
             RagePower ragePower, Creature? applier, CardModel? cardSource)
         {
-            foreach (AbstractModel model in runState.IterateHookListeners(combatState))
+            foreach (var model in runState.IterateHookListeners(combatState))
             {
                 if (model is not IAfterRageThresholdReached thresholdReachedModel)
                     continue;

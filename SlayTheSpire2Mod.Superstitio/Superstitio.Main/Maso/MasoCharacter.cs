@@ -1,6 +1,7 @@
 ﻿using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Maso.Cards.Base;
 using Superstitio.Main.Maso.Cards.Kongfu;
@@ -17,20 +18,20 @@ namespace Superstitio.Main.Maso;
 public class MasoCharacter : SuperstitioCharacter
 {
     /// <inheritdoc />
-    protected override CharacterColorAssets ColorsConfig => field ??= new()
+    protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssets
     {
         NameColor = new Color(0.5f, 0.5f, 1f)
     };
 
     /// <inheritdoc />
-    protected override CharacterStatsAssets StatsConfig => field ??= new()
+    protected override CharacterStatsAssets StatsConfig => field ??= new CharacterStatsAssets
     {
         StartingHp = 70,
         Gender = CharacterGender.Feminine,
     };
 
     /// <inheritdoc />
-    protected override CharacterLoadoutAssets LoadoutConfig => field ??= new()
+    protected override CharacterLoadoutAssets LoadoutConfig => field ??= new CharacterLoadoutAssets
     {
         CardPool = ModelDb.CardPool<MasoCardPool>(),
         RelicPool = ModelDb.RelicPool<MasoRelicPool>(),
@@ -45,7 +46,6 @@ public class MasoCharacter : SuperstitioCharacter
         StartingRelics =
         [
             MasoStartRelic.Relic(),
-            CardPoolSelectionRelic.Relic(),
         ],
     };
 

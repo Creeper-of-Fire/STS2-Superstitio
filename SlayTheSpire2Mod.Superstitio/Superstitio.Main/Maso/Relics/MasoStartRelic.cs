@@ -6,10 +6,12 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Saves.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Features.Rage;
 using Superstitio.Main.Maso.Pools;
+using Superstitio.Main.SubPool;
 
 namespace Superstitio.Main.Maso.Relics;
 
@@ -17,13 +19,29 @@ namespace Superstitio.Main.Maso.Relics;
 /// Maso 的初始遗物
 /// </summary>
 [Pool(typeof(MasoRelicPool))]
-public class MasoStartRelic : CustomRelicModel, ICorruptusBuffer, IAfterRageThresholdReached
+public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRageThresholdReached
 {
     /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     /// <inheritdoc />
-    public CorruptusBufferComponent CorruptusBufferComponent => field ??= new(this);
+    public CorruptusBufferComponent CorruptusBufferComponent => field ??= new CorruptusBufferComponent(this);
+
+    /// <inheritdoc />
+    [SavedProperty]
+    public override string SelectedSubPoolIdsRaw
+    {
+        get;
+        set
+        {
+            this.AssertMutable();
+            field = value;
+        }
+    } = string.Empty;
+
+    /// <inheritdoc />
+    [SavedProperty]
+    public override bool IsInitialized { get; set; } = false;
 
     /// <inheritdoc />
     public Creature OwnerCreature => this.Owner.Creature;

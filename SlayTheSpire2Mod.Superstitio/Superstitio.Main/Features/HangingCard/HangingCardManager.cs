@@ -19,7 +19,7 @@ public static class HangingCardManager
     /// <returns>一个表示异步操作完成的任务。</returns>
     public static async Task HangCard(HangingCardToken hangingCardToken, CardModel? cardReason)
     {
-        HangingCardPower hangingPower = ModelDb.GetMutablePower<HangingCardPower>();
+        var hangingPower = ModelDb.GetMutablePower<HangingCardPower>();
 
         await hangingPower.HangCard(hangingCardToken);
 

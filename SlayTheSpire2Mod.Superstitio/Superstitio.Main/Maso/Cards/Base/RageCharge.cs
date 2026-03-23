@@ -1,7 +1,10 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.HangingCard;
@@ -12,13 +15,13 @@ namespace Superstitio.Main.Maso.Cards.Base;
 /// <summary>
 /// 蓄势待发 - 0费技能，挂起自身，获得4(6)点怒火。打出任意2张牌后，抽1张牌。
 /// </summary>
-public class RageCharge() : MasoBaseCard(new()
+public class RageCharge() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Skill,
     Rarity = CardRarity.Uncommon,
     Target = TargetType.Self,
-})
+}), IWithHangingConfig
 {
     /// <summary>
     /// 基础怒火值
@@ -51,24 +54,30 @@ public class RageCharge() : MasoBaseCard(new()
         return PileType.None; // 挂起后不进入弃牌堆
     }
 
+    /// <inheritdoc />
+    public HangingCardConfig HangingCardConfig => new(
+        Card: this,
+        HangingType: HangingType.Delay,
+        TriggerCount: this.DynamicVars.TriggerCount,
+        CardTypeFilter: CardType.Attack
+    );
 
-    /// <summary>
-    /// 挂起令牌：记录打出任意2张牌后抽1张牌
-    /// </summary>
-    public record GatheringMomentumToken : AutoHangingCardToken
+    /// <inheritdoc />
+    protected override void AddExtraArgsToDescription(LocString description)
     {
-        /// <summary>
-        /// 响应任意卡牌打出（不限制类型）
-        /// </summary>
-        protected override bool ShouldRespond(PlayerChoiceContext context, CardPlay cardPlay) => true;
-
-        /// <inheritdoc />
-        protected override async Task OnEnd(PlayerChoiceContext context, CardPlay cardPlay)
-        {
-            // 抽1张牌
-            await CardPileCmd.Draw(context, 1, this.OriginalOwner, fromHandDraw: true);
-        }
+        base.AddExtraArgsToDescription(description);
+        HangingDescriptionBuilder.AddExtraArgsToDescription(
+            description,
+            this.HangingCardConfig
+        );
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        ..HangingDescriptionBuilder.GetHoverTips(this.HangingCardConfig, showHangingTotalDescription: true),
+    ];
 
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -80,14 +89,16 @@ public class RageCharge() : MasoBaseCard(new()
         await RageManager.ModifyRage(this.Owner.Creature, rageAmount, this.Owner.Creature, cardPlay.Card);
 
         // 创建挂起令牌
-        var token = new GatheringMomentumToken
+        var token = new AutoHangingCardTokenWithConfig(
+            this.HangingCardConfig,
+            base.GetResultPileType())
         {
-            HangingCard = this,
-            OriginalOwner = this.Owner,
-            RemainCount = TriggerThreshold,
-            InitialCount = TriggerThreshold,
             ShouldManualRemoveFromBattle = false,
-            ReturnPileType = base.GetResultPileType(),
+            HangingAction = async (context, _) =>
+            {
+                // 抽 1 张牌
+                await CardPileCmd.Draw(context, 1, this.Owner, fromHandDraw: true);
+            }
         };
 
         // 挂起自身

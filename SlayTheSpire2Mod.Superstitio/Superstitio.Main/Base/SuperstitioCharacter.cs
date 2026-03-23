@@ -3,7 +3,7 @@ using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Utils;
+namespace Superstitio.Main.Base;
 
 /// <summary>
 /// 角色全套色彩配置。
