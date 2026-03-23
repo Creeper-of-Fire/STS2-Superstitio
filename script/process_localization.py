@@ -60,14 +60,32 @@ def process_localization(solution_dir, mod_id, output_dir):
                     toml_files_to_process.append(category_path)
 
                 for toml_file in toml_files_to_process:
-                    with open(toml_file, "rb") as f:
-                        try:
-                            data = tomllib.load(f)
-                            # 合并数据，后加载的会覆盖先加载的
-                            aggregated_data[lang][category_name].update(data)
-                        except tomllib.TOMLDecodeError as e:
-                            print(f"解析 TOML 文件失败: {toml_file}\n{e}", file=sys.stderr)
-                            sys.exit(1)
+                    try:
+                        # 先以二进制模式读取，处理可能的 BOM
+                        with open(toml_file, 'rb') as f:
+                            content = f.read()
+                
+                            # 检查并移除 UTF-8 BOM
+                            if content.startswith(b'\xef\xbb\xbf'):
+                                content = content[3:]
+                
+                            # 尝试多种编码
+                            for encoding in ['utf-8', 'utf-8-sig', 'gbk', 'gb2312', 'latin-1']:
+                                try:
+                                    decoded_content = content.decode(encoding)
+                                    data = tomllib.loads(decoded_content)
+                                    aggregated_data[lang][category_name].update(data)
+                                    break
+                                except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+                                    continue
+                            else:
+                                # 所有编码都失败
+                                print(f"解析 TOML 文件失败（编码问题）: {toml_file}", file=sys.stderr)
+                                sys.exit(1)
+                
+                    except Exception as e:
+                        print(f"解析 TOML 文件失败: {toml_file}\n{e}", file=sys.stderr)
+                        sys.exit(1)
 
     # 3. 转换并写入 JSON
     print("\n正在转换 TOML 为 JSON 并添加 ModID 前缀...")
