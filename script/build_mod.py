@@ -23,6 +23,8 @@ class ModBuilder:
         self.output_dir = self._get_output_dir()
         self.script_dir = self.solution_dir.parent / "script"
         self.mod_name = self._get_mod_name()
+        self.game_dir = self._get_game_dir()
+        self.game_exe = self.game_dir / "SlayTheSpire2.exe"
 
     def _get_output_dir(self):
         """从 MSBuild 获取实际输出路径"""
@@ -51,6 +53,96 @@ class ModBuilder:
                 return data.get('id', 'Superstitio')
         return 'Superstitio'
 
+    def _get_game_dir(self):
+        """从环境变量获取游戏目录"""
+        from dotenv import load_dotenv
+        load_dotenv()
+        return Path(os.environ.get('STS2_GAME_DIR'))
+
+    def kill_game(self):
+        """快速杀死正在运行的杀戮尖塔2进程"""
+        import psutil
+        import time
+
+        if not self.game_exe or not self.game_exe.exists():
+            print("⚠️  未配置游戏目录或找不到游戏可执行文件")
+            return False
+
+        game_name = f"{self.game_exe.stem}.exe".lower()
+        game_path = str(self.game_exe).lower()
+        killed = False
+
+        # 单次快速扫描
+        for proc in psutil.process_iter(['pid', 'name']):
+            try:
+                # 先快速检查进程名（最轻量）
+                if proc.info['name'] and proc.info['name'].lower() == game_name:
+                    proc.terminate()
+                    killed = True
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+
+        # 如果通过进程名没找到，再检查完整路径（更慢的fallback）
+        if not killed:
+            for proc in psutil.process_iter(['pid', 'exe']):
+                try:
+                    if proc.info['exe'] and proc.info['exe'].lower() == game_path:
+                        proc.terminate()
+                        killed = True
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    continue
+
+        if killed:
+            # 批量等待进程退出，使用短轮询
+            timeout = 2.0
+            start = time.time()
+            while time.time() - start < timeout:
+                try:
+                    # 快速检查是否还有同名进程
+                    still_alive = False
+                    for proc in psutil.process_iter(['name']):
+                        if proc.info['name'] and proc.info['name'].lower() == game_name:
+                            still_alive = True
+                            break
+                    if not still_alive:
+                        break
+                    time.sleep(0.01)  # 短暂等待
+                except:
+                    break
+
+            print("✅ 游戏进程已终止")
+        else:
+            print("ℹ️  未找到正在运行的游戏进程")
+
+        return killed
+
+    def run_game(self):
+        """启动游戏"""
+        if not self.game_exe:
+            print("⚠️  未配置游戏目录，请在 .env 中设置 STS2_GAME_DIR")
+            return False
+
+        if not self.game_exe.exists():
+            print(f"❌ 找不到游戏可执行文件: {self.game_exe}")
+            return False
+
+        print(f"🎮 正在启动游戏: {self.game_exe}")
+
+        try:
+            # 使用 subprocess.Popen 启动游戏，不等待退出
+            subprocess.Popen(
+                [str(self.game_exe)],
+                cwd=str(self.game_exe.parent),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
+            )
+            print("✅ 游戏已启动")
+            return True
+        except Exception as e:
+            print(f"❌ 启动游戏失败: {e}")
+            return False
+
     def build(self):
         """调用 dotnet build"""
         print("🔨 正在构建解决方案...")
@@ -63,6 +155,30 @@ class ModBuilder:
             print("❌ 构建失败")
             sys.exit(1)
         print("✅ 构建完成")
+
+    def run_extractor(self):
+        """运行本地化文本提取器（在当前控制台）"""
+        print("🔍 正在启动本地化文本提取器...")
+        print("   提示: 按 Ctrl+C 可停止提取器")
+        print("-" * 50)
+
+        try:
+            # 动态导入并运行提取器的主函数
+            # 它会自动解析 sys.argv 中的 toml
+            import STS2LocalizationTextExtractor as extractor_module
+            
+            extractor_module.main()
+
+            return True
+        except KeyboardInterrupt:
+            print("\n" + "=" * 50)
+            print("⏹️  提取器已停止")
+            return True
+        except Exception as e:
+            print(f"❌ 运行提取器失败: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
 
     def process_localization(self):
         """处理本地化文件（可选）"""
@@ -153,13 +269,18 @@ class ModBuilder:
         print("📋 正在安装模组...")
         self.pack(install=True)
 
-    def run_all(self):
+    def run_all(self, kill_first=False, run_after=False):
         """执行完整构建流程"""
         print("=" * 50)
         print(f"🚀 开始构建模组 [{self.mod_name}]")
         print(f"   解决方案: {self.solution_dir}")
         print(f"   配置: {self.config}")
         print("=" * 50)
+
+        # 0. 可选的：先杀死游戏进程
+        if kill_first:
+            self.kill_game()
+            print()
 
         # 1. 先构建（MSBuild 会负责 DLL 合并）
         self.build()
@@ -175,6 +296,11 @@ class ModBuilder:
         print(f"   输出目录: {self.output_dir}")
         print("=" * 50)
 
+        # 4. 可选的：启动游戏
+        if run_after:
+            print()
+            self.run_game()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Superstitio 模组构建工具')
@@ -188,6 +314,12 @@ def main():
     group.add_argument('--pack-only', action='store_true', help='仅打包（不构建）')
     group.add_argument('--install-only', action='store_true', help='仅安装（使用现有文件）')
 
+    parser.add_argument('--kill', action='store_true', help='构建前杀死游戏进程')
+    parser.add_argument('--run', action='store_true', help='构建后启动游戏')
+
+    parser.add_argument('--loc-extract', action='store_true', help='安装后运行本地化文本提取器（在当前控制台）')
+    parser.add_argument('--toml', action='store_true', help='提取器使用 TOML 格式导出（需安装 tomlkit）')
+
     args = parser.parse_args()
 
     builder = ModBuilder(args.solution_dir, args.config)
@@ -195,15 +327,30 @@ def main():
     if args.clean:
         builder.clean()
     elif args.build_only:
+        if args.kill:
+            builder.kill_game()
         builder.build()
         builder.process_localization()
+        if args.run:
+            builder.run_game()
     elif args.pack_only:
+        if args.kill:
+            builder.kill_game()
         builder.pack(install=True)
+        if args.run:
+            builder.run_game()
     elif args.install_only:
+        if args.kill:
+            builder.kill_game()
         builder.install()
+        if args.run:
+            builder.run_game()
     else:
-        # 默认：完整流程
-        builder.run_all()
+        # 默认：完整流程，支持 --kill 和 --run
+        builder.run_all(kill_first=args.kill, run_after=args.run)
+
+    if args.loc_extract:
+        builder.run_extractor()
 
 
 if __name__ == "__main__":
