@@ -3,7 +3,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using Superstitio.Main.Base;
 using Superstitio.Main.Maso.Pools;
 using Superstitio.Main.SubPool;
-using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso.Cards;
 

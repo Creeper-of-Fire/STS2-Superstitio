@@ -1,12 +1,13 @@
 ﻿using BaseLib.Abstracts;
-using JetBrains.Annotations;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.DynamicVars;
 
 namespace Superstitio.Main.Features.HangingCard;
 
@@ -24,6 +25,25 @@ public class HangingCardPower : CustomPowerModel, IHangingCarrier
     /// <inheritdoc />
     public override bool IsInstanced => true;
 
+    /// <inheritdoc />
+    public override LocString Description
+    {
+        get
+        {
+            var locString = this.HangingCardToken?.Description;
+            if (locString is null)
+                return this.BasicDescription;
+            var baseDescription = base.Description;
+            baseDescription.Add("HangingDescription", locString);
+            return baseDescription;
+        }
+    }
+
+    /// <summary>
+    /// 基础描述
+    /// </summary>
+    public LocString BasicDescription => new(locTable, "basic_description");
+
     /// <summary>
     /// 在 hover 提示中显示被吸收的卡牌
     /// </summary>
@@ -35,12 +55,7 @@ public class HangingCardPower : CustomPowerModel, IHangingCarrier
             if (this.HangingCard is null)
                 return base.ExtraHoverTips;
 
-            return
-            [
-                HoverTipFactory.FromCard(this.HangingCard),
-                // TODO 这样子的显示效果不佳。另外，power的动态效果有限，并且没有预留复杂的Description.Add的方便的位置，可能要之后研究一下。
-                ..this.HangingCardToken?.ExtraHoverTips ?? [],
-            ];
+            return [HoverTipFactory.FromCard(this.HangingCard)];
         }
     }
 

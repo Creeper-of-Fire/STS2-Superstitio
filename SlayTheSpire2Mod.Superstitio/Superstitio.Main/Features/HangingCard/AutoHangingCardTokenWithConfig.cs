@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.DynamicVars;
 
 namespace Superstitio.Main.Features.HangingCard;
@@ -24,13 +22,17 @@ public record AutoHangingCardTokenWithConfig(
 {
     /// <inheritdoc />
     public override LocString Description =>
-        HangingDescriptionBuilder.BuildHangingDescription(this.HangingCardConfig).HangingDescription;
+        HangingDescriptionBuilder.BuildHangingDescription(this.HangingCardConfig with
+        {
+            TriggerCount = new HangingTriggerVar(this.RemainCount)
+        }).HangingDescription;
 
     /// <inheritdoc />
     public override IEnumerable<IHoverTip> ExtraHoverTips =>
-        HangingDescriptionBuilder.GetHoverTips(
-            this.HangingCardConfig with { TriggerCount = new HangingTriggerVar(this.HangingCardConfig.TriggerCount.PreviewTriggers) },
-            showHangingTotalDescription: false);
+        HangingDescriptionBuilder.GetHoverTips(this.HangingCardConfig with
+        {
+            TriggerCount = new HangingTriggerVar(this.RemainCount)
+        }, showHangingTotalDescription: false);
 
     /// <summary>
     /// 
@@ -50,6 +52,9 @@ public record AutoHangingCardTokenWithConfig(
     /// <inheritdoc />
     protected override bool ShouldRespond(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        if (this.CardTypeFilter == CardType.None)
+            return true;
+
         return cardPlay.Card.Type == this.CardTypeFilter;
     }
 

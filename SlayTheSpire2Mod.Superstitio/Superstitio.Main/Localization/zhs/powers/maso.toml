@@ -1,9 +1,16 @@
 ﻿[HANGING_CARD_POWER]
-description = ""
-smartDescription = ""
-title = ""
+title = "挂起"
+description = "{HangingDescription}"
+basic_description = "挂起的效果。"
 
 [RAGE_POWER]
-description = ""
-smartDescription = ""
-title = ""
+title = "怒火"
+description = "愤怒之火熊熊燃烧。"
+
+[CORRUPTUS_POWER]
+title = "腐朽"
+description = "你的心灵已然……"
+
+[RAGE_DISCOUNT_POWER]
+title = "费用减免"
+description = "你的所有卡费用减少。"

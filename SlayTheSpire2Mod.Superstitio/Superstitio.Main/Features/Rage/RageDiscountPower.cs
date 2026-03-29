@@ -33,27 +33,23 @@ public class RageDiscountPower : CustomPowerModel
         if (this.IsCheckingRageDiscount)
         {
             modifiedCost = originalCost;
-            Log.Info("不修改能量1");
             return false;
         }
 
         if (card.EnergyCost.CostsX || card.Keywords.Contains(CardKeyword.Unplayable))
         {
             modifiedCost = originalCost;
-            Log.Info("不修改能量2");
             return false;
         }
 
         // originalCost 是进入此 Hook 时的费用
         if (originalCost <= 0)
         {
-            Log.Info("不修改能量3");
             modifiedCost = originalCost;
             return false;
         }
 
         modifiedCost = Math.Max(0, originalCost - this.Amount);
-        Log.Info($"修改能量{modifiedCost}");
         return true;
     }
 
@@ -85,8 +81,9 @@ public class RageDiscountPower : CustomPowerModel
             this.IsCheckingRageDiscount = false; // 恢复折扣
         }
 
-        // 如果没有我，这张牌的费用本来是 > 0 的，说明我确实生效了
-        if (costWithoutMe > 0)
+        // cardPlay.Resources.EnergySpent 是引擎记录的实际扣费（打出那一刻的快照）
+        // 如果 实际扣费 < 不加我时的费用，说明我确实“出力”了
+        if (cardPlay.Resources.EnergySpent < costWithoutMe)
         {
             this.Flash();
             await PowerCmd.Decrement(this);

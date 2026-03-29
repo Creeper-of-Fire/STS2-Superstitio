@@ -12,12 +12,12 @@ internal static class SuperstitioLocStringFactory
     /// 基于 <see cref="LocStringFactory"/> 类型自动获取的程序集前缀。
     /// </summary>
     public static readonly string SuperstitioBaseLibPrefix = typeof(LocStringFactory).GetPrefix();
-    
+
     /// <summary>
     /// 使用默认前缀初始化的 <see cref="LocStringFactory"/> 单例实例。
     /// </summary>
     public static readonly LocStringFactory Instance = new(SuperstitioBaseLibPrefix);
-    
+
     /// <summary>
     /// 使用默认实例创建一个指向通用扩展本地化表的 <see cref="LocString"/>。
     /// </summary>
@@ -28,7 +28,7 @@ internal static class SuperstitioLocStringFactory
     {
         return Instance.ExtendLocString(locPrefix, locEntryKeys);
     }
-    
+
     /// <summary>
     /// 使用默认实例创建一个指向关键词本地化表的 <see cref="LocString"/>。
     /// </summary>
@@ -37,6 +37,6 @@ internal static class SuperstitioLocStringFactory
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public static LocString KeywordLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return Instance.KeywordLocString(locPrefix, locEntryKeys);
+        return  Instance.KeywordLocString(locPrefix, locEntryKeys);
     }
 }

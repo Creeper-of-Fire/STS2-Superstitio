@@ -59,7 +59,7 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
         Card: this,
         HangingType: HangingType.Delay,
         TriggerCount: this.DynamicVars.TriggerCount,
-        CardTypeFilter: CardType.Attack
+        CardTypeFilter: CardType.None
     );
 
     /// <inheritdoc />

@@ -1,5 +1,4 @@
-﻿using BaseLib.Abstracts;
-using BaseLib.Utils;
+﻿using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -26,22 +25,6 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRa
 
     /// <inheritdoc />
     public CorruptusBufferComponent CorruptusBufferComponent => field ??= new CorruptusBufferComponent(this);
-
-    /// <inheritdoc />
-    [SavedProperty]
-    public override string SelectedSubPoolIdsRaw
-    {
-        get;
-        set
-        {
-            this.AssertMutable();
-            field = value;
-        }
-    } = string.Empty;
-
-    /// <inheritdoc />
-    [SavedProperty]
-    public override bool IsInitialized { get; set; } = false;
 
     /// <inheritdoc />
     public Creature OwnerCreature => this.Owner.Creature;
@@ -73,6 +56,9 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRa
     /// <inheritdoc />
     public override async Task AfterEnergySpent(CardModel card, int amount)
     {
+        if (amount <= 0 || this.OwnerCreature.Player != card.Owner)
+            return;
+
         await PowerCmd.Apply<RagePower>(this.OwnerCreature, amount * RageGetPerEnergy, null, card);
     }
 }

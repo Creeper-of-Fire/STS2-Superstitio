@@ -1,27 +1,26 @@
 ﻿using BaseLib.Abstracts;
-using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Logging;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Saves.Runs;
-using Superstitio.Main.Maso.Pools;
 using Superstitio.Main.SubPool.UI;
 using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.SubPool;
 
-#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 /// <summary>
 /// 卡池选择遗物
 /// </summary>
 public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSelection
 {
+    /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;
 
+    /// <summary>
+    /// 
+    /// </summary>
     [SavedProperty]
-    public virtual string SelectedSubPoolIdsRaw
+    protected virtual string SelectedSubPoolIdsRaw
     {
         get;
         set
@@ -30,13 +29,18 @@ public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSe
             field = value;
         }
     } = string.Empty;
-    
-    
-    [SavedProperty] public virtual bool IsInitialized { get; set; } = false;
 
+
+    /// <summary>
+    /// 一个内部标记，用于判断是否已经初始化
+    /// </summary>
+    [SavedProperty]
+    protected virtual bool IsInitialized { get; set; } = false;
+
+    /// <inheritdoc />
     public List<string> SelectedSubPoolIds
     {
-        get => string.IsNullOrEmpty(this.SelectedSubPoolIdsRaw) 
+        get => string.IsNullOrEmpty(this.SelectedSubPoolIdsRaw)
             ? []
             : this.SelectedSubPoolIdsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
         set =>
@@ -44,8 +48,8 @@ public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSe
             this.SelectedSubPoolIdsRaw = (value.Count == 0) ? string.Empty : string.Join(",", value);
     }
 
-
-    // 在遗物被添加到玩家时，如果是新游戏（不是读档），就从 SubPoolManager 读取配置
+    /// <inheritdoc />
+    /// 在遗物被添加到玩家时，如果是新游戏（不是读档），就从 SubPoolManager 读取配置
     public override async Task AfterObtained()
     {
         await base.AfterObtained();
@@ -68,6 +72,7 @@ public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSe
         }
     }
 
+    /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips
     {
         get
