@@ -11,7 +11,6 @@ sys.dont_write_bytecode = True
 import subprocess
 import argparse
 import shutil
-import json
 import tomllib
 from pathlib import Path
 
@@ -25,6 +24,9 @@ class ModBuilder:
         self.mod_name = self._get_mod_name()
         self.game_dir = self._get_game_dir()
         self.game_exe = self.game_dir / "SlayTheSpire2.exe"
+
+        self.assets_dir = self.solution_dir / "assets"
+        self.staging_dir = self.solution_dir / ".pck_staging"
 
     def _get_output_dir(self):
         """从 MSBuild 获取实际输出路径"""
@@ -166,7 +168,7 @@ class ModBuilder:
             # 动态导入并运行提取器的主函数
             # 它会自动解析 sys.argv 中的 toml
             import STS2LocalizationTextExtractor as extractor_module
-            
+
             extractor_module.main()
 
             return True
@@ -180,32 +182,30 @@ class ModBuilder:
             traceback.print_exc()
             return False
 
-    def process_localization(self):
-        """处理本地化文件（可选）"""
-        from process_localization import process_localization
+    def process_assets(self):
+        """处理资源"""
+        from assets_processor import AssetOrchestrator
 
-        print("🌐 正在处理本地化文件...")
+        print("🌐 正在处理资源文件...")
 
-        pck_content = self.solution_dir / "pck_content"
+        # 清理旧的暂存区
+        if self.staging_dir.exists():
+            shutil.rmtree(self.staging_dir)
+        self.staging_dir.mkdir(parents=True)
 
-        try:
-            process_localization(
-                solution_dir=self.solution_dir,
-                mod_id=self.mod_name,
-                output_dir=pck_content
-            )
-        except Exception as e:
-            print(f"⚠️  本地化处理失败: {e}")
-            # 继续执行，不退出
+        orchestrator = AssetOrchestrator(
+            mod_id=self.mod_name,
+            solution_dir=self.solution_dir,
+            staging_dir=self.staging_dir
+        )
+        orchestrator.run()
 
     def pack(self, install=False):
         """打包 PCK（从输出目录取文件）"""
         from pack_pck import build_mod_pack, get_env_config
 
         print("📦 正在打包 PCK...")
-        script = self.script_dir / "pack_pck.py"
-        mod_toml = self.solution_dir / "mod.toml"
-        pck_content = self.solution_dir / "pck_content"
+        staging_dir = self.staging_dir
 
         # 输出文件都在 output_dir 中
         output_pck = self.output_dir / f"{self.mod_name}.pck"
@@ -230,7 +230,7 @@ class ModBuilder:
             mod_toml=self.solution_dir / "mod.toml",
             output_pck=output_pck,
             dll_path=merged_dll,
-            pck_src=pck_content if pck_content.exists() else None,
+            pck_src=staging_dir if staging_dir.exists() else None,
             pck_tool=pck_tool,
             game_dir=game_dir,
             copy_to_game=install
@@ -241,11 +241,11 @@ class ModBuilder:
         """清理构建产物"""
         print("🧹 正在清理...")
 
-        # 清理 pck_content
-        pck_content = self.solution_dir / "pck_content"
-        if pck_content.exists():
-            shutil.rmtree(pck_content)
-            print(f"  已删除: {pck_content}")
+        # 清理 staging_dir
+        staging_dir = self.staging_dir
+        if staging_dir.exists():
+            shutil.rmtree(staging_dir)
+            print(f"  已删除: {staging_dir}")
 
         # 清理输出目录中的 PCK 和合并 DLL
         for file in self.output_dir.glob("*.pck"):
@@ -265,41 +265,25 @@ class ModBuilder:
         print("✅ 清理完成")
 
     def install(self):
-        """仅安装（不打包）"""
+        """仅安装（不打包），这是个语义化包装"""
         print("📋 正在安装模组...")
         self.pack(install=True)
 
-    def run_all(self, kill_first=False, run_after=False):
-        """执行完整构建流程"""
-        print("=" * 50)
-        print(f"🚀 开始构建模组 [{self.mod_name}]")
+    def print_start_banner(self, mode_name="构建"):
+        print("=" * 60)
+        print(f"🚀 开始执行模组任务 [{self.mod_name}] - 模式: {mode_name}")
         print(f"   解决方案: {self.solution_dir}")
         print(f"   配置: {self.config}")
-        print("=" * 50)
+        print(f"   暂存目录: {self.staging_dir}")
+        print("=" * 60)
 
-        # 0. 可选的：先杀死游戏进程
-        if kill_first:
-            self.kill_game()
-            print()
-
-        # 1. 先构建（MSBuild 会负责 DLL 合并）
-        self.build()
-
-        # 2. 处理本地化（生成到 pck_content）
-        self.process_localization()
-
-        # 3. 打包 PCK（从 output_dir 取 DLL）
-        self.pack(install=True)
-
-        print("=" * 50)
-        print("✨ 构建完成！")
+    def print_finish_banner(self):
+        print("=" * 60)
+        print("✨ 任务序列全部完成！")
         print(f"   输出目录: {self.output_dir}")
-        print("=" * 50)
-
-        # 4. 可选的：启动游戏
-        if run_after:
-            print()
-            self.run_game()
+        if (self.output_dir / f"{self.mod_name}.pck").exists():
+            print(f"   PCK 大小: {os.path.getsize(self.output_dir / f'{self.mod_name}.pck') // 1024} KB")
+        print("=" * 60)
 
 
 def main():
@@ -307,16 +291,16 @@ def main():
     parser.add_argument('--solution-dir', default='.', help='解决方案目录')
     parser.add_argument('--config', default='Debug', choices=['Debug', 'Release'], help='构建配置')
 
-    # 操作模式
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('--clean', action='store_true', help='清理构建产物')
-    group.add_argument('--build-only', action='store_true', help='仅构建（不打包）')
-    group.add_argument('--pack-only', action='store_true', help='仅打包（不构建）')
-    group.add_argument('--install-only', action='store_true', help='仅安装（使用现有文件）')
+    # 操作模式（互斥组）
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--build-only', action='store_true', help='仅构建 DLL 与处理资源')
+    mode.add_argument('--pack-only', action='store_true', help='仅处理资源并打包 PCK')
+    mode.add_argument('--install-only', action='store_true', help='仅执行安装（打包并复制）')
 
+    # 副作用操作
+    parser.add_argument('--clean', action='store_true', help='执行任务前清理构建产物')
     parser.add_argument('--kill', action='store_true', help='构建前杀死游戏进程')
     parser.add_argument('--run', action='store_true', help='构建后启动游戏')
-
     parser.add_argument('--loc-extract', action='store_true', help='安装后运行本地化文本提取器（在当前控制台）')
     parser.add_argument('--toml', action='store_true', help='提取器使用 TOML 格式导出（需安装 tomlkit）')
 
@@ -324,31 +308,55 @@ def main():
 
     builder = ModBuilder(args.solution_dir, args.config)
 
-    if args.clean:
-        builder.clean()
-    elif args.build_only:
-        if args.kill:
-            builder.kill_game()
-        builder.build()
-        builder.process_localization()
-        if args.run:
-            builder.run_game()
-    elif args.pack_only:
-        if args.kill:
-            builder.kill_game()
-        builder.pack(install=True)
-        if args.run:
-            builder.run_game()
-    elif args.install_only:
-        if args.kill:
-            builder.kill_game()
-        builder.install()
-        if args.run:
-            builder.run_game()
-    else:
-        # 默认：完整流程，支持 --kill 和 --run
-        builder.run_all(kill_first=args.kill, run_after=args.run)
+    # 2. 编排任务流
+    pipeline = []
 
+    # --- 前置修饰任务 ---
+    if args.clean:
+        pipeline.append(builder.clean)
+    if args.kill:
+        pipeline.append(builder.kill_game)
+
+    # --- 核心任务主体 ---
+    if args.build_only:
+        pipeline.extend([builder.build, builder.process_assets])
+    elif args.pack_only:
+        pipeline.extend([builder.process_assets, builder.pack])
+    elif args.install_only:
+        pipeline.append(builder.install)
+    else:
+        # 默认完整流程：构建 -> 资源处理 -> 打包并安装
+        pipeline.extend([builder.build, builder.process_assets, builder.install])
+
+    # 执行任务流
+    # 确定当前执行模式的名称（用于 UI 显示）
+    current_mode = "完整流程"
+    if args.build_only:
+        current_mode = "仅构建"
+    elif args.pack_only:
+        current_mode = "仅打包"
+    elif args.install_only:
+        current_mode = "仅安装"
+
+    builder.print_start_banner(current_mode)
+
+    try:
+        for task in pipeline:
+            # 打印每个小任务的开始提示
+            task_name = task.__name__.replace('_', ' ').title()
+            print(f"\n▶️ 执行任务: {task_name}...")
+            task()
+    except Exception as e:
+        print(f"\n❌ 任务流执行失败: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+    builder.print_finish_banner()
+
+    # --- 后置副作用 ---
+    if args.run:
+        builder.run_game()
     if args.loc_extract:
         builder.run_extractor()
 

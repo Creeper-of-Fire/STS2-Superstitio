@@ -78,7 +78,7 @@ BenchmarkDotNet.Artifacts/
 /lib
 
 # 编译出来的素材库
-SlayTheSpire2Mod.Superstitio/pck_content/
+SlayTheSpire2Mod.Superstitio/.pck_staging/
 
 # 开发相关的资源/素材/工具链调用结果文件夹
 /STS2_Localization_Export/
