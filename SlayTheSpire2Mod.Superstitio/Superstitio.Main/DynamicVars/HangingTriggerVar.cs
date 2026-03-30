@@ -1,13 +1,14 @@
 ﻿using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 触发次数动态变量
 /// </summary>
-public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.DefaultName) : MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar(name, triggers)
+public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.DefaultName) : DynamicVar(name, triggers)
 {
     /// <summary>
     /// 名称

@@ -15,7 +15,7 @@ public static class DynamicVarSetExtensions
         /// <summary>
         /// 获取指定类型的动态变量，若不存在或类型不匹配则抛出异常
         /// </summary>
-        public TVar GetVarOrThrow<TVar>(string key) where TVar : MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar
+        public TVar GetVarOrThrow<TVar>(string key) where TVar : DynamicVar
         {
             if (!dynamicVarSet.TryGetValue(key, out var dynamicVar))
                 throw new ArgumentException($"未能找到键为 '{key}' 的动态变量。");

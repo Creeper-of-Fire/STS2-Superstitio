@@ -1,13 +1,14 @@
 ﻿using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 怒火动态变量
 /// </summary>
-public class RageVar(int rageAmount, string name = RageVar.DefaultName) : MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar(name, rageAmount)
+public class RageVar(int rageAmount, string name = RageVar.DefaultName) : DynamicVar(name, rageAmount)
 {
     /// <summary>
     /// 名称
