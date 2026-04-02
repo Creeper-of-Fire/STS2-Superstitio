@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.DynamicVars;
 
 namespace Superstitio.Main.Features.HangingCard;
 

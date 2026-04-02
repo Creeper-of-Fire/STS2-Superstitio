@@ -3,17 +3,17 @@ using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
-using Superstitio.Main.Maso.Base;
-using Superstitio.Main.Maso.Cards.Base;
+using Superstitio.Main.Lupa.Base;
+using Superstitio.Main.Lupa.Cards.Base;
+using Superstitio.Main.Lupa.Relics;
 using Superstitio.Main.Maso.Cards.Kongfu;
-using Superstitio.Main.Maso.Relics;
 
-namespace Superstitio.Main.Maso;
+namespace Superstitio.Main.Lupa;
 
 /// <summary>
 /// 
 /// </summary>
-public class MasoCharacter : SuperstitioCharacter
+public class LupaCharacter : SuperstitioCharacter
 {
     /// <inheritdoc />
     protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssets
@@ -31,19 +31,19 @@ public class MasoCharacter : SuperstitioCharacter
     /// <inheritdoc />
     protected override CharacterLoadoutAssets LoadoutConfig => field ??= new CharacterLoadoutAssets
     {
-        CardPool = ModelDb.CardPool<MasoCardPool>(),
-        RelicPool = ModelDb.RelicPool<MasoRelicPool>(),
-        PotionPool = ModelDb.PotionPool<MasoPotionPool>(),
+        CardPool = ModelDb.CardPool<LupaCardPool>(),
+        RelicPool = ModelDb.RelicPool<LupaRelicPool>(),
+        PotionPool = ModelDb.PotionPool<LupaPotionPool>(),
         StartingDeck =
         [
-            ..StrikeMaso.Card().Repeat(4),
-            ..DefendMaso.Card().Repeat(4),
-            FistIn.Card(),
-            Spark.Card(),
+            ..StrikeLupa.Card().Repeat(4),
+            ..DefendLupa.Card().Repeat(4),
+            Masturbate.Card(),
+            SuspendingStrike.Card(),
         ],
         StartingRelics =
         [
-            MasoStartRelic.Relic(),
+            LupaStartRelic.Relic(),
         ],
     };
 

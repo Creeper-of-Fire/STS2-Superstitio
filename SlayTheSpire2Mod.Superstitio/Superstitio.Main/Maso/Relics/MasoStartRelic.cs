@@ -1,33 +1,33 @@
 ﻿using BaseLib.Utils;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Relics;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Saves.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Features.Corruptus;
-using Superstitio.Main.Features.Rage;
-using Superstitio.Main.Maso.Pools;
+using Superstitio.Main.Features.Felix;
+using Superstitio.Main.Maso.Base;
 using Superstitio.Main.SubPool;
 
 namespace Superstitio.Main.Maso.Relics;
 
 /// <summary>
 /// Maso 的初始遗物
+/// 单次获得的腐朽每有3点获得2点快感。达到顶峰时，移除5腐朽 。
 /// </summary>
 [Pool(typeof(MasoRelicPool))]
-public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRageThresholdReached
+public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterClimaxReached
 {
+    private const int CorruptusReduceWhenClimax = 5;
+
     /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     /// <inheritdoc />
-    public CorruptusBufferComponent CorruptusBufferComponent => field ??= new CorruptusBufferComponent(this);
+    public Creature OwnerCreature => this.Owner.Creature;
 
     /// <inheritdoc />
-    public Creature OwnerCreature => this.Owner.Creature;
+    public CorruptusBufferComponent CorruptusBufferComponent => field ??= new CorruptusBufferComponent(this);
 
     /// <inheritdoc />
     public override decimal ModifyHpLostAfterOstyLate(Creature target,
@@ -35,23 +35,38 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRa
         this.CorruptusBufferComponent.ModifyHpLostAfterOstyLate(target, amount, props, dealer, cardSource);
 
     /// <inheritdoc />
-    public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    public override async Task AfterPowerAmountChanged(PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (side != this.OwnerCreature.Side)
+        if (power.Owner != this.OwnerCreature)
             return;
-        await this.CorruptusBufferComponent.TriggerCorruptusDamage(choiceContext);
+        if (power is not CorruptusPower)
+            return;
+        // 仅在腐朽减少时触发（amount < 0）
+        if (amount >= 0)
+            return;
+
+        // 根据减少的腐朽量，按比例给予快感（每 3 点腐朽获得 2 点快感）
+        // 注意：amount 为负数，计算时需取绝对值或调整符号
+        decimal corruptusLost = -amount;
+        decimal felixGain = Math.Floor(corruptusLost / 3m) * 2m;
+
+        if (felixGain > 0)
+        {
+            await PowerCmd.Apply<FelixPower>(this.OwnerCreature, felixGain, applier, cardSource);
+        }
     }
 
     /// <inheritdoc />
-    public async Task AfterRageThresholdReached(Creature powerOwner, RagePower ragePower, Creature? applier, CardModel? cardSource)
+    public async Task AfterClimaxReached(Creature powerOwner, FelixPower felixPower, Creature? applier, CardModel? cardSource)
     {
         if (powerOwner.Player is null || powerOwner != this.OwnerCreature)
             return;
 
-        await PowerCmd.Apply<RageDiscountPower>(powerOwner, 1, applier, cardSource);
+
+        await PowerCmd.Apply<CorruptusPower>(powerOwner, -CorruptusReduceWhenClimax, applier, cardSource);
     }
 
-    private const int RageGetPerEnergy = 2;
+    private const int FelixGetPerEnergy = 2;
 
     /// <inheritdoc />
     public override async Task AfterEnergySpent(CardModel card, int amount)
@@ -59,6 +74,6 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterRa
         if (amount <= 0 || this.OwnerCreature.Player != card.Owner)
             return;
 
-        await PowerCmd.Apply<RagePower>(this.OwnerCreature, amount * RageGetPerEnergy, null, card);
+        await PowerCmd.Apply<FelixPower>(this.OwnerCreature, amount * FelixGetPerEnergy, null, card);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -33,7 +32,7 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
     /// <summary>
     /// 标记是否正在处理腐朽伤害，防止递归触发。
     /// </summary>
-    private bool IsProcessingCorruptusDamage { get; set; } = false;
+    public bool IsProcessingCorruptusDamage { get; set; } = false;
 
     /// <summary>
     /// 获取拥有该组件的生物实体。
@@ -68,37 +67,5 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
         );
 
         return 0M;
-    }
-
-    /// <summary>
-    /// 触发腐朽伤害。
-    /// 对拥有者造成等同于当前腐朽层数的不可阻挡伤害，随后移除腐朽效果。
-    /// </summary>
-    public async Task TriggerCorruptusDamage(PlayerChoiceContext choiceContext)
-    {
-        var power = this.OwnerCreature.GetPower<CorruptusPower>();
-        if (power is not { Amount: > 0 })
-            return;
-
-        this.IsProcessingCorruptusDamage = true;
-
-        try
-        {
-            // 对自身造成等同于腐朽层数的伤害
-            await CreatureCmd.Damage(
-                choiceContext,
-                this.OwnerCreature,
-                power.Amount,
-                ValueProp.Unblockable,
-                this.OwnerCreature
-            );
-
-            // 伤害结算后移除腐朽效果
-            await PowerCmd.Remove<CorruptusPower>(this.OwnerCreature);
-        }
-        finally
-        {
-            this.IsProcessingCorruptusDamage = false;
-        }
     }
 }

@@ -32,8 +32,13 @@ public static class DynamicVarSetExtensions
         public HangingTriggerVar TriggerCount => dynamicVarSet.GetVarOrThrow<HangingTriggerVar>(HangingTriggerVar.DefaultName);
 
         /// <summary>
-        /// 获取怒火动态变量
+        /// 获取快感动态变量
         /// </summary>
-        public RageVar Rage => dynamicVarSet.GetVarOrThrow<RageVar>(RageVar.DefaultName);
+        public FelixVar Felix => dynamicVarSet.GetVarOrThrow<FelixVar>(FelixVar.DefaultName);
+        
+        /// <summary>
+        /// 获取自伤动态变量
+        /// </summary>
+        public DamageSelfVar DamageSelf => dynamicVarSet.GetVarOrThrow<DamageSelfVar>(DamageSelfVar.DefaultName);
     }
 }

@@ -6,24 +6,24 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
-/// 怒火动态变量
+/// 快感动态变量
 /// </summary>
-public class RageVar(int rageAmount, string name = RageVar.DefaultName) : DynamicVar(name, rageAmount)
+public class FelixVar(int felixAmount, string name = FelixVar.DefaultName) : DynamicVar(name, felixAmount)
 {
     /// <summary>
     /// 名称
     /// </summary>
-    public const string DefaultName = nameof(RageVar);
+    public const string DefaultName = nameof(FelixVar);
 
     /// <summary>
-    /// 基础怒火值
+    /// 基础快感值
     /// </summary>
-    public int BaseRage { get; set; } = rageAmount;
+    public int BaseFelix { get; set; } = felixAmount;
 
     /// <summary>
-    /// 预览/实际显示的怒火值
+    /// 预览/实际显示的快感值
     /// </summary>
-    public int PreviewRage { get; private set; } = rageAmount;
+    public int PreviewFelix { get; private set; } = felixAmount;
 
     /// <inheritdoc />
     public override void UpdateCardPreview(
@@ -33,25 +33,25 @@ public class RageVar(int rageAmount, string name = RageVar.DefaultName) : Dynami
         bool runGlobalHooks)
     {
         // 基础值（考虑升级）
-        int currentRage = this.BaseRage;
+        int currentFelix = this.BaseFelix;
 
-        // 如果有附魔，处理附魔对怒火值的影响
+        // 如果有附魔，处理附魔对快感值的影响
         var enchantment = card.Enchantment;
         if (enchantment != null)
         {
-            // 假设附魔可以增加怒火值
-            // currentRage = (int)enchantment.EnchantRageValue(currentRage);
+            // 假设附魔可以增加快感值
+            // currentFelix = (int)enchantment.EnchantFelixValue(currentFelix);
             if (!card.IsEnchantmentPreview)
-                this.EnchantedValue = currentRage;
+                this.EnchantedValue = currentFelix;
         }
 
-        // 如果需要全局钩子修改怒火值，可以在这里调用
+        // 如果需要全局钩子修改快感值，可以在这里调用
         // if (runGlobalHooks)
         // {
-        //     currentRage = Hook.ModifyRageValue(card.CombatState, card, currentRage);
+        //     currentFelix = Hook.ModifyFelixValue(card.CombatState, card, currentFelix);
         // }
 
-        this.PreviewRage = currentRage;
-        this.PreviewValue = currentRage;
+        this.PreviewFelix = currentFelix;
+        this.PreviewValue = currentFelix;
     }
 }

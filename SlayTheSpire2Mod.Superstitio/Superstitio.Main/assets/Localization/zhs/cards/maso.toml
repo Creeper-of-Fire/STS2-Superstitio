@@ -15,7 +15,7 @@ flavor = "用于调试。"
 title = "测试卡牌"
 
 [RAGE_CHARGE]
-description = "获得{RageVar:diff()}点[gold]怒火[/gold]。\n{CardHangingDescription}"
+description = "获得{FelixVar:diff()}点[gold]快感[/gold]。\n{CardHangingDescription}"
 flavor = "蓄势待发，只待一击。"
 title = "蓄势待发"
 hanging_effect = "抽1张牌"

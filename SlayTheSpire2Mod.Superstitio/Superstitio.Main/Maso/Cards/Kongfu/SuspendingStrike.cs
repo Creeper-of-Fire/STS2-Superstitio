@@ -9,6 +9,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Kongfu;
 

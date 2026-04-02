@@ -3,15 +3,13 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
 
-namespace Superstitio.Main.Maso.Cards.Base;
+namespace Superstitio.Main.Base;
 
 /// <summary>
-/// 攻击
+/// 基础牌 - 打击
 /// </summary>
-
-public sealed class StrikeMaso() : MasoBaseCard(new CardInitMessage
+public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Attack,

@@ -17,6 +17,11 @@ public static class Plugin
     /// 模组名称
     /// </summary>
     public const string ModName = "Superstitio";
+    
+    /// <summary>
+    /// 本模组中推荐使用的 Guid/Guid 种子
+    /// </summary>
+    public const string ModGuid = "62FE4F75";
 
     /// <summary>
     /// 初始化模组，在游戏启动时调用。

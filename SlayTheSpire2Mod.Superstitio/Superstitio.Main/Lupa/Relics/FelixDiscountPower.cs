@@ -3,16 +3,15 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 
-namespace Superstitio.Main.Features.Rage;
+namespace Superstitio.Main.Lupa.Relics;
 
 /// <summary>
-/// 怒火爆发带来的减费效果
+/// 快感爆发带来的减费效果
 /// 层数 = 减费数值 = 可使用的次数
 /// </summary>
-public class RageDiscountPower : CustomPowerModel
+public class FelixDiscountPower : CustomPowerModel
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;
@@ -23,14 +22,14 @@ public class RageDiscountPower : CustomPowerModel
     /// <inheritdoc />
     public override bool IsInstanced => false;
 
-    private bool IsCheckingRageDiscount { get; set; } = false;
+    private bool IsCheckingFelixDiscount { get; set; } = false;
 
     /// <summary>
     /// 战斗中修改费用的钩子
     /// </summary>
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
-        if (this.IsCheckingRageDiscount)
+        if (this.IsCheckingFelixDiscount)
         {
             modifiedCost = originalCost;
             return false;
@@ -66,8 +65,8 @@ public class RageDiscountPower : CustomPowerModel
             return;
         }
 
-        // 我们需要知道：如果没有这个 RageDiscountPower，这张牌要花多少钱？
-        this.IsCheckingRageDiscount = true; // 临时关掉折扣
+        // 我们需要知道：如果没有这个 FelixDiscountPower，这张牌要花多少钱？
+        this.IsCheckingFelixDiscount = true; // 临时关掉折扣
 
         decimal costWithoutMe;
 
@@ -78,7 +77,7 @@ public class RageDiscountPower : CustomPowerModel
         }
         finally
         {
-            this.IsCheckingRageDiscount = false; // 恢复折扣
+            this.IsCheckingFelixDiscount = false; // 恢复折扣
         }
 
         // cardPlay.Resources.EnergySpent 是引擎记录的实际扣费（打出那一刻的快照）

@@ -1,4 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\Superstitio.DesignConceptAnalyzer\Superstitio.DesignConceptAnalyzer.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
     <!-- 通用的游戏DLL引用 -->
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->
@@ -12,7 +18,7 @@
             <HintPath>$(Sts2LibPath)sts2.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        
+
         <!-- GodotSharp -->
         <Reference Include="GodotSharp">
             <HintPath>$(Sts2LibPath)/GodotSharp.dll</HintPath>
@@ -26,7 +32,12 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="assets\" />
-      <Folder Include="Patches\" />
+        <Folder Include="assets\"/>
+        <Folder Include="Lupa\Pools\" />
+        <Folder Include="Patches\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="concepts.toml"/>
     </ItemGroup>
 </Project>

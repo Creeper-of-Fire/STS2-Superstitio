@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.SubPool;
 using Superstitio.Main.SubPool.UI;
 
-namespace Superstitio.Main.Maso.Pools;
+namespace Superstitio.Main.Maso.Base;
 
 /// <summary>
 /// 职业的卡牌池模型。
@@ -14,7 +14,7 @@ public class MasoCardPool : CustomCardPoolModel, IWithSubPool<MasoCardPool>
     /// <summary>
     /// 卡池的 ID。必须唯一，防撞车。
     /// </summary>
-    public override string Title => "maso-cea173d4";
+    public override string Title => $"{nameof(MasoCardPool)}_{Plugin.ModGuid}";
 
     /// <summary>
     /// 卡池的能量图标。
@@ -43,4 +43,26 @@ public class MasoCardPool : CustomCardPoolModel, IWithSubPool<MasoCardPool>
 /// <summary>
 /// Maso的卡牌池
 /// </summary>
-public class MasoSubPool : SubPool<MasoSubPool> { }
+public class MasoSubPool : SubPool<MasoSubPool>;
+
+/// <summary>
+/// 职业的药水池模型。
+/// </summary>
+public class MasoPotionPool : CustomPotionPoolModel
+{
+    /// <summary>
+    /// 能量图标。
+    /// </summary>
+    public override string EnergyColorName => "ironclad";
+}
+
+/// <summary>
+/// 职业的遗物池模型。
+/// </summary>
+public class MasoRelicPool : CustomRelicPoolModel
+{
+    /// <summary>
+    /// 能量图标。
+    /// </summary>
+    public override string EnergyColorName => "ironclad";
+}

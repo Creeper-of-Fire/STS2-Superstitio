@@ -7,15 +7,16 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
+using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.Rage;
+using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Maso.Cards.Base;
+namespace Superstitio.Main.Lupa.Cards.Base;
 
 /// <summary>
-/// 蓄势待发 - 0费技能，挂起自身，获得4(6)点怒火。打出任意2张牌后，抽1张牌。
+/// 自慰 - 0费技能，挂起自身，获得4(6)点快感。打出任意2张牌后，抽1张牌。
 /// </summary>
-public class RageCharge() : MasoBaseCard(new CardInitMessage
+public class Masturbate() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Skill,
@@ -24,19 +25,24 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
 }), IWithHangingConfig
 {
     /// <summary>
-    /// 基础怒火值
+    /// 基础快感值
     /// </summary>
-    private const int BaseRageGain = 4;
+    private const int BaseFelixGain = 4;
 
     /// <summary>
-    /// 升级增加的怒火值
+    /// 升级增加的快感值
     /// </summary>
-    private const int UpgradeRageIncrease = 2;
+    private const int UpgradeFelixIncrease = 2;
 
     /// <summary>
     /// 触发抽牌所需打出的牌数
     /// </summary>
     private const int TriggerThreshold = 2;
+
+    /// <summary>
+    /// 触发抽牌的牌数
+    /// </summary>
+    private const int DrawCard = 1;
 
     /// <inheritdoc />
     protected override HashSet<CardTag> CanonicalTags => [];
@@ -44,7 +50,7 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new RageVar(BaseRageGain),
+        new FelixVar(BaseFelixGain),
         new HangingTriggerVar(TriggerThreshold),
     ];
 
@@ -82,11 +88,11 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 获取怒火值
-        decimal rageAmount = this.DynamicVars.Rage.BaseValue;
+        // 获取快感值
+        decimal felixAmount = this.DynamicVars.Felix.BaseValue;
 
-        // 使用 RageManager 增加怒火
-        await RageManager.ModifyRage(this.Owner.Creature, rageAmount, this.Owner.Creature, cardPlay.Card);
+        // 使用 FelixManager 增加快感
+        await FelixManager.ModifyFelix(this.Owner.Creature, felixAmount, this.Owner.Creature, cardPlay.Card);
 
         // 创建挂起令牌
         var token = new AutoHangingCardTokenWithConfig(
@@ -94,11 +100,7 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
             base.GetResultPileType())
         {
             ShouldManualRemoveFromBattle = false,
-            HangingAction = async (context, _) =>
-            {
-                // 抽 1 张牌
-                await CardPileCmd.Draw(context, 1, this.Owner, fromHandDraw: true);
-            }
+            HangingAction = async (context, _) => { await CardPileCmd.Draw(context, DrawCard, this.Owner, fromHandDraw: true); }
         };
 
         // 挂起自身
@@ -108,7 +110,7 @@ public class RageCharge() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override void OnUpgrade()
     {
-        // 升级：增加获得的怒火值
-        this.DynamicVars.Rage.UpgradeValueBy(UpgradeRageIncrease);
+        // 升级：增加获得的快感值
+        this.DynamicVars.Felix.UpgradeValueBy(UpgradeFelixIncrease);
     }
 }

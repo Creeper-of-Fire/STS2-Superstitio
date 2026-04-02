@@ -2,7 +2,7 @@
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.Maso.Pools;
+using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.SubPool.UI;
 
@@ -134,7 +134,7 @@ public static class SubPoolManager
     {
         var canonicalCard = card.CanonicalInstance;
     
-        foreach (var poolId in subPoolIds)
+        foreach (string poolId in subPoolIds)
         {
             var subPool = GetSubPoolById(poolId);
             if (subPool != null && subPool.PoolCards.Any(pc => pc.CanonicalInstance == canonicalCard))

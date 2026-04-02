@@ -8,12 +8,12 @@ using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Runs;
 
-namespace Superstitio.Main.Features.Rage;
+namespace Superstitio.Main.Features.Felix;
 
 /// <summary>
-/// TODO 怒火占位符能力（临时）
+/// 
 /// </summary>
-public class RagePower : CustomPowerModel
+public class FelixPower : CustomPowerModel
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;
@@ -31,7 +31,7 @@ public class RagePower : CustomPowerModel
     /// <inheritdoc />
     public override async Task AfterPowerAmountChanged(PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (power is not RagePower ragePower || ragePower != this)
+        if (power is not FelixPower felixPower || felixPower != this)
             return;
 
         // 1. 计算当前层数代表的理论触发次数 (例如 25层 = 2次)
@@ -60,16 +60,16 @@ public class RagePower : CustomPowerModel
     }
 
     /// <summary>
-    /// 触发怒火状态的方法
+    /// 触发快感状态的方法
     /// </summary>
-    private async Task TriggerAngry(RagePower ragePower, Creature? applier, CardModel? cardSource)
+    private async Task TriggerAngry(FelixPower felixPower, Creature? applier, CardModel? cardSource)
     {
         var runState = this.Owner.Player?.RunState;
         var combatState = this.Owner.CombatState;
         if (runState is null || combatState is null)
             return;
-        // 调用怒火阈值达到后的钩子方法
-        await Hook.AfterRageThresholdReached(runState, combatState, this.Owner, ragePower, applier, cardSource);
+        // 调用达到顶峰后的钩子方法
+        await Hook.AfterClimaxReached(runState, combatState, this.Owner, felixPower, applier, cardSource);
         // 可以在这里添加视觉和音效反馈
         if (this.Owner.IsPlayer)
         {
@@ -89,30 +89,30 @@ public class RagePower : CustomPowerModel
 
         this.MaxThresholdReachedThisTurn = 0;
 
-        // 回合结束失去所有怒火
+        // 回合结束失去所有快感
         await PowerCmd.Remove(this);
     }
 }
 
 /// <summary>
-/// 怒火阈值达到后事件接口
-/// 允许监听者在角色达到怒火阈值时执行自定义逻辑
+/// 达到顶峰后事件接口
+/// 允许监听者在角色达到顶峰时执行自定义逻辑
 /// </summary>
-public interface IAfterRageThresholdReached
+public interface IAfterClimaxReached
 {
     /// <summary>
-    /// 当怒火阈值达到时调用
+    /// 当达到顶峰时调用
     /// </summary>
-    /// <param name="powerOwner">怒火Buff的所有者</param>
-    /// <param name="ragePower">Buff自身</param>
+    /// <param name="powerOwner">快感Buff的所有者</param>
+    /// <param name="felixPower">Buff自身</param>
     /// <param name="applier"></param>
     /// <param name="cardSource"></param>
     /// <returns></returns>
-    Task AfterRageThresholdReached(Creature powerOwner, RagePower ragePower, Creature? applier, CardModel? cardSource);
+    Task AfterClimaxReached(Creature powerOwner, FelixPower felixPower, Creature? applier, CardModel? cardSource);
 }
 
 /// <summary>
-/// 钩子扩展类 - 提供怒火阈值达到后的事件分发功能
+/// 钩子扩展类 - 提供达到顶峰后的事件分发功能
 /// </summary>
 public static class HookExtension
 {
@@ -122,16 +122,16 @@ public static class HookExtension
     extension(Hook)
     {
         /// <summary>
-        /// 分发怒火阈值达到事件给所有监听者
+        /// 分发达到顶峰事件给所有监听者
         /// </summary>
-        public static async Task AfterRageThresholdReached(IRunState runState, CombatState? combatState, Creature owner,
-            RagePower ragePower, Creature? applier, CardModel? cardSource)
+        public static async Task AfterClimaxReached(IRunState runState, CombatState? combatState, Creature owner,
+            FelixPower felixPower, Creature? applier, CardModel? cardSource)
         {
             foreach (var model in runState.IterateHookListeners(combatState))
             {
-                if (model is not IAfterRageThresholdReached thresholdReachedModel)
+                if (model is not IAfterClimaxReached thresholdReachedModel)
                     continue;
-                await thresholdReachedModel.AfterRageThresholdReached(owner, ragePower, applier, cardSource);
+                await thresholdReachedModel.AfterClimaxReached(owner, felixPower, applier, cardSource);
                 model.InvokeExecutionFinished();
             }
         }
@@ -139,19 +139,19 @@ public static class HookExtension
 }
 
 /// <summary>
-/// 怒火管理器（占位符）
+/// 快感管理器（占位符）
 /// </summary>
-public static class RageManager
+public static class FelixManager
 {
     /// <summary>
-    /// 修改怒火值
+    /// 修改快感值
     /// </summary>
     /// <param name="target">目标角色</param>
-    /// <param name="amount">变化的怒火值（正数增加，负数减少）</param>
+    /// <param name="amount">变化的快感值（正数增加，负数减少）</param>
     /// <param name="sourceCreature">来源生物（可选）</param>
     /// <param name="cardReason">导致变化的卡牌（可选）</param>
     /// <returns></returns>
-    public static async Task ModifyRage(
+    public static async Task ModifyFelix(
         Creature target,
         decimal amount,
         Creature? sourceCreature = null,
@@ -160,8 +160,8 @@ public static class RageManager
         if (amount == 0)
             return;
 
-        // 更新怒火值
-        await PowerCmd.Apply<RagePower>(
+        // 更新快感值
+        await PowerCmd.Apply<FelixPower>(
             target,
             amount,
             sourceCreature,
