@@ -7,9 +7,6 @@ namespace Superstitio.Main.DynamicVars.Extensions;
 /// </summary>
 public static class DynamicVarSetExtensions
 {
-    /// <summary>
-    /// 动态变量集的扩展方法
-    /// </summary>
     extension(DynamicVarSet dynamicVarSet)
     {
         /// <summary>

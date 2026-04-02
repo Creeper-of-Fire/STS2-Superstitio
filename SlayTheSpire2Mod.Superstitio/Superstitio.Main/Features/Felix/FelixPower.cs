@@ -116,9 +116,6 @@ public interface IAfterClimaxReached
 /// </summary>
 public static class HookExtension
 {
-    /// <summary>
-    /// 
-    /// </summary>
     extension(Hook)
     {
         /// <summary>

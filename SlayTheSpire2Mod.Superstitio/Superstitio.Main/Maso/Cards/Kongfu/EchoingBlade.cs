@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
@@ -98,25 +99,12 @@ public sealed class EchoingBlade() : MasoBaseCard(new CardInitMessage
             ShouldManualRemoveFromBattle = false,
             HangingAction = async (context, play) =>
             {
-                var target = play.Target;
-
-                if (target is { IsAlive: true, IsEnemy: true })
-                {
-                    // 触发一次攻击到原目标
-                    await DamageCmd.Attack(this.DynamicVars.Damage.BaseValue).FromCard(this)
-                        .Targeting(target)
-                        .WithHitFx("vfx/vfx_attack_slash")
-                        .Execute(context);
-                    return;
-                }
-
-                var combatState = this.CombatState;
-                if (combatState is null)
+                if (this.CombatState is null)
                     return;
 
-                // 如果原目标无效，选择随机敌人
+                // 触发一次攻击到原目标
                 await DamageCmd.Attack(this.DynamicVars.Damage.BaseValue).FromCard(this)
-                    .TargetingRandomOpponents(combatState)
+                    .TryTargetingOrRandom(play.Target, this.CombatState)
                     .WithHitFx("vfx/vfx_attack_slash")
                     .Execute(context);
             }

@@ -61,10 +61,7 @@ public static class ModelDbExtensions
 
         return typedMutable;
     }
-
-    /// <summary>
-    /// 模型库的扩展方法
-    /// </summary>
+    
     extension(ModelDb)
     {
         /// <summary>
