@@ -5,12 +5,14 @@ basic_description = "挂起的效果。"
 
 [FelixPower]
 title = "快感"
-description = "愤怒之火熊熊燃烧。"
+description = "每累积[blue]10[/blue]层，达到一次[pink]顶峰[/pink]，触发特定效果。"
 
 [CorruptusPower]
 title = "腐朽"
-description = "你的心灵已然……"
+description = "直到下一次你的回合结束时，才移除生命值。"
+smartDescription = "直到下一次你的回合结束时，你移除[red]{Amount}[/red]点生命值。"
 
 [FelixDiscountPower]
 title = "费用减免"
-description = "你的所有卡费用减少。"
+description = "你的手牌的[gold]能量[/gold]费用减少，直至你打出被本效果减免费用的卡牌。"
+smartDescription= "你的手牌的费用减少{Amount:energyIcons()}，直至你打出被本效果减免费用的卡牌[blue]{Amount}[/blue]张。"

@@ -1,6 +1,7 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
@@ -47,6 +48,13 @@ public class Masturbate() : LupaBaseCard(new CardInitMessage
         new FelixVar(FelixGain).WithUpgrade(FelixGainUpgrade),
         new TriggerCountVar(TriggerCount),
         new DrawCardsVar(DrawCard)
+    ];
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromPower<FelixPower>()
     ];
 
     /// <inheritdoc />

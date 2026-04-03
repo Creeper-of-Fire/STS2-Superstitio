@@ -1,7 +1,10 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+﻿using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Combat.History.Entries;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
@@ -20,14 +23,23 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
     BaseCost = 1,
     Type = CardType.Attack,
     Rarity = CardRarity.Basic,
-    Target = TargetType.AnyPlayer
+    Target = TargetType.AnyEnemy
 })
 {
+    /// <inheritdoc />
+    protected override bool ShouldGlowGoldInternal => this.ShouldTrigger;
+
+    /// <summary>
+    /// 是否触发
+    /// </summary>
+    protected bool ShouldTrigger => (this.Owner.Creature.GetPower<CorruptusPower>()?.Amount ?? 0) >=
+                                    this.DynamicVars.GetVarOrThrow<DynamicVar>(nameof(CorruptusThreshold)).IntValue;
+
     private const int DamageSelf = 3;
 
     private const int CorruptusThreshold = 3;
 
-    private const int Damage = 4;
+    private const int Damage = 6;
 
     private const int DamageUpgrade = 2;
 
@@ -37,6 +49,13 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
         new DamageSelfVar(DamageSelf, ValueProp.Move),
         new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
         new DynamicVar(nameof(CorruptusThreshold), CorruptusThreshold)
+    ];
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromPower<CorruptusPower>()
     ];
 
 
@@ -49,10 +68,8 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
 
         await Damage(cardPlay.Target, this.DynamicVars.Damage.BaseValue);
 
-        if ((this.Owner.Creature.GetPower<CorruptusPower>()?.Amount ?? 0) <
-            this.DynamicVars.GetVarOrThrow<DynamicVar>(nameof(CorruptusThreshold)).IntValue) return;
-
-        await Damage(cardPlay.Target, this.DynamicVars.Damage.BaseValue);
+        if (this.ShouldTrigger)
+            await Damage(cardPlay.Target, this.DynamicVars.Damage.BaseValue);
 
         return;
 

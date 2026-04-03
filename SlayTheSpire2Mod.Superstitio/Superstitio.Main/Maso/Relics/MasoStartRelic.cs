@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Features.Corruptus;
@@ -22,6 +23,15 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterCl
 
     /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromPower<CorruptusPower>(),
+        HoverTipFactory.FromPower<FelixPower>()
+    ];
+    
 
     /// <inheritdoc />
     public Creature OwnerCreature => this.Owner.Creature;

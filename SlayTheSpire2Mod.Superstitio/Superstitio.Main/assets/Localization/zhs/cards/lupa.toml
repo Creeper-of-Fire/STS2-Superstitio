@@ -1,5 +1,5 @@
 ﻿[Masturbate]
 title = "蓄势待发"
-description = "获得{Felix:diff()}点[gold]快感[/gold]。\n{CardHangingDescription}"
+description = "获得{Felix:diff()}点[pink]快感[/pink]。\n{CardHangingDescription}"
 hanging_effect = "抽{DrawCards:diff()}张牌"
 flavor = "蓄势待发，只待一击。"

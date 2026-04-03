@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.Runs;
 namespace Superstitio.Main.Features.Felix;
 
 /// <summary>
-/// 
+/// 快感
 /// </summary>
 public class FelixPower : CustomPowerModel
 {

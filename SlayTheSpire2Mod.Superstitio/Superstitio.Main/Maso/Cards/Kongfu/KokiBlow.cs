@@ -1,6 +1,7 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
@@ -13,7 +14,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.Kongfu;
 
 /// <summary>
-/// 打出后挂起自身，后续每次打出攻击牌时获得2点怒火
+/// 打出后挂起自身，后续每次打出攻击牌时获得2点快感
 /// </summary>
 public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
 {
@@ -46,6 +47,13 @@ public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
         new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
         new TriggerCountVar(TriggerCount).WithUpgrade(TriggerCountUpgrade),
         new FelixVar(FelixGive)
+    ];
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromPower<FelixPower>()
     ];
 
     /// <inheritdoc />

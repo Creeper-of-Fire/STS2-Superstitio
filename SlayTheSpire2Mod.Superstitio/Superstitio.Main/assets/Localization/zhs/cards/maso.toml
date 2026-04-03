@@ -1,10 +1,10 @@
 ﻿[FistIn]
 title = "给你一拳"
-description = "选择一张手牌，失去其费用 × {HpLoss:diff()} 点生命，强制打出该牌。\n{CardHangingDescription}"
+description = "选择一张手牌，失去其{Energy:energyIcons()}费用×{HpLoss:diff()}点生命，强制打出该牌。\n{CardHangingDescription}"
 hanging_effect = "抽{DrawCards:diff()}张牌"
 flavor = "忍一时之痛，换一瞬之机。"
 
 [Spark]
 title = "雷光一闪"
-description = "对自己造成{DamageSelf:diff()}点伤害，对敌人造成{Damage:diff()}点伤害。\n若自身【腐朽】大于等于{CorruptusThreshold:diff()}，额外造成一次伤害。"
+description = "对自己造成{DamageSelf:diff()}点伤害，对敌人造成{Damage:diff()}点伤害。\n若自身[sine][red]腐朽[/red][/sine]大于等于{CorruptusThreshold:diff()}，额外造成一次伤害。"
 flavor = "以自身的痛楚引动雷电，痛得越深，劈得越狠。"

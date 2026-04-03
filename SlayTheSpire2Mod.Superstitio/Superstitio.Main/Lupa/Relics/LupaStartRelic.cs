@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
@@ -19,6 +20,14 @@ public class LupaStartRelic : CardPoolSelectionRelic, IAfterClimaxReached
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     private const int FelixGetPerEnergy = 2;
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromPower<FelixPower>(),
+        HoverTipFactory.FromPower<FelixDiscountPower>()
+    ];
 
     /// <inheritdoc />
     public async Task AfterClimaxReached(Creature powerOwner, FelixPower felixPower, Creature? applier, CardModel? cardSource)

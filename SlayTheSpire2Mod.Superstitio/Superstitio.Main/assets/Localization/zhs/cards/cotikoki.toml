@@ -13,5 +13,5 @@ flavor = "每一次挥击，都会在敌人的伤口上留下回响。"
 [KokiBlow]
 title = "怒意冲拳"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
-hanging_effect = "获得{Felix:diff()}点怒火"
+hanging_effect = "获得{Felix:diff()}点[pink]快感[/pink]"
 flavor = "每一拳都在心中埋下更烈的火种。"
