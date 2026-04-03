@@ -3,8 +3,6 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
@@ -24,25 +22,22 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
     Type = CardType.Skill,
     Rarity = CardRarity.Basic,
     Target = TargetType.Self
-}), IWithHangingConfig
+}), IWithHangingConfigCard
 {
+    private const int HpLoss = 4;
+    private const int HpLossUpgrade = -1;
+    private const int DrawCard = 1;
+    private const int TriggerCount = 3;
+
+
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
     [
-        new HpLossVar(BaseHpLoss),
-        new HangingTriggerVar(Wait),
+        new HpLossVar(HpLoss).WithUpgrade(HpLossUpgrade),
+        new TriggerCountVar(TriggerCount),
+        new DrawCardsVar(DrawCard)
     ];
 
-    private const int BaseHpLoss = 4;
-    private const int UpgradeHpLoss = -1;
-    private const int DrawCard = 1;
-    private const int Wait = 3;
-
-    /// <inheritdoc />
-    protected override PileType GetResultPileType()
-    {
-        return PileType.None; // 挂起后不进入弃牌堆
-    }
 
     /// <inheritdoc />
     public HangingCardConfig HangingCardConfig => new(
@@ -53,21 +48,7 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
     );
 
     /// <inheritdoc />
-    protected override void AddExtraArgsToDescription(LocString description)
-    {
-        base.AddExtraArgsToDescription(description);
-        HangingDescriptionBuilder.AddExtraArgsToDescription(
-            description,
-            this.HangingCardConfig
-        );
-    }
-
-    /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        ..base.ExtraHoverTips,
-        ..HangingDescriptionBuilder.GetHoverTips(this.HangingCardConfig, showHangingTotalDescription: true),
-    ];
+    public bool HangingSelfAfterPlay => true;
 
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -97,21 +78,10 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
         }
 
         // 创建挂起令牌
-        var token = new AutoHangingCardTokenWithConfig(
-            this.HangingCardConfig,
-            base.GetResultPileType())
-        {
-            ShouldManualRemoveFromBattle = false,
-            HangingAction = async (context, _) => { await CardPileCmd.Draw(context, DrawCard, this.Owner, fromHandDraw: true); }
-        };
+        var token = this.CreateHangingToken(async (context, _) =>
+            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true));
 
         // 挂起自身
         await HangingCardManager.HangCard(token, this);
-    }
-
-    /// <inheritdoc />
-    protected override void OnUpgrade()
-    {
-        this.DynamicVars.HpLoss.UpgradeValueBy(UpgradeHpLoss);
     }
 }

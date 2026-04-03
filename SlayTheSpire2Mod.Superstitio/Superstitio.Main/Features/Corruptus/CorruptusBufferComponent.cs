@@ -1,5 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
+﻿using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -39,6 +38,8 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
     /// </summary>
     private Creature OwnerCreature => this.CorruptusBuffer.OwnerCreature;
 
+    private List<Func<Task>> PendingCorruptusTasks { get; set; } = [];
+    
     /// <summary>
     /// 在伤害结算后期修改损失的生命值。
     /// 如果目标是拥有者且未在处理中，则将伤害量转换为腐朽层数，并抵消原伤害。
@@ -59,13 +60,30 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
         if (target != this.OwnerCreature)
             return amount;
 
-        PowerCmd.Apply<CorruptusPower>(
-            target,
-            amount,
-            dealer,
-            null
-        );
+        this.PendingCorruptusTasks.Add(async () => 
+        {
+            await CorruptusManager.IncreaseCorruptus(
+                target, 
+                amount, 
+                dealer, 
+                cardSource
+            );
+        });
 
         return 0M;
+    }
+    
+    /// <summary>
+    /// 在伤害结算后期处理完成时，处理所有等待的腐朽应用任务。
+    /// </summary>
+    /// 推荐挂载点：和缓冲 <see cref="Buffer"/> 使用相同的钩子，即 <see cref="AbstractModel.AfterModifyingHpLostAfterOsty"/>。
+    public async Task AfterModifyingHpLostAfterOsty()
+    {
+        foreach (var taskFunc in this.PendingCorruptusTasks)
+        {
+            await taskFunc();
+        }
+    
+        this.PendingCorruptusTasks.Clear();
     }
 }

@@ -8,12 +8,12 @@ namespace Superstitio.Main.DynamicVars;
 /// <summary>
 /// 触发次数动态变量
 /// </summary>
-public class HangingTriggerVar(int triggers, string name = HangingTriggerVar.DefaultName) : DynamicVar(name, triggers)
+public class TriggerCountVar(int triggers, string name = TriggerCountVar.DefaultName) : DynamicVar(name, triggers)
 {
     /// <summary>
     /// 名称
     /// </summary>
-    public const string DefaultName = nameof(HangingTriggerVar);
+    public const string DefaultName = nameof(TriggerCountVar);
 
     /// <summary>
     /// 基础触发次数

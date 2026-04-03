@@ -17,11 +17,6 @@ public abstract class BaseDefend() : SuperstitioBaseCard(new CardInitMessage
     Target = TargetType.Self,
 })
 {
-    /// <summary>
-    /// 指示此卡牌是否获得格挡。
-    /// </summary>
-    public override bool GainsBlock => true;
-
     /// <inheritdoc/>
     protected override HashSet<CardTag> CanonicalTags =>
     [
@@ -29,9 +24,9 @@ public abstract class BaseDefend() : SuperstitioBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc/>
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
     [
-        new BlockVar(5M, ValueProp.Move)
+        new BlockVar(5, ValueProp.Move).WithUpgrade(3)
     ];
 
     /// <inheritdoc/>
@@ -39,7 +34,4 @@ public abstract class BaseDefend() : SuperstitioBaseCard(new CardInitMessage
     {
         await CreatureCmd.GainBlock(this.Owner.Creature, this.DynamicVars.Block, cardPlay);
     }
-
-    /// <inheritdoc/>
-    protected override void OnUpgrade() => this.DynamicVars.Block.UpgradeValueBy(3M);
 }

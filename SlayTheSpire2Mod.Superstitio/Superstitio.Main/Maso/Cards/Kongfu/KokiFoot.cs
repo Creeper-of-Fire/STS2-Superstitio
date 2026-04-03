@@ -2,60 +2,54 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
-using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Base;
+namespace Superstitio.Main.Maso.Cards.Kongfu;
 
 /// <summary>
-/// 自慰 - 0费技能，挂起自身，获得4(6)点快感。打出任意2张牌后，抽1张牌。
+/// 打出后挂起自身，后续每次打出攻击牌时抽1张牌（可触发2/3次）
 /// </summary>
-public class Masturbate() : MasoBaseCard(new CardInitMessage
+public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
 {
-    BaseCost = 0,
-    Type = CardType.Skill,
+    BaseCost = 1,
+    Type = CardType.Attack,
     Rarity = CardRarity.Uncommon,
-    Target = TargetType.Self,
+    Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {
     /// <summary>
-    /// 基础快感值
-    /// </summary>
-    private const int FelixGain = 4;
-
-    /// <summary>
-    /// 升级增加的快感值
-    /// </summary>
-    private const int FelixGainUpgrade = 2;
-
-    /// <summary>
-    /// 触发抽牌所需打出的牌数
+    /// 基础触发次数
     /// </summary>
     private const int TriggerCount = 2;
 
     /// <summary>
-    /// 触发抽牌的牌数
+    /// 升级增加的触发次数
     /// </summary>
-    private const int DrawCard = 1;
+    private const int TriggerCountUpgrade = 1;
+
+    private const int Damage = 5;
+
+    private const int DamageUpgrade = 3;
 
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
     [
-        new FelixVar(FelixGain).WithUpgrade(FelixGainUpgrade),
-        new TriggerCountVar(TriggerCount),
-        new DrawCardsVar(DrawCard)
+        new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
+        new TriggerCountVar(TriggerCount).WithUpgrade(TriggerCountUpgrade),
+        new DrawCardsVar(1)
     ];
 
     /// <inheritdoc />
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
-        HangingType: HangingType.Delay,
+        HangingType: HangingType.Follow,
         TriggerCount: this.DynamicVars.TriggerCount,
-        CardTypeFilter: CardType.None
+        CardTypeFilter: CardType.Attack
     );
 
     /// <inheritdoc />
@@ -64,19 +58,14 @@ public class Masturbate() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 获取快感值
-        decimal felixAmount = this.DynamicVars.Felix.BaseValue;
+        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        await DamageCmd.Attack(this.DynamicVars.Damage.BaseValue).FromCard(this)
+            .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
 
-        // 使用 FelixManager 增加快感
-        await FelixManager.ModifyFelix(this.Owner.Creature, felixAmount, this.Owner.Creature, cardPlay.Card);
-
-        // 创建挂起令牌
         var token = this.CreateHangingToken(async (context, _) =>
         {
             await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true);
         });
-
-        // 挂起自身
         await HangingCardManager.HangCard(token, this);
     }
 }

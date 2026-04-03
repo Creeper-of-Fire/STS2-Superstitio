@@ -23,18 +23,22 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
     Target = TargetType.AnyPlayer
 })
 {
+    private const int DamageSelf = 3;
+
+    private const int CorruptusThreshold = 3;
+
+    private const int Damage = 4;
+
+    private const int DamageUpgrade = 2;
+
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
     [
-        new DamageSelfVar(BaseDamageSelf, ValueProp.Move),
-        new DamageVar(BaseDamage, ValueProp.Move),
-        new(nameof(CorruptusThreshold), CorruptusThreshold)
+        new DamageSelfVar(DamageSelf, ValueProp.Move),
+        new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
+        new DynamicVar(nameof(CorruptusThreshold), CorruptusThreshold)
     ];
 
-    private const int BaseDamageSelf = 3;
-    private const int CorruptusThreshold = 3;
-    private const int BaseDamage = 4;
-    private const int UpgradeDamage = 2;
 
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -57,11 +61,5 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
             await DamageCmd.Attack(amount).FromCard(this)
                 .Targeting(target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
         }
-    }
-
-    /// <inheritdoc />
-    protected override void OnUpgrade()
-    {
-        this.DynamicVars.Damage.UpgradeValueBy(UpgradeDamage);
     }
 }

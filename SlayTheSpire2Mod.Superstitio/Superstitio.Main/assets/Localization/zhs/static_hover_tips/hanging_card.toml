@@ -10,11 +10,11 @@ description = "[orange]合力序列[/orange]中的卡牌会在满足条件时发
 
 [Hanging.Follow]
 keyword = "伴随"
-description = "后续{HangingTriggerVar:diff()}次打出{CardType}时，{HangingEffect}。"
+description = "后续{TriggerCountVar:diff()}次打出{CardType}时，{HangingEffect}。"
 
 [Hanging.Delay]
 keyword = "延缓"
-description = "直到打出{HangingTriggerVar:diff()}次{CardType}后，{HangingEffect}。"
+description = "直到打出{TriggerCountVar:diff()}次{CardType}后，{HangingEffect}。"
 
 [CardType]
 any = "[purple]任意牌[/purple]"

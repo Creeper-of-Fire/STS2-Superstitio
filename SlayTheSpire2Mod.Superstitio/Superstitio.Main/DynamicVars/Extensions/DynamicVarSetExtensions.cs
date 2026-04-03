@@ -26,16 +26,21 @@ public static class DynamicVarSetExtensions
         /// <summary>
         /// 获取触发次数动态变量
         /// </summary>
-        public HangingTriggerVar TriggerCount => dynamicVarSet.GetVarOrThrow<HangingTriggerVar>(HangingTriggerVar.DefaultName);
+        public TriggerCountVar TriggerCount => dynamicVarSet.GetVarOrThrow<TriggerCountVar>(TriggerCountVar.DefaultName);
 
         /// <summary>
         /// 获取快感动态变量
         /// </summary>
         public FelixVar Felix => dynamicVarSet.GetVarOrThrow<FelixVar>(FelixVar.DefaultName);
-        
+
         /// <summary>
         /// 获取自伤动态变量
         /// </summary>
         public DamageSelfVar DamageSelf => dynamicVarSet.GetVarOrThrow<DamageSelfVar>(DamageSelfVar.DefaultName);
+
+        /// <summary>
+        /// 获取抽牌数量动态变量
+        /// </summary>
+        public DrawCardsVar DrawCards => dynamicVarSet.GetVarOrThrow<DrawCardsVar>(DrawCardsVar.DefaultName);
     }
 }

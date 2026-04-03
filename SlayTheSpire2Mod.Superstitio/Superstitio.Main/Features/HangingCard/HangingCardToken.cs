@@ -59,6 +59,7 @@ public abstract record HangingCardToken(
 
     /// <summary>
     /// 挂起后，是否手动从战斗中移除
+    /// 如果禁用，则由 ResultPileType 决定卡牌的去处
     /// </summary>
     /// <remarks>
     /// 这是由于，部分卡是挂起自身的，如果手动使用 <see cref="CardPileCmd.RemoveFromCombat(CardModel,bool)"/>> ，则可能会导致问题。

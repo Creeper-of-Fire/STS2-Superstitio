@@ -5,7 +5,6 @@ using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Maso.Base;
 using Superstitio.Main.Maso.Cards.Base;
-using Superstitio.Main.Maso.Cards.Kongfu;
 using Superstitio.Main.Maso.Relics;
 
 namespace Superstitio.Main.Maso;

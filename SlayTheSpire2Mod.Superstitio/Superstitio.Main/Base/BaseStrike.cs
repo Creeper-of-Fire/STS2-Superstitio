@@ -24,9 +24,9 @@ public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc/>
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
     [
-        new DamageVar(6M, ValueProp.Move)
+        new DamageVar(6, ValueProp.Move).WithUpgrade(3)
     ];
 
     /// <inheritdoc/>
@@ -36,7 +36,4 @@ public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
         await DamageCmd.Attack(this.DynamicVars.Damage.BaseValue).FromCard(this)
             .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
     }
-
-    /// <inheritdoc/>
-    protected override void OnUpgrade() => this.DynamicVars.Damage.UpgradeValueBy(3M);
 }

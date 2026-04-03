@@ -4,44 +4,9 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.Features.HangingCard;
 
 namespace Superstitio.Main.Base;
-
-/// <summary>
-/// 用于初始化卡牌基本属性的记录类型。
-/// </summary>
-public record CardInitMessage
-{
-    /// <summary>
-    /// 卡牌的基础费用。
-    /// </summary>
-    public required int BaseCost { get; init; }
-
-    /// <summary>
-    /// 卡牌的类型。
-    /// </summary>
-    public required CardType Type { get; init; }
-
-    /// <summary>
-    /// 卡牌的稀有度。
-    /// </summary>
-    public required CardRarity Rarity { get; init; }
-
-    /// <summary>
-    /// 卡牌的使用目标类型。
-    /// </summary>
-    public required TargetType Target { get; init; }
-
-    /// <summary>
-    /// 指示该卡牌是否显示在卡牌库中。
-    /// </summary>
-    public bool ShowInCardLibrary { get; init; } = true;
-
-    /// <summary>
-    /// <see cref="BaseLib"/> 模组：指示该卡牌是否自动添加/注册。
-    /// </summary>
-    public bool AutoAdd { get; init; } = true;
-}
 
 /// <summary>
 /// 
@@ -64,21 +29,25 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     /// <summary>
     /// 定义卡牌的动态变量集合。
     /// </summary>
-    protected override IEnumerable<DynamicVar> CanonicalVars => [];
+    protected override IEnumerable<DynamicVar> CanonicalVars => this.InitVarsWithUpgrade.Select(it => it.DynamicVar);
 
     /// <summary>
-    /// 卡牌的风味文本
+    /// 为卡牌定义动态变量集合（带升级描述）。
     /// </summary>
-    public LocString Flavor => new("cards", this.Id.Entry + ".flavor");
+    protected virtual IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade => [];
 
-    /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        ..base.ExtraHoverTips,
-        new HoverTip(
-            this.Flavor
-        )
-    ];
+    /// <summary>
+    /// 卡牌升级效果。
+    /// </summary>
+    protected override void OnUpgrade()
+    {
+        // 这里因为是重复获取，所以性能会低一点，但是，这只是在升级时重新获取一次，就不做缓存了，不缺这三瓜两枣。
+        foreach (var dynamicVarWithUpgrade in this.InitVarsWithUpgrade)
+        {
+            if (this.DynamicVars.TryGetValue(dynamicVarWithUpgrade.DynamicVar.Name, out var dynamicVar))
+                dynamicVar.UpgradeValueBy(dynamicVarWithUpgrade.UpgradeValue);
+        }
+    }
 
     /// <summary>
     /// 执行卡牌效果。
@@ -90,8 +59,44 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
         return Task.CompletedTask;
     }
 
+
     /// <summary>
-    /// 卡牌升级效果。
+    /// 卡牌的风味文本
     /// </summary>
-    protected override void OnUpgrade() { }
+    public LocString Flavor => new("cards", this.Id.Entry + ".flavor");
+
+    /// <inheritdoc />
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+
+        if (this is IWithHangingConfig withHangingConfig)
+            HangingDescriptionBuilder.AddExtraArgsToDescription(description, withHangingConfig.HangingCardConfig);
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        new HoverTip(
+            this.Flavor
+        ),
+        ..this is IWithHangingConfig withHangingConfig
+            ? HangingDescriptionBuilder.GetHoverTips(withHangingConfig.HangingCardConfig, showHangingTotalDescription: true)
+            : [],
+    ];
+
+    /// <inheritdoc />
+    protected override PileType GetResultPileType()
+    {
+        if (this is IWithHangingConfigCard { HangingSelfAfterPlay: true })
+            return PileType.None; // 挂起后不进入弃牌堆
+
+        return base.GetResultPileType();
+    }
+
+    /// <summary>
+    /// 基类打出后返回的牌堆
+    /// </summary>
+    public PileType BaseResultPileType => base.GetResultPileType();
 }

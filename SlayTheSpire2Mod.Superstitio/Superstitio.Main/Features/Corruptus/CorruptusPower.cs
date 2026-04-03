@@ -8,7 +8,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace Superstitio.Main.Features.Corruptus;
 
 /// <summary>
-/// TODO 腐朽占位符能力（临时）
+/// 
 /// </summary>
 public class CorruptusPower : CustomPowerModel
 {

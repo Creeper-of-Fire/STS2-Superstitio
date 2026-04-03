@@ -30,9 +30,17 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterCl
     public CorruptusBufferComponent CorruptusBufferComponent => field ??= new CorruptusBufferComponent(this);
 
     /// <inheritdoc />
-    public override decimal ModifyHpLostAfterOstyLate(Creature target,
-        decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource) =>
-        this.CorruptusBufferComponent.ModifyHpLostAfterOstyLate(target, amount, props, dealer, cardSource);
+    public override decimal ModifyHpLostAfterOstyLate(
+        Creature target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource
+    ) => this.CorruptusBufferComponent.ModifyHpLostAfterOstyLate(target, amount, props, dealer, cardSource);
+
+    /// <inheritdoc />
+    public override Task AfterModifyingHpLostAfterOsty() =>
+        this.CorruptusBufferComponent.AfterModifyingHpLostAfterOsty();
 
     /// <inheritdoc />
     public override async Task AfterPowerAmountChanged(PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
@@ -62,8 +70,7 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterCl
         if (powerOwner.Player is null || powerOwner != this.OwnerCreature)
             return;
 
-
-        await PowerCmd.Apply<CorruptusPower>(powerOwner, -CorruptusReduceWhenClimax, applier, cardSource);
+        await CorruptusManager.DecreaseCorruptus(powerOwner, CorruptusReduceWhenClimax, applier, cardSource);
     }
 
     private const int FelixGetPerEnergy = 2;

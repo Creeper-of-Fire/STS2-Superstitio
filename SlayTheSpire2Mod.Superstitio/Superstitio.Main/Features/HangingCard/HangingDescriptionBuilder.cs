@@ -16,7 +16,7 @@ namespace Superstitio.Main.Features.HangingCard;
 /// 挂起卡牌配置
 /// </summary>
 [method: SetsRequiredMembers]
-public record HangingCardConfig(CardModel Card, HangingType HangingType, HangingTriggerVar TriggerCount, CardType CardTypeFilter)
+public record HangingCardConfig(CardModel Card, HangingType HangingType, TriggerCountVar TriggerCount, CardType CardTypeFilter)
 {
     /// <summary>
     /// 挂起的卡牌
@@ -31,7 +31,7 @@ public record HangingCardConfig(CardModel Card, HangingType HangingType, Hanging
     /// <summary>
     /// 触发次数（动态变量值）
     /// </summary>
-    public required HangingTriggerVar TriggerCount { get; init; } = TriggerCount;
+    public required TriggerCountVar TriggerCount { get; init; } = TriggerCount;
 
     /// <summary>
     /// 触发的卡牌类型过滤（ <see cref="CardType.None"/> 为任意牌）
@@ -110,20 +110,20 @@ public record LocKeywordTitle() : LocTemplate("Hanging", "keyword_title")
 
 /// <summary>
 /// 对应 [Hanging.Follow] description / [Hanging.Delay] description
-/// "后续{HangingTriggerVar:diff()}次打出{CardType}时，{HangingEffect}。"
+/// "后续{TriggerCountVar:diff()}次打出{CardType}时，{HangingEffect}。"
 /// </summary>
 public record LocHangingTypeDescription : LocTemplate
 {
     public LocHangingTypeDescription(HangingType hangingType) : base("Hanging", hangingType.ToString(), "description") { }
 
     // C# 参数名严格对应 TOML，谁也填不乱
-    public LocString Fill(HangingTriggerVar HangingTriggerVar, LocString CardType, LocString HangingEffect)
+    public LocString Fill(TriggerCountVar triggerCountVar, LocString CardType, LocString HangingEffect)
     {
         var loc = this.CreateBaseLoc();
 
         // 注意：Sts2 的动态变量(DynamicVar)通常依靠直接传入对象解析，
-        // 它会自动匹配 TOML 里的 {HangingTriggerVar:diff()}，所以这里保留原有 Add 逻辑
-        loc.Add(HangingTriggerVar);
+        // 它会自动匹配 TOML 里的 {TriggerCountVar:diff()}，所以这里保留原有 Add 逻辑
+        loc.Add(triggerCountVar);
 
         // 普通的本地化文本替换，完美使用 nameof
         loc.Add(nameof(CardType), CardType);
@@ -192,7 +192,7 @@ public static class HangingDescriptionBuilder
 
         // 利用模板 Fill() 方法，编译器会强迫你交出所有必须的变量
         var description = new LocHangingTypeDescription(config.HangingType).Fill(
-            HangingTriggerVar: config.TriggerCount,
+            triggerCountVar: config.TriggerCount,
             CardType: HangingStaticLocs.GetCardTypeText(config.CardTypeFilter),
             HangingEffect: GetCardHangingEffect(config.Card)
         );
