@@ -4,7 +4,7 @@ description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hanging_effect = "抽{DrawCards:diff()}张牌"
 flavor = "刀刃悬于空中，随时准备再次落下。"
 
-[CotiThroat]
+[KokiGroin]
 title = "回响之刃"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hanging_effect = "造成{Damage:diff()}点伤害"
