@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using Superstitio.Main.Extensions;
 
 namespace Superstitio.Main.Base;
 
@@ -24,7 +25,7 @@ public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc/>
-    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(6, ValueProp.Move).WithUpgrade(3)
     ];
@@ -32,8 +33,6 @@ public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
     /// <inheritdoc/>
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
-        await DamageCmd.Attack(this.DynamicVars.Damage.BaseValue).FromCard(this)
-            .Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
+        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
     }
 }

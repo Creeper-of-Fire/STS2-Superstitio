@@ -31,7 +31,7 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
 
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new HpLossVar(HpLoss).WithUpgrade(HpLossUpgrade),
         new TriggerCountVar(TriggerCount),
@@ -43,7 +43,6 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Delay,
-        TriggerCount: this.DynamicVars.TriggerCount,
         CardTypeFilter: CardType.None
     );
 
@@ -56,7 +55,7 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
         var selectedCard = (await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(this.SelectionScreenPrompt, 1),
             context: choiceContext, player: this.Owner, filter: null, source: this)).FirstOrDefault();
 
-        if (selectedCard != null)
+        if (selectedCard is not null)
         {
             int costEnergy = selectedCard.EnergyCost.GetAmountToSpend();
 

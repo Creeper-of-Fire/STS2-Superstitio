@@ -36,7 +36,7 @@ public class TriggerCountVar(int triggers, string? name = null) : DynamicVar(nam
 
         // 如果有附魔，可以在这里处理附魔对触发次数的影响
         var enchantment = card.Enchantment;
-        if (enchantment != null)
+        if (enchantment is not null)
         {
             // 如果有附魔增加触发次数的逻辑，可以在这里实现
             // currentTriggers = (int)enchantment.EnchantTriggerCount(currentTriggers);

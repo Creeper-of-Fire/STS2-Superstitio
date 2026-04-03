@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Godot;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
 using static Superstitio.Main.Features.HangingCard.HangingStaticLocs;
 using static Superstitio.Main.Utils.SuperstitioLocStringFactory;
 
@@ -20,6 +20,10 @@ namespace Superstitio.Main.Features.HangingCard;
 [method: SetsRequiredMembers]
 public record HangingCardConfig(CardModel Card, HangingType HangingType, TriggerCountVar TriggerCount, CardType CardTypeFilter)
 {
+    [SetsRequiredMembers]
+    public HangingCardConfig(CardModel Card, HangingType HangingType, CardType CardTypeFilter) :
+        this(Card, HangingType, new TriggerCountVar(Card.DynamicVars.TriggerCount.IntValue), CardTypeFilter) { }
+
     /// <summary>
     /// 挂起的卡牌
     /// </summary>

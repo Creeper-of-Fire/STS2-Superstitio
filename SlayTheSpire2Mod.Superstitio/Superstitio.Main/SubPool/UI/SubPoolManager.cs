@@ -137,7 +137,7 @@ public static class SubPoolManager
         foreach (string poolId in subPoolIds)
         {
             var subPool = GetSubPoolById(poolId);
-            if (subPool != null && subPool.PoolCards.Any(pc => pc.CanonicalInstance == canonicalCard))
+            if (subPool is not null && subPool.PoolCards.Any(pc => pc.CanonicalInstance == canonicalCard))
                 return true;
         }
     

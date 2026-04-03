@@ -30,7 +30,7 @@ public static class CharacterSelectPatches
         // 使用 Harmony 的 Traverse 访问私有变量 _infoPanel
         var infoPanel = Traverse.Create(__instance).Field("_infoPanel").GetValue<Control>();
 
-        if (infoPanel != null)
+        if (infoPanel is not null)
         {
             // 创建我们的 UI 实例
             // 可能是由于生命周期问题，没办法使用 "_Ready"，于是自己手动构建
@@ -40,7 +40,7 @@ public static class CharacterSelectPatches
             // 源码中显示路径是 "InfoPanel/VBoxContainer"
             var vbox = infoPanel.GetNodeOrNull<VBoxContainer>("VBoxContainer");
 
-            if (vbox != null)
+            if (vbox is not null)
             {
                 vbox.AddChild(_masoSelector);
                 // 将我们的 UI 移动到描述文本之后，血量/金币显示之前

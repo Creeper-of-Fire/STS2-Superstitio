@@ -3,13 +3,14 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
+using Superstitio.Main.Features.Felix;
 
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 快感动态变量
 /// </summary>
-public class FelixVar(int felixAmount, string? name = null) : DynamicVar(name ?? DefaultName, felixAmount)
+public class FelixVar(int felixAmount, string? name = null) : PowerVar<FelixPower>(name ?? DefaultName, felixAmount)
 {
     /// 默认名称
     public static readonly string DefaultName = FelixVar.DynamicVarName;
@@ -36,7 +37,7 @@ public class FelixVar(int felixAmount, string? name = null) : DynamicVar(name ??
 
         // 如果有附魔，处理附魔对快感值的影响
         var enchantment = card.Enchantment;
-        if (enchantment != null)
+        if (enchantment is not null)
         {
             // 假设附魔可以增加快感值
             // currentFelix = (int)enchantment.EnchantFelixValue(currentFelix);

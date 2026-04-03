@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
@@ -13,42 +12,28 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.Kongfu;
 
 /// <summary>
-/// 打出后挂起自身，后续每次打出攻击牌时抽1张牌（可触发2/3次）
+/// 造成伤害。打出一张本牌的复制品。
 /// </summary>
-public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
+public class KokiArmpit() : MasoBaseCard(new CardInitMessage
 {
-    BaseCost = 1,
+    BaseCost = 0,
     Type = CardType.Attack,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Common,
     Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {
-    /// <summary>
-    /// 基础触发次数
-    /// </summary>
-    private const int TriggerCount = 2;
-
-    /// <summary>
-    /// 升级增加的触发次数
-    /// </summary>
-    private const int TriggerCountUpgrade = 1;
-
-    private const int Damage = 5;
-
-    private const int DamageUpgrade = 3;
 
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
-        new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
-        new TriggerCountVar(TriggerCount).WithUpgrade(TriggerCountUpgrade),
-        new DrawCardsVar(1)
+        new DamageVar(7, ValueProp.Move).WithUpgrade(2),
+        new TriggerCountVar(2)
     ];
 
     /// <inheritdoc />
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
-        HangingType: HangingType.Follow,
+        HangingType: HangingType.Delay,
         CardTypeFilter: CardType.Attack
     );
 
@@ -58,12 +43,16 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
-
-        var token = this.CreateHangingToken(async (context, _) =>
+        var token = this.CreateHangingToken(async (context, play) =>
         {
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true);
+            // 触发一次攻击到原目标或随机目标
+            await DamageCmd.AutoAttack(this, play, tryRandomWhenTargetDie: true).Execute(context);
+
+            var clonedCard = this.CreateClone();
+
+            await CardCmd.AutoPlay(context, clonedCard, play.Target);
         });
+
         await HangingCardManager.HangCard(token, this);
     }
 }

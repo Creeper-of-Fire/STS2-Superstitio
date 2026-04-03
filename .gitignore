@@ -59,6 +59,7 @@ BenchmarkDotNet.Artifacts/
 
 # 文档和原型文件
 concepts.toml
+concepts.*
 
 # Python
 *.pyc

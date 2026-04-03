@@ -1,4 +1,5 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Extensions;
 
@@ -30,5 +31,13 @@ public static class HangingCardManager
             cardReason?.Owner.Creature,
             cardReason
         );
+    }
+
+    /// <summary>
+    /// 获取玩家身上所有指定类型的悬挂卡牌令牌。
+    /// </summary>
+    public static IEnumerable<TToken> GetHangingCardTokens<TToken>(Player player) where TToken : HangingCardToken
+    {
+        return player.Creature.Powers.OfType<HangingCardPower>().Select(it => it.HangingCardToken).OfType<TToken>();
     }
 }

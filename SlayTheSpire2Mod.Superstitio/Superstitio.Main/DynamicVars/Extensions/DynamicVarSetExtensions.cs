@@ -24,6 +24,17 @@ public static class DynamicVarSetExtensions
         }
 
         /// <summary>
+        /// 获取指定名称的动态变量，若不存在则抛出异常
+        /// </summary>
+        public DynamicVar GetVarOrThrow(string key)
+        {
+            if (!dynamicVarSet.TryGetValue(key, out var dynamicVar))
+                throw new ArgumentException($"未能找到键为 '{key}' 的动态变量。");
+
+            return dynamicVar;
+        }
+
+        /// <summary>
         /// 获取触发次数动态变量
         /// </summary>
         public TriggerCountVar TriggerCount => dynamicVarSet.GetVarOrThrow<TriggerCountVar>(TriggerCountVar.DefaultName);

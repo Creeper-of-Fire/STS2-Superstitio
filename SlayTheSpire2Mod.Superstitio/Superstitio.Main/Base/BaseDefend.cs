@@ -24,7 +24,7 @@ public abstract class BaseDefend() : SuperstitioBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc/>
-    protected override IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade =>
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new BlockVar(5, ValueProp.Move).WithUpgrade(3)
     ];

@@ -35,7 +35,7 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     /// <summary>
     /// 为卡牌定义动态变量集合（带升级描述）。
     /// </summary>
-    protected virtual IEnumerable<DynamicVarWithUpgrade> InitVarsWithUpgrade => [];
+    protected virtual IEnumerable<DynamicVarSpec> InitVarsWithUpgrade => [];
 
     /// <summary>
     /// 卡牌升级效果。
@@ -78,6 +78,7 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips => base.ExtraHoverTips
         .TryAddTip(this.Flavor)
+        .TryAddTip(this.InitVarsWithUpgrade.SelectMany(it => it.ExtraHoverTips))
         .TryAddTip(this is IWithHangingConfig withHangingConfig
             ? HangingDescriptionBuilder.GetHoverTips(withHangingConfig.HangingCardConfig, showHangingTotalDescription: true)
             : []);

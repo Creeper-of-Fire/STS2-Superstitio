@@ -15,3 +15,9 @@ title = "怒意冲拳"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hanging_effect = "获得{Felix:diff()}点[pink]快感[/pink]"
 flavor = "每一拳都在心中埋下更烈的火种。"
+
+[KokiArmpit]
+title = "无尽燃烧"
+description = "{CardHangingDescription}"
+hanging_effect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品。"
+flavor = "你已无法停止。"
