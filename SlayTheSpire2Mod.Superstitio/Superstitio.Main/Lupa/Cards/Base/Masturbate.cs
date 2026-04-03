@@ -6,14 +6,14 @@ using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Maso.Base;
+using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Base;
 
 /// <summary>
 /// 自慰 - 0费技能，挂起自身，获得4(6)点快感。打出任意2张牌后，抽1张牌。
 /// </summary>
-public class Masturbate() : MasoBaseCard(new CardInitMessage
+public class Masturbate() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Skill,
