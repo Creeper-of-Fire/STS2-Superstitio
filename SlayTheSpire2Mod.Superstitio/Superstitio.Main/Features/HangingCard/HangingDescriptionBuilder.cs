@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Godot;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.DynamicVars;
+using static Superstitio.Main.Features.HangingCard.HangingStaticLocs;
 using static Superstitio.Main.Utils.SuperstitioLocStringFactory;
 
 // ReSharper disable InconsistentNaming
@@ -68,7 +70,7 @@ public abstract record LocTemplate(string LocPrefix, params string[] Keys)
 /// 对应 [Hanging] general_description
 /// "打出后，送入[orange]{SequenceName}[/orange]而非牌堆，直到效果耗尽。"
 /// </summary>
-public record LocGeneralDescription() : LocTemplate("Hanging", "general_description")
+public record LocGeneralDescription() : LocTemplate(HangingKey, "general_description")
 {
     // 参数名直接对应 TOML 里的 {SequenceName}
     public LocString Fill(LocString SequenceName)
@@ -83,7 +85,7 @@ public record LocGeneralDescription() : LocTemplate("Hanging", "general_descript
 /// 对应 [Hanging] card_description_frame
 /// "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
 /// </summary>
-public record LocCardDescriptionFrame() : LocTemplate("Hanging", "card_description_frame")
+public record LocCardDescriptionFrame() : LocTemplate(HangingKey, "card_description_frame")
 {
     public LocString Fill(LocString HangingKeyword, LocString HangingDescription)
     {
@@ -98,7 +100,7 @@ public record LocCardDescriptionFrame() : LocTemplate("Hanging", "card_descripti
 /// 对应 [Hanging] keyword_title
 /// "{HangingKeyword}效果"
 /// </summary>
-public record LocKeywordTitle() : LocTemplate("Hanging", "keyword_title")
+public record LocKeywordTitle() : LocTemplate(HangingKey, "keyword_title")
 {
     public LocString Fill(LocString HangingKeyword)
     {
@@ -110,11 +112,11 @@ public record LocKeywordTitle() : LocTemplate("Hanging", "keyword_title")
 
 /// <summary>
 /// 对应 [Hanging.Follow] description / [Hanging.Delay] description
-/// "后续{TriggerCountVar:diff()}次打出{CardType}时，{HangingEffect}。"
+/// "后续{TriggerCount:diff()}次打出{CardType}时，{HangingEffect}。"
 /// </summary>
 public record LocHangingTypeDescription : LocTemplate
 {
-    public LocHangingTypeDescription(HangingType hangingType) : base("Hanging", hangingType.ToString(), "description") { }
+    public LocHangingTypeDescription(HangingType hangingType) : base(HangingKey, hangingType.ToString(), "description") { }
 
     // C# 参数名严格对应 TOML，谁也填不乱
     public LocString Fill(TriggerCountVar triggerCountVar, LocString CardType, LocString HangingEffect)
@@ -122,7 +124,7 @@ public record LocHangingTypeDescription : LocTemplate
         var loc = this.CreateBaseLoc();
 
         // 注意：Sts2 的动态变量(DynamicVar)通常依靠直接传入对象解析，
-        // 它会自动匹配 TOML 里的 {TriggerCountVar:diff()}，所以这里保留原有 Add 逻辑
+        // 它会自动匹配 TOML 里的 {TriggerCount:diff()}，所以这里保留原有 Add 逻辑
         loc.Add(triggerCountVar);
 
         // 普通的本地化文本替换，完美使用 nameof
@@ -148,20 +150,24 @@ public record HangingKeywordTitleArgs(LocString HangingKeyword)
 
 public static class HangingStaticLocs
 {
-    public static LocString SequenceName => KeywordLocString("Hanging", "Sequence", "name");
-    public static LocString SequenceDescription => KeywordLocString("Hanging", "Sequence", "description");
+    public static readonly string CardTypeName = nameof(CardType);
 
-    public static LocString GetTypeKeyword(HangingType type) => KeywordLocString("Hanging", type.ToString(), "keyword");
+    public static readonly string HangingKey = "Hanging";
+
+    public static LocString SequenceName => KeywordLocString(HangingKey, "Sequence", "name");
+    public static LocString SequenceDescription => KeywordLocString(HangingKey, "Sequence", "description");
+
+    public static LocString GetTypeKeyword(HangingType type) => KeywordLocString(HangingKey, type.ToString(), "keyword");
 
     public static LocString GetCardTypeText(CardType type) => type switch
     {
-        CardType.Attack => KeywordLocString("CardType", "attack"),
-        CardType.Skill => KeywordLocString("CardType", "skill"),
-        CardType.Power => KeywordLocString("CardType", "power"),
-        CardType.Status => KeywordLocString("CardType", "status"),
-        CardType.Curse => KeywordLocString("CardType", "curse"),
-        CardType.Quest => KeywordLocString("CardType", "quest"),
-        CardType.None => KeywordLocString("CardType", "any"),
+        CardType.Attack => KeywordLocString(CardTypeName, "attack"),
+        CardType.Skill => KeywordLocString(CardTypeName, "skill"),
+        CardType.Power => KeywordLocString(CardTypeName, "power"),
+        CardType.Status => KeywordLocString(CardTypeName, "status"),
+        CardType.Curse => KeywordLocString(CardTypeName, "curse"),
+        CardType.Quest => KeywordLocString(CardTypeName, "quest"),
+        CardType.None => KeywordLocString(CardTypeName, "any"),
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
 }
@@ -188,12 +194,12 @@ public static class HangingDescriptionBuilder
 
     public static (LocString HangingKeyword, LocString HangingDescription) BuildHangingDescription(HangingCardConfig config)
     {
-        var keyword = HangingStaticLocs.GetTypeKeyword(config.HangingType);
+        var keyword = GetTypeKeyword(config.HangingType);
 
         // 利用模板 Fill() 方法，编译器会强迫你交出所有必须的变量
         var description = new LocHangingTypeDescription(config.HangingType).Fill(
             triggerCountVar: config.TriggerCount,
-            CardType: HangingStaticLocs.GetCardTypeText(config.CardTypeFilter),
+            CardType: GetCardTypeText(config.CardTypeFilter),
             HangingEffect: GetCardHangingEffect(config.Card)
         );
 
@@ -211,11 +217,11 @@ public static class HangingDescriptionBuilder
         if (showHangingTotalDescription)
         {
             var generalDesc = new LocGeneralDescription().Fill(
-                SequenceName: HangingStaticLocs.SequenceName
+                SequenceName: SequenceName
             );
 
             yield return new HoverTip(keyword, generalDesc);
-            yield return new HoverTip(HangingStaticLocs.SequenceName, HangingStaticLocs.SequenceDescription);
+            yield return new HoverTip(SequenceName, SequenceDescription);
         }
 
         yield return new HoverTip(keywordTitle, description);
@@ -223,6 +229,8 @@ public static class HangingDescriptionBuilder
 
     private static LocString GetCardHangingEffect(CardModel card)
     {
-        return new LocString("cards", $"{card.Id.Entry}.hanging_effect");
+        var loc = new LocString("cards", $"{card.Id.Entry}.hanging_effect");
+        card.DynamicVars.AddTo(loc);
+        return loc;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BaseLib.Extensions;
+using Godot;
 using MegaCrit.Sts2.Core.Localization;
 
 namespace Superstitio.Main.Utils;
@@ -26,7 +27,7 @@ internal static class SuperstitioLocStringFactory
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public static LocString ExtendLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return Instance.ExtendLocString(locPrefix, locEntryKeys);
+        return Instance.ExtendLocString(locPrefix.ToSnakeCase().ToUpper(), locEntryKeys);
     }
 
     /// <summary>
@@ -37,6 +38,6 @@ internal static class SuperstitioLocStringFactory
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public static LocString KeywordLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return  Instance.KeywordLocString(locPrefix, locEntryKeys);
+        return Instance.KeywordLocString(locPrefix.ToSnakeCase().ToUpper(), locEntryKeys);
     }
 }

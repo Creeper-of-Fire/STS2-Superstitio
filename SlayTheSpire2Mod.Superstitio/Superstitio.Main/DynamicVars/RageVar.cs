@@ -2,18 +2,17 @@
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 快感动态变量
 /// </summary>
-public class FelixVar(int felixAmount, string name = FelixVar.DefaultName) : DynamicVar(name, felixAmount)
+public class FelixVar(int felixAmount, string? name = null) : DynamicVar(name ?? DefaultName, felixAmount)
 {
-    /// <summary>
-    /// 名称
-    /// </summary>
-    public const string DefaultName = nameof(FelixVar);
+    /// 默认名称
+    public static readonly string DefaultName = FelixVar.DynamicVarName;
 
     /// <summary>
     /// 基础快感值

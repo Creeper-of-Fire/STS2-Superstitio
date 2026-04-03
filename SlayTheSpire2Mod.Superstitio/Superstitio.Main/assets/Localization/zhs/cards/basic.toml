@@ -1,0 +1,15 @@
+﻿[DefendLupa]
+title = "防御"
+description = "获得{Block:diff()}点[gold]格挡[/gold]。"
+
+[StrikeLupa]
+title = "打击"
+description = "造成{Damage:diff()}点伤害。"
+
+[DefendMaso]
+title = "防御"
+description = "获得{Block:diff()}点[gold]格挡[/gold]。"
+
+[StrikeMaso]
+title = "打击"
+description = "造成{Damage:diff()}点伤害。"

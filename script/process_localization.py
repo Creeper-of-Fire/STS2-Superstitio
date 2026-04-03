@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import tomllib
 import argparse
+import inflection
 
 
 def flatten_dict(d, parent_key='', sep='.'):
@@ -90,7 +91,19 @@ def process_localization(assets_dir, mod_id, output_dir):
             final_json_data = {}
             flat_data = flatten_dict(data)
             for key, value in flat_data.items():
-                final_json_data[f"{mod_id.upper()}-{key}"] = value
+                # key 格式如 "DefendMaso.title" 或 "DefendMaso.description"
+                # 分割为第一段和剩余部分
+                parts = key.split('.', 1)
+                if len(parts) == 2:
+                    first_part, rest = parts
+                    # 将第一段转换为 UPPER_SNAKE_CASE
+                    first_part_upper_snake = inflection.underscore(first_part).upper()
+                    new_key = f"{mod_id.upper()}-{first_part_upper_snake}.{rest}"
+                else:
+                    # 如果没有点，则整个处理
+                    new_key = f"{mod_id.upper()}-{inflection.underscore(parts[0]).upper()}"
+                
+                final_json_data[new_key] = value
 
             # 确定输出路径并写入文件
             output_dir = output_path / mod_id / "localization" / lang

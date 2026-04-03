@@ -1,0 +1,17 @@
+﻿[KokiFoot]
+title = "悬刃"
+description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+hanging_effect = "抽{DrawCards:diff()}张牌"
+flavor = "刀刃悬于空中，随时准备再次落下。"
+
+[CotiThroat]
+title = "回响之刃"
+description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+hanging_effect = "造成{Damage:diff()}点伤害"
+flavor = "每一次挥击，都会在敌人的伤口上留下回响。"
+
+[KokiBlow]
+title = "怒意冲拳"
+description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+hanging_effect = "获得{Felix:diff()}点怒火"
+flavor = "每一拳都在心中埋下更烈的火种。"

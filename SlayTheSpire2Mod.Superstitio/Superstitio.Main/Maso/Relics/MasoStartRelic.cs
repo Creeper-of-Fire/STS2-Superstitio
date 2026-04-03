@@ -49,14 +49,12 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterCl
             return;
         if (power is not CorruptusPower)
             return;
-        // 仅在腐朽减少时触发（amount < 0）
-        if (amount >= 0)
+        // 仅在腐朽增加时触发（amount >= 0）
+        if (amount < 0)
             return;
 
-        // 根据减少的腐朽量，按比例给予快感（每 3 点腐朽获得 2 点快感）
-        // 注意：amount 为负数，计算时需取绝对值或调整符号
-        decimal corruptusLost = -amount;
-        decimal felixGain = Math.Floor(corruptusLost / 3m) * 2m;
+        // 根据增加的腐朽量，按比例给予快感（每 3 点腐朽获得 2 点快感）
+        decimal felixGain = Math.Floor(amount / 3m) * 2m;
 
         if (felixGain > 0)
         {
@@ -71,16 +69,5 @@ public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterCl
             return;
 
         await CorruptusManager.DecreaseCorruptus(powerOwner, CorruptusReduceWhenClimax, applier, cardSource);
-    }
-
-    private const int FelixGetPerEnergy = 2;
-
-    /// <inheritdoc />
-    public override async Task AfterEnergySpent(CardModel card, int amount)
-    {
-        if (amount <= 0 || this.OwnerCreature.Player != card.Owner)
-            return;
-
-        await PowerCmd.Apply<FelixPower>(this.OwnerCreature, amount * FelixGetPerEnergy, null, card);
     }
 }

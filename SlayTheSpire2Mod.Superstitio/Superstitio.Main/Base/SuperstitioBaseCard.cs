@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 
 namespace Superstitio.Main.Base;
@@ -75,16 +76,11 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        ..base.ExtraHoverTips,
-        new HoverTip(
-            this.Flavor
-        ),
-        ..this is IWithHangingConfig withHangingConfig
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => base.ExtraHoverTips
+        .TryAddTip(this.Flavor)
+        .TryAddTip(this is IWithHangingConfig withHangingConfig
             ? HangingDescriptionBuilder.GetHoverTips(withHangingConfig.HangingCardConfig, showHangingTotalDescription: true)
-            : [],
-    ];
+            : []);
 
     /// <inheritdoc />
     protected override PileType GetResultPileType()

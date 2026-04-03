@@ -1,4 +1,4 @@
-[MASO_CHARACTER]
+[MasoCharacter]
 # --- 基础信息 ---
 title = "苦行者"
 titleObject = "苦行者"
@@ -31,9 +31,37 @@ cardsModifierTitle = "苦行者卡牌"
 cardsModifierDescription = "苦行者的卡牌现在会出现在奖励和商店中。"
 
 # --- 多人模式互动 (Banter) ---
-# 使用嵌套 Table 处理多级键名: MASO_CHARACTER.banter.alive.endTurnPing
-[MASO_CHARACTER.banter.alive]
-endTurnPing = "轮到你了，别让我等太久。"
+banter.alive.endTurnPing = "轮到你了，别让我等太久。"
+banter.dead.endTurnPing = "即便身处暗影，我依然在注视着。"
 
-[MASO_CHARACTER.banter.dead]
-endTurnPing = "即便身处暗影，我依然在注视着。"
+[LupaCharacter]
+# --- 基础信息 ---
+title = "欢愉使"
+titleObject = "欢愉使"
+description = """
+一名追寻极致体验的战士。
+她在连绵不绝的攻势中积累战意，每一次巅峰都让她的力量更加澎湃。
+"""
+unlockText = "用 [pink]{Prerequisite}[/pink] 进行一局游戏来解锁这个角色。"
+
+# --- 动态文本与代词 (用于事件和描述) ---
+pronounSubject = "她"
+pronounObject = "她"
+pronounPossessive = "她的"
+possessiveAdjective = "她的"
+
+# --- 事件独白 (Monologues) ---
+# 混沌香气事件
+aromaPrinciple = "[sine][orange]尽情释放，直至极限……[/orange][/sine]"
+# 沉没宝库金币独白
+goldMonologue = "[sine]更多的机会，更多的连击。[/sine]"
+# 触发死亡防止时的对白
+eventDeathPrevention = "还没完……这才刚刚开始……"
+
+# --- 自定义模式 (Custom Mode) 文本 ---
+cardsModifierTitle = "欢愉使卡牌"
+cardsModifierDescription = "欢愉使的卡牌现在会出现在奖励和商店中。"
+
+# --- 多人模式互动 (Banter) ---
+banter.alive.endTurnPing = "该你了，跟上我的节奏。"
+banter.dead.endTurnPing = "即使倒下了……连击也不会停止。"

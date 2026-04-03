@@ -2,18 +2,17 @@
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.DynamicVars;
 
 /// <summary>
 /// 触发次数动态变量
 /// </summary>
-public class TriggerCountVar(int triggers, string name = TriggerCountVar.DefaultName) : DynamicVar(name, triggers)
+public class TriggerCountVar(int triggers, string? name = null) : DynamicVar(name ?? DefaultName, triggers)
 {
-    /// <summary>
-    /// 名称
-    /// </summary>
-    public const string DefaultName = nameof(TriggerCountVar);
+    /// 默认名称
+    public static readonly string DefaultName = TriggerCountVar.DynamicVarName;
 
     /// <summary>
     /// 基础触发次数

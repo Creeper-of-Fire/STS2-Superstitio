@@ -1,0 +1,17 @@
+﻿[MasoStartRelic]
+title = "苦行印记"
+description = """
+[gold]初始遗物[/gold]。
+单次每获得3点[gold]腐朽[/gold]，获得2点[gold]快感[/gold]。
+达到[gold]顶峰[/gold]时，移除5点[gold]腐朽[/gold]。
+"""
+flavor = "在苦痛中，她找到了力量的真谛。"
+
+[LupaStartRelic]
+title = "欢愉印记"
+description = """
+[gold]初始遗物[/gold]。
+每消耗1点能量，获得2点[gold]快感[/gold]。
+达到[gold]顶峰[/gold]时，获得1层[gold]费用减免[/gold]。
+"""
+flavor = "她的攻势如潮水，连绵不绝，无穷无尽。"

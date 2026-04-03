@@ -2,7 +2,7 @@
 using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 
-namespace Superstitio.Main.DynamicVars.Extensions;
+namespace Superstitio.Main.Extensions;
 
 /// <summary>
 /// 攻击命令的扩展方法

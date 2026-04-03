@@ -1,4 +1,5 @@
 ﻿using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.DynamicVars;
 
@@ -8,8 +9,6 @@ namespace Superstitio.Main.DynamicVars;
 /// <param name="cards"></param>
 public class DrawCardsVar(int cards) : CardsVar(DefaultName, cards)
 {
-    /// <summary>
     /// 默认名称
-    /// </summary>
-    public const string DefaultName = nameof(DrawCardsVar);
+    public static readonly string DefaultName = DrawCardsVar.DynamicVarName;
 }

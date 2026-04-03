@@ -1,6 +1,4 @@
-﻿using Superstitio.Main.Base;
-
-namespace Superstitio.Main.Features.HangingCard;
+﻿namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 一张卡，具有挂起效果
