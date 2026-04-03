@@ -8,7 +8,7 @@ using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Maso.Cards.Kongfu;
+namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
  * 造成 !D! 点 伤害 。 NL 如果 superstitiomod:合力序列 不为空， NL 获得 !M! 的 [E] 。

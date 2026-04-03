@@ -1,5 +1,6 @@
 ﻿using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Combat.History.Entries;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -69,7 +70,14 @@ public class FelixPower : CustomPowerModel
         if (runState is null || combatState is null)
             return;
         // 调用达到顶峰后的钩子方法
-        await Hook.AfterClimaxReached(runState, combatState, this.Owner, felixPower, applier, cardSource);
+        await Hook.AfterClimaxReached(
+            runState: runState,
+            combatState: combatState,
+            powerOwner: this.Owner,
+            felixPower: felixPower,
+            applier: applier,
+            cardSource: cardSource
+        );
         // 可以在这里添加视觉和音效反馈
         if (this.Owner.IsPlayer)
         {
@@ -121,18 +129,37 @@ public static class HookExtension
         /// <summary>
         /// 分发达到顶峰事件给所有监听者
         /// </summary>
-        public static async Task AfterClimaxReached(IRunState runState, CombatState? combatState, Creature owner,
+        public static async Task AfterClimaxReached(IRunState runState, CombatState? combatState, Creature powerOwner,
             FelixPower felixPower, Creature? applier, CardModel? cardSource)
         {
             foreach (var model in runState.IterateHookListeners(combatState))
             {
                 if (model is not IAfterClimaxReached thresholdReachedModel)
                     continue;
-                await thresholdReachedModel.AfterClimaxReached(owner, felixPower, applier, cardSource);
+                await PowerCmd.Apply<ClimaxRecordPower>(powerOwner, 1, applier, cardSource);
+                await thresholdReachedModel.AfterClimaxReached(powerOwner, felixPower, applier, cardSource);
                 model.InvokeExecutionFinished();
             }
         }
     }
+}
+
+/// <summary>
+/// 顶峰记录用 Power
+/// </summary>
+public class ClimaxRecordPower : CustomPowerModel
+{
+    /// <inheritdoc />
+    public override PowerType Type => PowerType.Buff;
+
+    /// <inheritdoc />
+    public override PowerStackType StackType => PowerStackType.Counter;
+
+    /// <inheritdoc />
+    public override bool IsInstanced => false;
+
+    /// <inheritdoc />
+    protected override bool IsVisibleInternal => false;
 }
 
 /// <summary>
@@ -164,5 +191,16 @@ public static class FelixManager
             sourceCreature,
             cardReason
         );
+    }
+
+    /// <summary>
+    /// 获取目标的顶峰记录
+    /// </summary>
+    /// <param name="target">目标生物</param>
+    /// <returns>包含其所有顶峰记录的 enumerable，可进一步过滤/处理</returns>
+    public static IEnumerable<PowerReceivedEntry> GetClimaxRecord(Creature target)
+    {
+        return CombatManager.Instance.History.Entries.OfType<PowerReceivedEntry>()
+            .Where(it => it.Power is ClimaxRecordPower && it.Actor == target);
     }
 }

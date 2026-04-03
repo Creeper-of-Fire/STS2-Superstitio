@@ -3,11 +3,10 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Maso.Cards.Kongfu;
+namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 
 /// <summary>

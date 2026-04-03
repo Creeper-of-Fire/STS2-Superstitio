@@ -2,20 +2,20 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Maso.Cards.Kongfu;
+namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /// <summary>
-/// 打出后挂起自身，后续每次打出攻击牌时抽1张牌（可触发2/3次）
+/// Cost 1 造成 3-4 点 伤害 两次。伴随 打出攻击牌 2-1 次：获得 1 力量 。
 /// </summary>
-public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
+public class KokiHand() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Attack,
@@ -23,26 +23,12 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {
-    /// <summary>
-    /// 基础触发次数
-    /// </summary>
-    private const int TriggerCount = 2;
-
-    /// <summary>
-    /// 升级增加的触发次数
-    /// </summary>
-    private const int TriggerCountUpgrade = 1;
-
-    private const int Damage = 5;
-
-    private const int DamageUpgrade = 3;
-
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
-        new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
-        new TriggerCountVar(TriggerCount).WithUpgrade(TriggerCountUpgrade),
-        new DrawCardsVar(1)
+        new DamageVar(3, ValueProp.Move).WithUpgrade(1),
+        new TriggerCountVar(2).WithUpgrade(1),
+        new PowerVar<StrengthPower>(1).AddToolTips() // 获得
     ];
 
     /// <inheritdoc />
@@ -60,10 +46,11 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     {
         await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
 
-        var token = this.CreateHangingToken(async (context, _) =>
+        var token = this.CreateHangingToken(async (_, _) =>
         {
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true);
+            await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature, this.DynamicVars.Strength.BaseValue);
         });
+
         await HangingCardManager.HangCard(token, this);
     }
 }

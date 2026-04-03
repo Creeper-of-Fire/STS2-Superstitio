@@ -29,19 +29,17 @@ public static class AttackCommandExtensions
         /// <summary>
         /// 应用目标选择逻辑
         /// </summary>
-        public AttackCommand ApplyTargeting(CardModel card, Creature? target, bool tryRandomWhenTargetDie)
+        public AttackCommand ApplyTargeting(CardModel card, Creature? target, bool tryRandomWhenTargetDie, bool forceAttackTarget)
         {
             var combatState = card.CombatState;
+
+            if (forceAttackTarget)
+                return SingleAttackCommand();
 
             switch (card.TargetType)
             {
                 case TargetType.AnyEnemy:
-                    if (target is not null)
-                        return attackCommand.Targeting(target);
-                    if (tryRandomWhenTargetDie && combatState is not null)
-                        return attackCommand.TryTargetingOrRandom(target, combatState);
-
-                    return attackCommand;
+                    return SingleAttackCommand();
                 case TargetType.AllEnemies:
                     if (combatState is null)
                         return attackCommand;
@@ -59,6 +57,16 @@ public static class AttackCommandExtensions
                 case TargetType.Osty:
                 default:
                     throw new Exception($"Unsupported AttackCommand target type {card.TargetType} for card {card.Title}");
+            }
+
+            AttackCommand SingleAttackCommand()
+            {
+                if (target is not null)
+                    return attackCommand.Targeting(target);
+                if (tryRandomWhenTargetDie && combatState is not null)
+                    return attackCommand.TryTargetingOrRandom(target, combatState);
+
+                return attackCommand;
             }
         }
 
@@ -81,10 +89,14 @@ public static class AttackCommandExtensions
         /// 并配置攻击目标、攻击次数和特效（视觉/音效）。
         /// </summary>
         public static AttackCommand AutoAttack(CardModel card, CardPlay cardPlay, DynamicVar? varForDamage = null, int hitCount = 1,
-            bool tryRandomWhenTargetDie = false,
+            bool tryRandomWhenTargetDie = false, bool forceAttackTarget = false,
             string? vfx = null, string? sfx = null, string? tmpSfx = null)
         {
-            return DamageCmd.AutoAttack(card, cardPlay.Target, varForDamage, hitCount, tryRandomWhenTargetDie, vfx, sfx, tmpSfx);
+            return DamageCmd.AutoAttack(
+                card, cardPlay.Target, varForDamage, hitCount,
+                tryRandomWhenTargetDie, forceAttackTarget,
+                vfx, sfx, tmpSfx
+            );
         }
 
         /// <summary>
@@ -96,6 +108,7 @@ public static class AttackCommandExtensions
         /// <param name="varForDamage">可选的自定义伤害变量。如果提供，将优先使用其值；否则尝试从卡牌动态变量中获取。</param>
         /// <param name="hitCount">攻击命中次数，默认为 1 次。</param>
         /// <param name="tryRandomWhenTargetDie">当 <paramref name="card"/>的<see cref="CardModel.TargetType"/>为<see cref="TargetType.AnyEnemy"/>且<paramref name="target"/>死亡/为空时，是否随机转火。</param>
+        /// <param name="forceAttackTarget">启用时，强制攻击目标，不受随机等影响</param>
         /// <param name="vfx">攻击命中时的视觉效果文件名（可选）。</param>
         /// <param name="sfx">攻击命中时的音效文件名（可选）。</param>
         /// <param name="tmpSfx">攻击命中时的临时音效文件名（可选）。</param>
@@ -103,13 +116,13 @@ public static class AttackCommandExtensions
         /// <exception cref="Exception">当卡牌既没有提供有效的 <paramref name="varForDamage"/>，
         /// 也不包含默认的计算伤害变量<see cref="CalculatedDamageVar"/>或基础伤害变量<see cref="DamageVar"/>时抛出。</exception>
         public static AttackCommand AutoAttack(CardModel card, Creature? target, DynamicVar? varForDamage = null, int hitCount = 1,
-            bool tryRandomWhenTargetDie = false,
+            bool tryRandomWhenTargetDie = false, bool forceAttackTarget = false,
             string? vfx = null, string? sfx = null, string? tmpSfx = null)
         {
             var cmd = CreateDamageCommand(card, varForDamage);
 
             return cmd.FromCard(card).WithHitCount(hitCount)
-                .ApplyTargeting(card, target, tryRandomWhenTargetDie)
+                .ApplyTargeting(card, target, tryRandomWhenTargetDie, forceAttackTarget)
                 .ApplyEffects(vfx: vfx, sfx: sfx, tmpSfx: tmpSfx);
         }
     }

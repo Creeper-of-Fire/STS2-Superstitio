@@ -1,4 +1,4 @@
-﻿namespace Superstitio.Main.Maso.Cards.Kongfu;
+﻿namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
  * TODO 造成 !D! 点 伤害 ， NL 使目标敌人 superstitiomod:恐惧 增加 10分之 !M! 。

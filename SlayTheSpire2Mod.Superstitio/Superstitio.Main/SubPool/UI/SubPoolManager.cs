@@ -11,8 +11,6 @@ namespace Superstitio.Main.SubPool.UI;
 /// </summary>
 public static class SubPoolManager
 {
-    // TODO 完全没有做持久化啥的。
-
     // 1. 通用子池仓库：存放所有实例化后的 SubPool
     private static readonly List<SubPool> AllUniversalSubPools = [];
 

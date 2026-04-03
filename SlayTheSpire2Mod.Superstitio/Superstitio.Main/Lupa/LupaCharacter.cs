@@ -6,7 +6,7 @@ using Superstitio.Main.Extensions;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.Lupa.Cards.Base;
 using Superstitio.Main.Lupa.Relics;
-using Superstitio.Main.Maso.Cards.Kongfu;
+using Superstitio.Main.Maso.Cards.CotiKoki;
 
 namespace Superstitio.Main.Lupa;
 

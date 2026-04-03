@@ -1,7 +1,6 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
@@ -12,7 +11,7 @@ using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
-namespace Superstitio.Main.Maso.Cards.Kongfu;
+namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /// <summary>
 /// 打出后挂起自身，后续每次打出任意牌时获得2点快感
