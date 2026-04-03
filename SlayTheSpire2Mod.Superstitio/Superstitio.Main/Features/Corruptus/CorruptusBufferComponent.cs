@@ -1,4 +1,5 @@
-﻿using MegaCrit.Sts2.Core.Entities.Creatures;
+﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -62,6 +63,8 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
 
         this.PendingCorruptusTasks.Add(async () => 
         {
+            await CreatureCmd.TriggerAnim(target, "Hit", 0);
+            
             await CorruptusManager.IncreaseCorruptus(
                 target, 
                 amount, 

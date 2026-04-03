@@ -35,7 +35,7 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
     [
         new HpLossVar(HpLoss).WithUpgrade(HpLossUpgrade),
         new TriggerCountVar(TriggerCount),
-        new DrawCardsVar(DrawCard)
+        new DrawCardsVar(DrawCard),
     ];
 
 
