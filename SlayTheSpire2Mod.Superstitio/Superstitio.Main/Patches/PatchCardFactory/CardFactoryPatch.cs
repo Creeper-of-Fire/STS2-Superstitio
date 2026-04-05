@@ -5,12 +5,14 @@ using MegaCrit.Sts2.Core.Factories;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Random;
 using MegaCrit.Sts2.Core.Runs;
-using static Superstitio.Main.SubPool.UI.SubPoolManager;
+using static Superstitio.Main.Patches.PatchCardFactory.HookCardListFilter;
 
 #pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 // ReSharper disable InconsistentNaming
 
-namespace Superstitio.Main.SubPool;
+namespace Superstitio.Main.Patches.PatchCardFactory;
+
+// 本文件处理对卡牌生成相关的全部拦截方法，允许注入自定义过滤逻辑。
 
 [HarmonyPatch(typeof(CardFactory))]
 public static class CardFactoryPatch

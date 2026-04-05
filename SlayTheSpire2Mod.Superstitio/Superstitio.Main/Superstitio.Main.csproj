@@ -33,8 +33,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="assets\"/>
-        <Folder Include="Lupa\Pools\" />
-        <Folder Include="Patches\"/>
     </ItemGroup>
 
     <ItemGroup>
