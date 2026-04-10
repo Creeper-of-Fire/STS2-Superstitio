@@ -20,6 +20,8 @@ namespace Superstitio.Main.Lupa.Cards.Blood;
  * 若选择的卡牌不能被打出，则将其[gold]消耗[/gold]。
  * """
  *
+ * SelectionScreenPrompt = "选择一张牌添加[gold]消耗[/gold]。"
+ *
  * Flavor = "禅意境界，看破红尘。"
  */
 public class ZenState() : LupaBaseCard(new CardInitMessage

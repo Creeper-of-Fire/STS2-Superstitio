@@ -1,10 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <ItemGroup>
-        <ProjectReference Include="..\Superstitio.DesignConceptAnalyzer\Superstitio.DesignConceptAnalyzer.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-    </ItemGroup>
-
     <!-- 通用的游戏DLL引用 -->
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->

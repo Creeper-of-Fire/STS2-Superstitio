@@ -14,7 +14,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
 /**
  * Title = "木兰飞弹"
  *
- * Description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]。"
+ * Description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]。"
  *
  * Flavor = "寄托了人类未来的魔神……前进！"
  */

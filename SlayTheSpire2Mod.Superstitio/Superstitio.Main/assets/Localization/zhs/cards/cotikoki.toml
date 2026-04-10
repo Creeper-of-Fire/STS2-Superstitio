@@ -41,24 +41,23 @@ flavor = "前、下、前下，拳击！"
 
 [KokiBreast]
 title = "木兰飞弹"
-description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]。"
+description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]。"
 flavor = "寄托了人类未来的魔神……前进！"
 
 [CotiEye]
 title = "蛇形拳"
-description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层[gold]虚弱[/gold]。\n{CardHangingDescription}"
+description = "对[gold]自身和敌人[/gold]各造成{Damage:diff()}点伤害{Repeat:diff()}次。\n获得{WeakPower:diff()}层[gold]虚弱[/gold]。\n{CardHangingDescription}"
 hangingEffect = "将[gold]龙形拳[/gold]放入手中"
 flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
 
 [CotiEar]
 title = "龙形拳"
-description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n{CardHangingDescription}"
-hangingEffect = "将[gold]蛇形拳[/gold]放入手中"
+description = "对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。\n移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。\n获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n将[gold]蛇形拳[/gold]放入手中。"
 flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
 
 [CotiNipple]
 title = "猴形拳"
-description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]，连续攻击{Repeat:diff()}次。"
+description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]，连续攻击{Repeat:diff()}次。"
 flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
 
 [CotiNavel]

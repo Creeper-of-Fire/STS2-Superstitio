@@ -18,11 +18,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  * Title = "龙形拳"
  *
  * Description = """
- * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{FrailPower:diff()}层[gold]脆弱[/gold]。
- * {CardHangingDescription}
+ * 对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。
+ * 移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。
+ * 获得{FrailPower:diff()}层[gold]脆弱[/gold]。
+ * 将[gold]蛇形拳[/gold]放入手中。
  * """
- *
- * HangingEffect = "将[gold]蛇形拳[/gold]放入手中"
  *
  * Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
  */
@@ -76,7 +76,8 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
  * Title = "蛇形拳"
  *
  * Description = """
- * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层[gold]虚弱[/gold]。
+ * 对[gold]自身和敌人[/gold]各造成{Damage:diff()}点伤害{Repeat:diff()}次。
+ * 获得{WeakPower:diff()}层[gold]虚弱[/gold]。
  * {CardHangingDescription}
  * """
  *
@@ -124,7 +125,7 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
         await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
         // 对自身造成伤害
-        await DamageCmd.AutoAttack(this, this.Owner.Creature).Execute(choiceContext);
+        await DamageCmd.AutoAttack(this, this.Owner.Creature, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
         // 获得虚弱
         await PowerCmd.ApplyByCard<WeakPower>(this, this.Owner.Creature);

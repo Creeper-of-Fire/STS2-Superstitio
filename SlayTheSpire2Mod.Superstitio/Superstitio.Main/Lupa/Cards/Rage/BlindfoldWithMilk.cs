@@ -17,7 +17,7 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  * Description = """
  * 对敌人造成{Damage:diff()}点伤害。
  * [gold]击晕[/gold]该敌人。
- * 给予{Power:diff()}层[pink]仁慈[/pink]。
+ * 给予{Power:diff()}层[pink]乳汁[/pink]。
  * """
  *
  * Flavor = "用血液蒙住眼睛，感受纯粹的力量。"

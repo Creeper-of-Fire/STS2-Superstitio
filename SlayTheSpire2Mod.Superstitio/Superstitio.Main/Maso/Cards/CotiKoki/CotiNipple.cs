@@ -14,7 +14,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
 /**
  * Title = "猴形拳"
  *
- * Description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]，连续攻击{Repeat:diff()}次。"
+ * Description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]，连续攻击{Repeat:diff()}次。"
  *
  * Flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
  */

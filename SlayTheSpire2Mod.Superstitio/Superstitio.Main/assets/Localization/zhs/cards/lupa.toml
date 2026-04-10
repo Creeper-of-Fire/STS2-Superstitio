@@ -13,7 +13,7 @@ flavor = "一怒之下，怒了一下。"
 
 [BlindfoldWithMilk]
 title = "以血蒙眼"
-description = "对敌人造成{Damage:diff()}点伤害。\n[gold]击晕[/gold]该敌人。\n给予{Power:diff()}层[pink]仁慈[/pink]。"
+description = "对敌人造成{Damage:diff()}点伤害。\n[gold]击晕[/gold]该敌人。\n给予{Power:diff()}层[pink]乳汁[/pink]。"
 flavor = "用血液蒙住眼睛，感受纯粹的力量。"
 
 [Samsara]
@@ -41,6 +41,7 @@ flavor = "投掷卡牌，获得能量。"
 [ZenState]
 title = "禅意"
 description = "移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。\n为{Cards:diff()}张[gold]手牌[/gold]添加[gold]消耗[/gold]。\n若选择的卡牌不能被打出，则将其[gold]消耗[/gold]。"
+selectionScreenPrompt = "选择一张牌添加[gold]消耗[/gold]。"
 flavor = "禅意境界，看破红尘。"
 
 [Whipping]

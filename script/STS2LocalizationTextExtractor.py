@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Dict, Set, List, Tuple
 from collections import deque
 import logging
+import inflection
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -148,7 +149,14 @@ class LocalizationExtractor:
             section = "DefaultSection"
             actual_key = rest
             if "." in rest:
-                section, actual_key = rest.split(".", 1)
+                section, rest_key = rest.split(".", 1)
+                # 将 section 转换为 camelCase（如 DESCRIPTION -> description, SMART_DESCRIPTION -> smartDescription）
+                section = inflection.camelize(section.lower(), uppercase_first_letter=False)
+            else:
+                rest_key = rest
+        
+            # 3. 将 actual_key 也转换为 camelCase
+            actual_key = inflection.camelize(rest_key.lower(), uppercase_first_letter=False)
 
             dict_key = (mod_name, table)
             if dict_key not in self.missing_texts:

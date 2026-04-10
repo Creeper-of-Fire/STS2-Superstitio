@@ -2,6 +2,7 @@ import os
 import re
 from pathlib import Path
 import tomlkit
+import inflection
 
 # 一个很随意的脚本，用硬编码同步 TOML 文件到 C# 文件，使用时一定要注意
 
@@ -20,22 +21,51 @@ SCRIPT_DIR = Path(__file__).parent
 SRC_ROOT = SCRIPT_DIR.parent / "SlayTheSpire2Mod.Superstitio" / "Superstitio.Main"
 OUT_ROOT = SRC_ROOT / "assets/Localization/zhs"
 
-KEY_DISPLAY_MAP = {
-    "title": "Title",
-    "description": "Description",
-    "hangingEffect": "HangingEffect",
-    "power.description": "Power.Description",
-    "power.smartDescription": "Power.SmartDescription",
-    "flavor": "Flavor",
-}
+# 需要排除的键（不生成注释的）
+EXCLUDED_KEYS = {}  # 可以根据需要添加更多
+
+
+def convert_to_pascal_case(key: str) -> str:
+    """
+    将任意格式的键转换为 PascalCase（大写驼峰）
+    
+    支持的输入格式：
+    - snake_case -> SnakeCase
+    - camelCase -> CamelCase
+    - kebab-case -> KebabCase
+    - UPPER_CASE -> UpperCase
+    - 混合格式 -> 自动处理
+    """
+    # 处理点分隔的嵌套键（如 power.description）
+    if '.' in key:
+        parts = key.split('.')
+        return '.'.join(convert_to_pascal_case(part) for part in parts)
+
+    # 使用 inflection 进行转换
+    # 先转换为 snake_case，再转换为 PascalCase
+    return inflection.camelize(inflection.underscore(key), uppercase_first_letter=True)
 
 
 def load_toml_data(toml_path: Path) -> dict:
+    """加载 TOML 文件并展平为点分隔的键值对"""
     if not toml_path.exists(): return {}
     with open(toml_path, 'r', encoding='utf-8-sig') as f:
         content = f.read().strip()
         return dict(tomlkit.parse(content)) if content else {}
 
+def flatten_for_display(card_data: dict, parent_key: str = '') -> dict:
+    """
+    将嵌套字典展平用于显示（仅用于生成注释内容）
+    例如: {"power": {"description": "xxx"}} -> {"power.description": "xxx"}
+    """
+    items = []
+    for k, v in card_data.items():
+        new_key = f"{parent_key}.{k}" if parent_key else k
+        if isinstance(v, dict):
+            items.extend(flatten_for_display(v, new_key).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
 def format_value(val: str, indent: str) -> str:
     val_str = str(val).strip()
@@ -56,18 +86,31 @@ def format_value(val: str, indent: str) -> str:
 
 
 def build_block_comment(card_data: dict, indent: str) -> str:
-    items = []
-    for k, display_name in KEY_DISPLAY_MAP.items():
-        val = None
-        if "." in k:
-            parts = k.split('.')
-            val = card_data.get(parts[0], {}).get(parts[1])
-        else:
-            val = card_data.get(k)
-        if val:
-            items.append((display_name, val))
+    """
+    根据卡片数据构建块注释
+    自动检测所有键并转换为 PascalCase
+    """
+    if not card_data:
+        return ""
 
-    if not items: return ""
+    # 展平用于显示
+    flat_data = flatten_for_display(card_data)
+
+    items = []
+    for key, val in flat_data.items():
+        # 跳过需要排除的键
+        if key in EXCLUDED_KEYS:
+            continue
+        # 跳过空值
+        if not val:
+            continue
+
+        # 转换键名: title -> Title, power.description -> Power.Description
+        display_name = '.'.join(convert_to_pascal_case(part) for part in key.split('.'))
+        items.append((display_name, val))
+
+    if not items:
+        return ""
 
     lines = [f"{indent}/**"]
     for i, (name, val) in enumerate(items):

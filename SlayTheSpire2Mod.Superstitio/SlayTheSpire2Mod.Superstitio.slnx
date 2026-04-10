@@ -1,4 +1,3 @@
 ﻿<Solution>
-  <Project Path="Superstitio.DesignConceptAnalyzer/Superstitio.DesignConceptAnalyzer.csproj" />
   <Project Path="Superstitio.Main\Superstitio.Main.csproj" />
 </Solution>

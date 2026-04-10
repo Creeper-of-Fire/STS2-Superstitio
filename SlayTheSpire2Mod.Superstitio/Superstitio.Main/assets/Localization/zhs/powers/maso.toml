@@ -16,3 +16,8 @@ smartDescription = "直到下一次你的回合结束时，你移除[red]{Amount
 title = "费用减免"
 description = "你的手牌的[gold]能量[/gold]费用减少，直至你打出被本效果减免费用的卡牌。"
 smartDescription= "你的手牌的费用减少{Amount:energyIcons()}，直至你打出被本效果减免费用的卡牌[blue]{Amount}[/blue]张。"
+
+[MilkPower]
+title = "乳汁"
+description = "在下一次攻击后，给予被攻击者临时生命。（目前以格挡代替）"
+smartDescription = "在下一次攻击后，给予被攻击者[blue]{Amount}[/blue]点临时生命。（目前以格挡代替）"

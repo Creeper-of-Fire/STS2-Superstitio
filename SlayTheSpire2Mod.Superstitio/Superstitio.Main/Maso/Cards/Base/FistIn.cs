@@ -21,6 +21,8 @@ namespace Superstitio.Main.Maso.Cards.Base;
  * {CardHangingDescription}
  * """
  *
+ * SelectionScreenPrompt = "选择一张牌打出。"
+ *
  * HangingEffect = "抽{DrawCards:diff()}张牌"
  *
  * Flavor = "忍一时之痛，换一瞬之机。"
