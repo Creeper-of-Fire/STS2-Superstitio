@@ -1,8 +1,10 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+﻿using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
@@ -26,7 +28,8 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
  */
-public class CotiEar() : MasoBaseCard(new CardInitMessage
+[Pool(typeof(TokenCardPool))]
+public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Attack,

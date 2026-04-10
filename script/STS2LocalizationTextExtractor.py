@@ -151,12 +151,12 @@ class LocalizationExtractor:
             if "." in rest:
                 section, rest_key = rest.split(".", 1)
                 # 将 section 转换为 camelCase（如 DESCRIPTION -> description, SMART_DESCRIPTION -> smartDescription）
-                section = inflection.camelize(section.lower(), uppercase_first_letter=False)
+                section = inflection.camelize(section.lower(), uppercase_first_letter=True)
             else:
                 rest_key = rest
         
             # 3. 将 actual_key 也转换为 camelCase
-            actual_key = inflection.camelize(rest_key.lower(), uppercase_first_letter=False)
+            actual_key = inflection.camelize(rest_key.lower(), uppercase_first_letter=True)
 
             dict_key = (mod_name, table)
             if dict_key not in self.missing_texts:
