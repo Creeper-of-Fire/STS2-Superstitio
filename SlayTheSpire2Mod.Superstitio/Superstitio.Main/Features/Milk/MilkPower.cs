@@ -1,9 +1,8 @@
-﻿using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Commands;
+﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Commands.Builders;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
+using Superstitio.Main.Base;
 
 namespace Superstitio.Main.Features.Milk;
 
@@ -11,7 +10,7 @@ namespace Superstitio.Main.Features.Milk;
 /// 在下一次攻击后，给予被攻击者[blue]{Amount}[/blue]点临时生命。（目前以格挡代替）
 /// TODO 临时生命还没有做好。或者也许召唤一个召唤物？
 /// </summary>
-public class MilkPower : CustomPowerModel
+public class MilkPower : SuperstitioBasePower
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Debuff;

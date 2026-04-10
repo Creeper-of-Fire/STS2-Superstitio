@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
+using BaseLib.Config;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
+using Superstitio.Main.ModSetting;
 using Superstitio.Main.SubPool;
 using Superstitio.Main.SubPool.UI;
 
@@ -17,7 +19,7 @@ public static class Plugin
     /// 模组名称
     /// </summary>
     public const string ModName = "Superstitio";
-    
+
     /// <summary>
     /// 本模组中推荐使用的 Guid/Guid 种子
     /// </summary>
@@ -29,7 +31,9 @@ public static class Plugin
     public static void Initialize()
     {
         Log.Info("[Superstitio] 已加载！");
-        
+
+        ModConfigRegistry.Register(ModName, new SuperstitioModConfig());
+
         var harmony = new Harmony(ModName);
         harmony.PatchAll();
 

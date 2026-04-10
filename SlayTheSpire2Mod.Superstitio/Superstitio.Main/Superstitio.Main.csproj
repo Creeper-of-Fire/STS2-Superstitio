@@ -26,10 +26,6 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="assets\"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="concepts.toml"/>
+        <Folder Include="assets\" />
     </ItemGroup>
 </Project>

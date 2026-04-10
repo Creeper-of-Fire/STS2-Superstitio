@@ -1,11 +1,15 @@
-﻿using BaseLib.Abstracts;
+﻿using System.Reflection;
+using BaseLib.Abstracts;
+using Godot;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Base;
 
@@ -22,6 +26,44 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     cardInitMessage.AutoAdd
 )
 {
+    private static string GetCardTypeString(CardModel card)
+    {
+        if (card.Rarity == CardRarity.Basic)
+            return "base";
+        return card.Type switch
+        {
+            CardType.Attack => "attack",
+            CardType.Skill => "skill",
+            CardType.Power => "power",
+            _ => "special"
+        };
+    }
+
+    private string GetCardPortraitPath()
+    {
+        var type = this.GetType();
+        string imgPrefix = ResourceUtils.GetImgPrefix(type);
+
+        // 获取自定义名称逻辑
+        var nameAttr = type.GetCustomAttribute<CustomImgNameAttribute>();
+        string fileName = nameAttr != null ? nameAttr.Name : type.Name;
+
+        string cardTypeStr = GetCardTypeString(this);
+
+        string path = $"{imgPrefix}/cards/{cardTypeStr}/{fileName}.png";
+
+        if (ResourceLoader.Exists(path))
+            return path;
+
+        string defaultImg = $"{imgPrefix}/cards/default.png";
+
+        return defaultImg;
+    }
+
+
+    /// <inheritdoc />
+    public override string PortraitPath => this.GetCardPortraitPath();
+
     /// <summary>
     /// 定义卡牌的标准标签集合。
     /// </summary>

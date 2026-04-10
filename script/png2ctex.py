@@ -60,18 +60,18 @@ class CtexConverter:
 
         header = struct.pack(
             cls.HEADER_FORMAT,
-            cls.MAGIC,           # 1
-            cls.VERSION,         # 2
-            width,               # 3
-            height,              # 4
-            cls.FLAGS,           # 5
-            cls.LIMITER,         # 6
-            0, 0, 0,             # 7, 8, 9 (三个保留)
-            cls.DATA_FORMAT,     # 10
-            packed_dims,         # 11
-            0,                   # 12 (保留)
-            cls.IMAGE_FORMAT,    # 13
-            len(webp_data)       # 14 (WebP数据大小)
+            cls.MAGIC,  # 1
+            cls.VERSION,  # 2
+            width,  # 3
+            height,  # 4
+            cls.FLAGS,  # 5
+            cls.LIMITER,  # 6
+            0, 0, 0,  # 7, 8, 9 (三个保留)
+            cls.DATA_FORMAT,  # 10
+            packed_dims,  # 11
+            0,  # 12 (保留)
+            cls.IMAGE_FORMAT,  # 13
+            len(webp_data)  # 14 (WebP数据大小)
         )
 
         # 验证头部长度
@@ -119,6 +119,28 @@ compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
 mipmaps/generate=false'''
+
+    @classmethod
+    def get_output_info(cls, png_path: Path, res_prefix: str, rel_path: str):
+        """
+        轻量级方法：仅计算预期的产物路径，不执行任何图像处理。
+        用于增量更新检查。
+        """
+        # 1. 计算源虚拟路径 (res://ModName/images/xxx.png)
+        source_vpath = f"res://{res_prefix}/{rel_path}"
+
+        # 2. 计算 MD5 (基于虚拟路径)
+        md5 = hashlib.md5(source_vpath.encode('utf-8')).hexdigest()
+
+        # 3. 构造预期的 ctex 和 import 虚拟路径
+        ctex_filename = f"{png_path.stem}.png-{md5}.ctex"
+        ctex_vpath = f"res://.godot/imported/{ctex_filename}"
+        import_vpath = f"{source_vpath}.import"
+
+        return {
+            "ctex_vpath": ctex_vpath,
+            "import_vpath": import_vpath
+        }
 
     @classmethod
     def convert_and_get_entries(cls, png_path: Path, res_prefix: str, rel_path: str):

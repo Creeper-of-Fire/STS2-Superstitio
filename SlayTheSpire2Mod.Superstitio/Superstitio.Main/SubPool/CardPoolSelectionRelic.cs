@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Saves.Runs;
+using Superstitio.Main.Base;
 using Superstitio.Main.SubPool.UI;
 using Superstitio.Main.Utils;
 
@@ -11,7 +12,7 @@ namespace Superstitio.Main.SubPool;
 /// <summary>
 /// 卡池选择遗物
 /// </summary>
-public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSelection
+public abstract class CardPoolSelectionRelic : SuperstitioBaseRelic, IHoldCardPoolSelection
 {
     /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;

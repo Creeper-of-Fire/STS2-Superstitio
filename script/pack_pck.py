@@ -15,61 +15,127 @@ import tomllib
 import json
 from dotenv import load_dotenv
 
-def filter_godot_output(process):
+
+def decode_godot_bytes(raw_bytes):
+    """解码逻辑：处理GodotPCKExplorer特定字节分布的输出"""
+    if not raw_bytes:
+        return ""
+
+    # 1. 找到第一个非零字节作为起始点
+    start_idx = 0
+    while start_idx < len(raw_bytes) and raw_bytes[start_idx] == 0:
+        start_idx += 1
+
+    # 2. 从第一个非零字节开始，每两个字节取第一个
+    filtered_bytes = bytearray()
+    i = start_idx
+    while i < len(raw_bytes):
+        filtered_bytes.append(raw_bytes[i])
+        i += 2
+
+    try:
+        # 用 GBK 解码
+        return filtered_bytes.decode('gbk', errors='ignore')
+    except Exception:
+        return ""
+
+
+def filter_godot_output(process, verbose=False):
     """实时过滤 GodotPCKExplorer 的输出"""
+
+    # 记录扫描到的最大文件数
+    last_file_count = 0
+
+    def should_show_and_process(line):
+        nonlocal last_file_count
+        line_clean = line.strip()
+        if not line_clean:
+            return False, None
+
+        if verbose:
+            return True, line_clean
+
+        # 1. 拦截 Found files，只记数不打印
+        count_match = re.search(r'Found files:\s+(\d+)', line_clean)
+        if count_match:
+            last_file_count = int(count_match.group(1))
+            return False, None
+
+        # 2. 拦截百分比、哈希、元数据等噪音
+        noise_patterns = [
+            r'\d+%',  # 进度百分比
+            r'Calculated MD5:',  # MD5
+            r'^\[.*?\]-\s+[0-9A-F\s]{2,}$',  # 哈希块
+            r'Version:', r'Alignment:',  # 元数据
+            r'Writing the PCK header',  # 过程琐碎描述
+            r'generating an index',  # 过程琐碎描述
+            r'Writing the content of files',  # 过程琐碎描述
+            r'Starting\.',  # 琐碎开始标记
+        ]
+        for pattern in noise_patterns:
+            if re.search(pattern, line_clean, re.IGNORECASE):
+                return False, None
+
+        # 3. 拦截单文件路径（.png, .import 等）
+        if any(ext in line_clean.lower() for ext in ['.png', '.import', '.ctex', '.json']):
+            return False, None
+
+        # 4. 白名单：只有这些里程碑才准打印
+        # 格式: (匹配正则, 是否替换为自定义中文, 是否显示原行)
+        milestones = [
+            (r'Started scanning', "  开始扫描文件...", False),
+            (r'Scan completed!', None, True),
+            (r'Pack PCK started', "  开始执行打包...", False),
+            (r'Output file:', None, True),
+            (r'Pack complete!', None, True),
+            (r'Success|Error|Warning|Failed', None, True),
+        ]
+
+        for pattern, replacement, keep_original in milestones:
+            if re.search(pattern, line_clean, re.IGNORECASE):
+                # 提取时间戳 (如果有的话)
+                timestamp_match = re.match(r'^(\[.*?\])', line_clean)
+                ts = timestamp_match.group(1) + " " if timestamp_match else ""
+
+                # 扫描完成时的特殊处理：合并统计数据
+                if 'Scan completed!' in line_clean:
+                    if last_file_count > 0:
+                        msg = f"{ts}  >> 扫描完成: 共找到 {last_file_count} 个文件"
+                        last_file_count = 0
+                        return True, msg
+                    return True, line_clean
+
+                # 返回自定义中文或原行
+                return True, (ts + replacement) if replacement else line_clean
+            
+        return True, line_clean
+
+    last_progress_line = None
+
     while True:
-        line = process.stdout.readline()
-        if not line:
+        line_bytes = process.stdout.readline()
+        if not line_bytes:
             break
 
-        # 找到第一个非零字节作为起始点
-        start_idx = 0
-        while start_idx < len(line) and line[start_idx] == 0:
-            start_idx += 1
+        # 使用提取的原始解码逻辑
+        decoded = decode_godot_bytes(line_bytes)
 
-        # 从第一个非零字节开始，每两个字节取第一个
-        filtered_bytes = bytearray()
-        i = start_idx
-        while i < len(line):
-            filtered_bytes.append(line[i])
-            i += 2
+        for decoded_line in decoded.splitlines():
+            show, final_line = should_show_and_process(decoded_line)
+            if show:
+                # 纯线性打印
+                sys.stdout.write(final_line + '\n')
+                sys.stdout.flush()
 
-        try:
-            # 用 GBK 解码
-            decoded = filtered_bytes.decode('gbk', errors='ignore')
+    # 处理错误输出
+    stderr_bytes = process.stderr.read()
+    if stderr_bytes:
+        err_text = decode_godot_bytes(stderr_bytes)
+        for line in err_text.splitlines():
+            if line.strip():
+                sys.stderr.write(line + '\n')
+                sys.stderr.flush()
 
-            # 处理每一行，去掉多余的空行
-            lines = decoded.splitlines()
-            for line in lines:
-                if line.strip():  # 如果这一行有内容
-                    sys.stdout.write(line + '\n')
-                    sys.stdout.flush()
-                # 空行直接跳过
-        except:
-            pass
-
-    # 错误输出同理
-    stderr = process.stderr.read()
-    if stderr:
-        start_idx = 0
-        while start_idx < len(stderr) and stderr[start_idx] == 0:
-            start_idx += 1
-
-        filtered_err = bytearray()
-        i = start_idx
-        while i < len(stderr):
-            filtered_err.append(stderr[i])
-            i += 2
-
-        try:
-            err_text = filtered_err.decode('gbk', errors='ignore')
-            lines = err_text.splitlines()
-            for line in lines:
-                if line.strip():
-                    sys.stderr.write(line + '\n')
-                    sys.stderr.flush()
-        except:
-            pass
 
 def load_mod_toml(toml_path):
     """加载 mod.toml 配置文件"""
@@ -203,7 +269,7 @@ def build_mod_pack(mod_toml, output_pck, dll_path=None, pck_src=None,
             for pdb_file in pdb_files:
                 shutil.copy2(pdb_file, mod_dir)
                 print(f"  复制: {pdb_file.name}")
-    
+
             # 复制所有 xml 文件（调试用）
             # TODO 这里全部复制可能会有点乱，不过我觉得无所谓。
             xml_files = list(dll_file.parent.glob("*.xml"))

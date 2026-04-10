@@ -9,6 +9,7 @@ using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Maso.Base;
 using Superstitio.Main.SubPool;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso.Relics;
 
@@ -17,6 +18,7 @@ namespace Superstitio.Main.Maso.Relics;
 /// 单次获得的腐朽每有3点获得2点快感。达到顶峰时，移除5腐朽 。
 /// </summary>
 [Pool(typeof(MasoRelicPool))]
+[CustomImgName("DevaBody")]
 public class MasoStartRelic : CardPoolSelectionRelic, ICorruptusBuffer, IAfterClimaxReached
 {
     private const int CorruptusReduceWhenClimax = 5;

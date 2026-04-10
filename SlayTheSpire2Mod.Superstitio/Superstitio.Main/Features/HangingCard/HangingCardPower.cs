@@ -1,5 +1,4 @@
-﻿using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Commands;
+﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -7,13 +6,14 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Base;
 
 namespace Superstitio.Main.Features.HangingCard;
 
 /// <summary>
 /// 挂起卡牌
 /// </summary>
-public class HangingCardPower : CustomPowerModel, IHangingCarrier
+public class HangingCardPower : SuperstitioBasePower, IHangingCarrier
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;

@@ -26,7 +26,7 @@ public class Masturbate() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Skill,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Basic,
     Target = TargetType.Self,
 }), IWithHangingConfigCard
 {

@@ -188,10 +188,9 @@ class ModBuilder:
 
         print("🌐 正在处理资源文件...")
 
-        # 清理旧的暂存区
-        if self.staging_dir.exists():
-            shutil.rmtree(self.staging_dir)
-        self.staging_dir.mkdir(parents=True)
+        # 确保暂存区存在
+        if not self.staging_dir.exists():
+            self.staging_dir.mkdir(parents=True)
 
         orchestrator = AssetOrchestrator(
             mod_id=self.mod_name,
@@ -240,12 +239,6 @@ class ModBuilder:
     def clean(self):
         """清理构建产物"""
         print("🧹 正在清理...")
-
-        # 清理 staging_dir
-        staging_dir = self.staging_dir
-        if staging_dir.exists():
-            shutil.rmtree(staging_dir)
-            print(f"  已删除: {staging_dir}")
 
         # 清理输出目录中的 PCK 和合并 DLL
         for file in self.output_dir.glob("*.pck"):

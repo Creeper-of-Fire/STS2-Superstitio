@@ -4,12 +4,14 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Extensions;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Base;
 
 /// <summary>
 /// 基础牌 - 打击
 /// </summary>
+[CustomImgName("Kiss")]
 public abstract class BaseStrike() : SuperstitioBaseCard(new CardInitMessage
 {
     BaseCost = 1,

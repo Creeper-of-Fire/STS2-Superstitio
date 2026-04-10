@@ -1,18 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using Superstitio.Main.Base;
-using Superstitio.Main.DynamicVars.Extensions;
-using Superstitio.Main.Extensions;
-using Superstitio.Main.Features.Felix;
-using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.PowerCardPower;
-using Superstitio.Main.Lupa.Base;
-
-namespace Superstitio.Main.Lupa.Cards.Rage;
+﻿namespace Superstitio.Main.Lupa.Cards.Rage;
 
 // /// <summary>
 // /// 漆黑噤默之页 - 当你 狂暴 时， 强制满足 !M! 次

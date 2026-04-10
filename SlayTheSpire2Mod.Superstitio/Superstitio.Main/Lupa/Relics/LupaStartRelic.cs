@@ -3,10 +3,13 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.SubPool;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Lupa.Relics;
 
@@ -14,12 +17,20 @@ namespace Superstitio.Main.Lupa.Relics;
 /// Lupa 的初始遗物，消耗能量时获得快感，她靠卡牌来把伤害转换为腐朽，而非在这里处理。腐朽转为全局效果。
 /// </summary>
 [Pool(typeof(LupaRelicPool))]
+[CustomImgName("DevaBody")]
 public class LupaStartRelic : CardPoolSelectionRelic, IAfterClimaxReached
 {
     /// <inheritdoc />
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     private const int FelixGetPerEnergy = 2;
+
+    /// <inheritdoc />
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    [
+        new EnergyVar(1),
+        new FelixVar(2)
+    ];
 
     /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>

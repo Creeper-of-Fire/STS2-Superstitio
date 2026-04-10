@@ -1,5 +1,4 @@
-﻿using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Combat;
+﻿using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Combat.History.Entries;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -8,13 +7,14 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Runs;
+using Superstitio.Main.Base;
 
 namespace Superstitio.Main.Features.Felix;
 
 /// <summary>
 /// 快感
 /// </summary>
-public class FelixPower : CustomPowerModel
+public class FelixPower : SuperstitioBasePower
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;
@@ -147,7 +147,7 @@ public static class HookExtension
 /// <summary>
 /// 顶峰记录用 Power
 /// </summary>
-public class ClimaxRecordPower : CustomPowerModel
+public class ClimaxRecordPower : SuperstitioBasePower
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;

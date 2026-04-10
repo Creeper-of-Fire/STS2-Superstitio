@@ -57,10 +57,15 @@ BenchmarkDotNet.Artifacts/
 .env
 /githubtoken.txt
 
+# 美术资源
+**/assets/*
+!**/assets/[Ll]ocalization/
+res/
+
 # 文档和原型文件
 concepts.toml
 concepts.*
-.nsfw/
+**/.nsfw/**
 
 # Python
 *.pyc

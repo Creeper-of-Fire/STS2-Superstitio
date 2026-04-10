@@ -3,6 +3,7 @@ using Godot;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.SubPool;
 using Superstitio.Main.SubPool.UI;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso.Base;
 
@@ -27,7 +28,12 @@ public class MasoCardPool : CustomCardPoolModel, IWithSubPool<MasoCardPool>
     /// <summary>
     /// 卡池的主题色。
     /// </summary>
-    public override Color DeckEntryCardColor => new(0.5f, 0.5f, 1f);
+    public override Color DeckEntryCardColor => Color.Color8(215, 35, 85);
+
+    /// <summary>
+    /// 卡牌颜色
+    /// </summary>
+    public override Color ShaderColor => this.DeckEntryCardColor.CalculateRequiredInputColor();
 
     /// <summary>
     /// 卡池是否是无色。例如事件、状态等卡池就是无色的。

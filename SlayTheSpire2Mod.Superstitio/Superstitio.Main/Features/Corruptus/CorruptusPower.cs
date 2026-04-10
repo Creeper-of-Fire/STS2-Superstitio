@@ -1,16 +1,16 @@
-﻿using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Combat;
+﻿using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.ValueProps;
+using Superstitio.Main.Base;
 
 namespace Superstitio.Main.Features.Corruptus;
 
 /// <summary>
 /// 
 /// </summary>
-public class CorruptusPower : CustomPowerModel
+public class CorruptusPower : SuperstitioBasePower
 {
     /// <inheritdoc />
     public override PowerType Type => PowerType.Buff;
