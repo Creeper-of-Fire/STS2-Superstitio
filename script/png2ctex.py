@@ -14,7 +14,7 @@ class CtexConverter:
     """PNG到.ctex转换器"""
 
     # GST2头部结构 (56字节)
-    HEADER_FORMAT = '<4s' + 'I' * 13  # 小端序，14个字段
+    HEADER_FORMAT = '<4s' + 'I' * 4 + 'i' + 'I' * 8  # 小端序，14个字段
     MAGIC = b'GST2'
     VERSION = 1
     FLAGS = 0x0D000000  # lossless, no mipmaps
