@@ -12,13 +12,11 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * 重复两次： NL 对随机敌人 造成 !D! 点 伤害 ，给予 !M! superstitiomod:仁慈 。
+ * Title = "猴形拳"
  *
-        private const val COST = 1
-        private const val DAMAGE = 5
-        private const val UPGRADE_DAMAGE = 2
-        private const val MAGIC = 2
-        private const val DAMAGE_TIME = 2
+ * Description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]，连续攻击{Repeat:diff()}次。"
+ *
+ * Flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
  */
 public class CotiNipple() : MasoBaseCard(new CardInitMessage
 {

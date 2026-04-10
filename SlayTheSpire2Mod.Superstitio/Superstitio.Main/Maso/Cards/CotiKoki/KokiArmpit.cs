@@ -11,9 +11,15 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// 造成伤害。打出一张本牌的复制品。
-/// </summary>
+/**
+ * Title = "肘击"
+ *
+ * Description = "{CardHangingDescription}"
+ *
+ * HangingEffect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品"
+ *
+ * Flavor = "曼巴永不退场。"
+ */
 public class KokiArmpit() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,
@@ -22,7 +28,6 @@ public class KokiArmpit() : MasoBaseCard(new CardInitMessage
     Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {
-
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
@@ -49,7 +54,7 @@ public class KokiArmpit() : MasoBaseCard(new CardInitMessage
             await DamageCmd.AutoAttack(this, play, tryRandomWhenTargetDie: true).Execute(context);
 
             var clonedCard = this.CreateClone();
-            
+
             await CardPileCmd.AddGeneratedCardToCombat(clonedCard, PileType.Play, addedByPlayer: true);
 
             await CardCmd.AutoPlay(context, clonedCard, play.Target);

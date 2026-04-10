@@ -12,9 +12,21 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// 打出后挂起自身，后续每次打出攻击牌时抽1张牌（可触发2/3次）
-/// </summary>
+/**
+ * Title = "回旋踢"
+ *
+ * Description = """
+ * 造成{Damage:diff()}点伤害。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "抽{DrawCards:diff()}张牌"
+ *
+ * Flavor = """
+ * [purple]造成15点伤害。
+ * 抽2张牌。[/purple]
+ * """
+ */
 public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,

@@ -1,8 +1,7 @@
-﻿[FistIn]
+[FistIn]
 title = "给你一拳"
 description = "选择一张手牌，失去其能量费用×{HpLoss:diff()}点生命，强制打出该牌。\n{CardHangingDescription}"
-hanging_effect = "抽{DrawCards:diff()}张牌"
-selectionScreenPrompt = "选择要打出的牌"
+hangingEffect = "抽{DrawCards:diff()}张牌"
 flavor = "忍一时之痛，换一瞬之机。"
 
 [Spark]

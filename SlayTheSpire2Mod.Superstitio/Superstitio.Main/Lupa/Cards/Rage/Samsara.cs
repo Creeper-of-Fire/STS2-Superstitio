@@ -13,9 +13,27 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
-/// <summary>
-/// 轮转 - 在[gold]抽牌堆[/gold]中添加{Cards:diff()}张[gold]伤口[/gold]。\n回合结束时，保留你所有的手牌。\n每当你打出卡牌，抽[blue]{SamsaraPower:diff()}[/blue]张牌。
-/// </summary>
+/**
+ * Title = "轮转"
+ *
+ * Description = """
+ * 在[gold]抽牌堆[/gold]中添加{Cards:diff()}张[gold]伤口[/gold]。
+ * 回合结束时，保留你所有的手牌。
+ * 每当你打出卡牌，抽[blue]{SamsaraPower:diff()}[/blue]张牌。
+ * """
+ *
+ * Power.Description = """
+ * 回合结束时，保留你所有的手牌。
+ * 每当你打出卡牌，抽牌。
+ * """
+ *
+ * Power.SmartDescription = """
+ * 回合结束时，保留你所有的手牌。
+ * 每当你打出卡牌，抽[blue]{Amount}[/blue]张牌。
+ * """
+ *
+ * Flavor = "生死轮转，无穷无尽。"
+ */
 public class Samsara() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 3,
@@ -55,7 +73,7 @@ public class Samsara() : LupaBaseCard(new CardInitMessage
         {
             if (cardPlay.CardPlayer != this.Owner.Player) return;
 
-            await CardPileCmd.Draw(context,this.Amount, cardPlay.CardPlayer);
+            await CardPileCmd.Draw(context, this.Amount, cardPlay.CardPlayer);
         }
     }
 
@@ -69,7 +87,7 @@ public class Samsara() : LupaBaseCard(new CardInitMessage
             count: this.DynamicVars.Cards.IntValue,
             addedByPlayer: false
         );
-        
+
         await PowerCmd.ApplyByCard<SamsaraPower>(this, this.Owner);
     }
 }

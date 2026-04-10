@@ -1,23 +1,77 @@
-﻿[KokiFoot]
-title = "悬刃"
+[KokiFoot]
+title = "回旋踢"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
-hanging_effect = "抽{DrawCards:diff()}张牌"
-flavor = "刀刃悬于空中，随时准备再次落下。"
+hangingEffect = "抽{DrawCards:diff()}张牌"
+flavor = "[purple]造成15点伤害。\n抽2张牌。[/purple]"
 
 [KokiGroin]
-title = "回响之刃"
+title = "震波震震"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
-hanging_effect = "造成{Damage:diff()}点伤害"
-flavor = "每一次挥击，都会在敌人的伤口上留下回响。"
+hangingEffect = "造成{Damage:diff()}点伤害"
+flavor = "弹弹弹弹。"
 
 [KokiBlow]
-title = "怒意冲拳"
+title = "铁头撞击"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
-hanging_effect = "获得{Felix:diff()}点[pink]快感[/pink]"
-flavor = "每一拳都在心中埋下更烈的火种。"
+hangingEffect = "获得{Felix:diff()}点[pink]快感[/pink]"
+flavor = "用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。"
 
 [KokiArmpit]
-title = "无尽燃烧"
+title = "肘击"
 description = "{CardHangingDescription}"
-hanging_effect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品"
-flavor = "你已无法停止。"
+hangingEffect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品"
+flavor = "曼巴永不退场。"
+
+[KokiHair]
+title = "辫子神功"
+description = "对敌人造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
+hangingEffect = "将带有消耗的本牌复制加入手牌，其在被打出之前耗能变为0"
+flavor = "鞭剪了，神留着，祖宗的东西再好，该割的时候就得割！再怎么变，也难不死咱。什么新玩意，都能玩到家，一变还得是绝活！"
+
+[KokiLegPit]
+title = "咬耳朵"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。每造成未被格挡的伤害，抽{DrawCards:diff()}张牌。"
+flavor = "拳王专属。"
+
+[KokiHand]
+title = "升龙拳"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。\n{CardHangingDescription}"
+hangingEffect = "获得{StrengthPower:diff()}层力量"
+flavor = "前、下、前下，拳击！"
+
+[KokiBreast]
+title = "木兰飞弹"
+description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]。"
+flavor = "寄托了人类未来的魔神……前进！"
+
+[CotiEye]
+title = "蛇形拳"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。\n{CardHangingDescription}"
+hangingEffect = "将[gold]龙形拳[/gold]放入手中"
+flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
+
+[CotiEar]
+title = "龙形拳"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。\n{CardHangingDescription}"
+hangingEffect = "将[gold]蛇形拳[/gold]放入手中"
+flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
+
+[CotiNipple]
+title = "猴形拳"
+description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]，连续攻击{Repeat:diff()}次。"
+flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
+
+[CotiNavel]
+title = "熊形拳"
+description = "对敌人造成{CalculatedDamage:diff()}点伤害，对自身造成{CalculatedDamage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+flavor = "笨重但致命的一击，如狂熊拍击般不顾一切。"
+
+[CotiThroat]
+title = "虎吼拳"
+description = "对敌人造成{Damage:diff()}点伤害。如果有挂起的牌，获得{Energy:energyIcons()}。"
+flavor = "如虎啸山林，其势不仅伤敌，更能振奋士气。"
+
+[CotiVaginal]
+title = "燕形拳"
+description = "对敌人造成{Damage:diff()}点伤害。触发所有[orange]伴随[/orange]效果。"
+flavor = "矫健如燕，在空中穿梭，引动后续的所有杀招。"

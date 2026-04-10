@@ -1,17 +1,22 @@
-﻿using MegaCrit.Sts2.Core.Entities.Cards;
+﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
+using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-
-/// <summary>
-/// 造成伤害，触发 <see cref="HangingType.Follow"/> 的挂载卡
-/// </summary>
+/**
+ * Title = "燕形拳"
+ *
+ * Description = "对敌人造成{Damage:diff()}点伤害。触发所有[orange]伴随[/orange]效果。"
+ *
+ * Flavor = "矫健如燕，在空中穿梭，引动后续的所有杀招。"
+ */
 public class CotiVaginal() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
@@ -29,6 +34,8 @@ public class CotiVaginal() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
+
         var configs = HangingCardManager.GetHangingCardTokens<AutoHangingCardTokenWithConfig>(this.Owner)
             .Where(it => it.HangingCardConfig.HangingType == HangingType.Follow);
 

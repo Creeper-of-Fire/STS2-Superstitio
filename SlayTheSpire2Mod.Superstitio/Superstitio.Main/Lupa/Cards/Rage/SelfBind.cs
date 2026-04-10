@@ -9,9 +9,16 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
-/// <summary>
-/// 结下束缚 - 获得 !M! 点 力量 。 失去 1 点 敏捷
-/// </summary>
+/**
+ * Title = "结下束缚"
+ *
+ * Description = """
+ * 获得{Power:diff()}层力量。
+ * 失去1层敏捷。
+ * """
+ *
+ * Flavor = "束缚自己，获得更强大的力量。"
+ */
 public class SelfBind() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,

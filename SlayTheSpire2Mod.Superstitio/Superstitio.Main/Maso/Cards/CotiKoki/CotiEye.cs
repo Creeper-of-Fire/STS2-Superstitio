@@ -14,13 +14,16 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * 消耗。移除 !B! 点 *腐朽 。 NL 造成 !D! 点 伤害 两次。 NL 把 CotiEye 加入手牌。 NL 获得 1 层 脆弱 。
-        private const val COST = 0
-        private const val DAMAGE = 2
-        private const val UPGRADE_DAMAGE = 1
-        private const val BLOCK = 4
-        private const val UPGRADE_BLOCK = 1
+ * Title = "龙形拳"
  *
+ * Description = """
+ * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "将[gold]蛇形拳[/gold]放入手中"
+ *
+ * Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
  */
 public class CotiEar() : MasoBaseCard(new CardInitMessage
 {
@@ -38,21 +41,21 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(2, ValueProp.Move).WithUpgrade(1),
         new BlockVar(4, ValueProp.Move).WithUpgrade(1), // 这里借用BlockVar来表示移除腐朽的数值
-        new PowerVar<VulnerablePower>(1)
+        new PowerVar<FrailPower>(1),
+        new RepeatVar(2)
     ];
 
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 造成两次伤害
-        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
-        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
+        // 造成伤害
+        await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
-        // 移除腐朽 (假设腐朽是 CorruptusPower)
+        // 移除腐朽
         await CorruptusManager.DecreaseCorruptus(this.Owner.Creature, this.DynamicVars.Block.BaseValue, this.Owner.Creature, this);
 
         // 自身获得脆弱
-        await PowerCmd.ApplyByCard<VulnerablePower>(this, this.Owner.Creature);
+        await PowerCmd.ApplyByCard<FrailPower>(this, this.Owner.Creature);
 
         // 把 CotiEye 加入手牌
         var cotiEye = this.CombatState?.CreateCard<CotiEye>(this.Owner);
@@ -61,9 +64,18 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
     }
 }
 
-/// <summary>
-/// 消耗。对自身和敌人造成伤害两次，获得虚弱。挂起：打出3张牌后获得 CotiEar。
-/// </summary>
+/**
+ * Title = "蛇形拳"
+ *
+ * Description = """
+ * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "将[gold]龙形拳[/gold]放入手中"
+ *
+ * Flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
+ */
 public class CotiEye() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
@@ -80,7 +92,8 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(4, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(3),
-        new PowerVar<WeakPower>(1)
+        new PowerVar<WeakPower>(1),
+        new RepeatVar(2)
     ];
 
     /// <inheritdoc />
@@ -92,8 +105,8 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 对敌人造成两次伤害
-        await DamageCmd.AutoAttack(this, cardPlay, hitCount: 2).Execute(choiceContext);
+        // 对敌人造成伤害
+        await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
         // 对自身造成伤害
         await DamageCmd.AutoAttack(this, this.Owner.Creature).Execute(choiceContext);

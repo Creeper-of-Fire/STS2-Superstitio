@@ -11,9 +11,13 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// Cost 1，造成 4-2 点 伤害 两次。每造成未被格挡的伤害，抽 1 张牌。
-/// </summary>
+/**
+ * Title = "咬耳朵"
+ *
+ * Description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。每造成未被格挡的伤害，抽{DrawCards:diff()}张牌。"
+ *
+ * Flavor = "拳王专属。"
+ */
 public class KokiLegPit() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,

@@ -11,11 +11,11 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * 造成 !D! 点 伤害 。 NL 如果 superstitiomod:合力序列 不为空， NL 获得 !M! 的 [E] 。
-        private const val COST = 2
-        private const val DAMAGE = 10
-        private const val UPGRADE_DAMAGE = 3
-        private const val MagicNum = 2
+ * Title = "虎吼拳"
+ *
+ * Description = "对敌人造成{Damage:diff()}点伤害。如果有挂起的牌，获得{Energy:energyIcons()}。"
+ *
+ * Flavor = "如虎啸山林，其势不仅伤敌，更能振奋士气。"
  */
 public class CotiThroat() : MasoBaseCard(new CardInitMessage
 {

@@ -8,9 +8,13 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
-/// <summary>
-/// 投技 - 选择最多{Cards:diff()}张牌丢弃，获得其耗能变化量的{Energy:energyIcons()}，抽等量的牌。
-/// </summary>
+/**
+ * Title = "投技"
+ *
+ * Description = "选择最多{Cards:diff()}张牌丢弃，获得其耗能变化量的{Energy:energyIcons()}，抽等量的牌。"
+ *
+ * Flavor = "投掷卡牌，获得能量。"
+ */
 public class MeasureDick() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 0,
@@ -42,10 +46,10 @@ public class MeasureDick() : LupaBaseCard(new CardInitMessage
             this
         )).ToList();
         await CardCmd.Discard(choiceContext, cards);
-        
+
         int energyChanged = cards.Where(it => !it.EnergyCost.CostsX && !it.Keywords.Contains(CardKeyword.Unplayable))
             .Select(it => Math.Abs(it.EnergyCost.GetAmountToSpend() - it.EnergyCost.GetWithModifiers(CostModifiers.None))).Sum();
-        
+
         await PlayerCmd.GainEnergy(this.DynamicVars.Energy.BaseValue * energyChanged, this.Owner);
 
         await CardPileCmd.Draw(choiceContext, cards.Count, this.Owner);

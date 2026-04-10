@@ -8,9 +8,13 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
-/// <summary>
-/// 战吼 - 获得 在场敌人数量+1次的 !B! 点 *格挡
-/// </summary>
+/**
+ * Title = "战吼"
+ *
+ * Description = "获得在场敌人数量+1次的{Block:diff()}点格挡。"
+ *
+ * Flavor = "战吼震天，震慑敌胆。"
+ */
 public class CoitalVocal() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,

@@ -12,9 +12,18 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// Cost 1 造成 3-4 点 伤害 两次。伴随 打出攻击牌 2-1 次：获得 1 力量 。
-/// </summary>
+/**
+ * Title = "升龙拳"
+ *
+ * Description = """
+ * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "获得{StrengthPower:diff()}层力量"
+ *
+ * Flavor = "前、下、前下，拳击！"
+ */
 public class KokiHand() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
@@ -28,6 +37,7 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(3, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(2).WithUpgrade(1),
+        new RepeatVar(2),
         new PowerVar<StrengthPower>(1).AddToolTips() // 获得
     ];
 
@@ -44,12 +54,9 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
+        await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
-        var token = this.CreateHangingToken(async (_, _) =>
-        {
-            await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature);
-        });
+        var token = this.CreateHangingToken(async (_, _) => { await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature); });
 
         await HangingCardManager.HangCard(token, this);
     }

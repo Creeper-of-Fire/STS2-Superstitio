@@ -11,9 +11,13 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// 造成伤害。给予仁慈。
-/// </summary>
+/**
+ * Title = "木兰飞弹"
+ *
+ * Description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]仁慈[/pink]。"
+ *
+ * Flavor = "寄托了人类未来的魔神……前进！"
+ */
 public class KokiBreast() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 2,

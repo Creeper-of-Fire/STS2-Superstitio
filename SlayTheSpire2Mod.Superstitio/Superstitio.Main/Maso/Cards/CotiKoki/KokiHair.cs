@@ -12,8 +12,16 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * 虚无。Cost 1 造成 5-7 点 *伤害 。 NL superstitiomod:延缓 打出任意牌 3 次： NL 把 带有 NL 消耗 的 复制加入手牌， NL 其在被打出之前，耗能变为0 。 NL superstitiomod:自动释放 。
- * 在新版本中，自动释放被取消，导致这张卡可能过于OP，也许加上一个虚无效果？但是之前就有虚无效果。
+ * Title = "辫子神功"
+ *
+ * Description = """
+ * 对敌人造成{Damage:diff()}点伤害。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "将带有消耗的本牌复制加入手牌，其在被打出之前耗能变为0"
+ *
+ * Flavor = "鞭剪了，神留着，祖宗的东西再好，该割的时候就得割！再怎么变，也难不死咱。什么新玩意，都能玩到家，一变还得是绝活！"
  */
 public class KokiHair() : MasoBaseCard(new CardInitMessage
 {

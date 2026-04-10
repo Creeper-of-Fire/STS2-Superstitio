@@ -238,7 +238,7 @@ public static class HangingDescriptionBuilder
 
     private static LocString GetCardHangingEffect(CardModel card)
     {
-        var loc = new LocString("cards", $"{card.Id.Entry}.hanging_effect");
+        var loc = new LocString("cards", $"{card.Id.Entry}.hangingEffect");
         card.DynamicVars.AddTo(loc);
         return loc;
     }

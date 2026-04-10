@@ -12,9 +12,16 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Base;
 
-/// <summary>
-/// 对自身造成伤害，对敌人造成伤害。若腐朽大于，再造成一次伤害。
-/// </summary>
+/**
+ * Title = "雷光一闪"
+ *
+ * Description = """
+ * 对自己造成{DamageSelf:diff()}点伤害，对敌人造成{Damage:diff()}点伤害。
+ * 若自身[sine][red]腐朽[/red][/sine]大于等于{CorruptusThreshold:diff()}，额外造成一次伤害。
+ * """
+ *
+ * Flavor = "以自身的痛楚引动雷电，痛得越深，劈得越狠。"
+ */
 public class Spark() : MasoBaseCard(new CardInitMessage()
 {
     BaseCost = 1,

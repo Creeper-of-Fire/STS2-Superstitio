@@ -13,9 +13,18 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// 打出后挂起自身，后续每次打出任意牌时获得2点快感
-/// </summary>
+/**
+ * Title = "铁头撞击"
+ *
+ * Description = """
+ * 造成{Damage:diff()}点伤害。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "获得{Felix:diff()}点[pink]快感[/pink]"
+ *
+ * Flavor = "用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。"
+ */
 public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,

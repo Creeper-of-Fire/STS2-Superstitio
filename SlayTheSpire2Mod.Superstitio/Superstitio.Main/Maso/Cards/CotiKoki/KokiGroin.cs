@@ -12,12 +12,17 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * TODO 旧效果：Cost 2 造成 18-24 点 *伤害 ， NL 根据手牌平均耗能， NL 减少 8 伤害每 [E] 。 NL （平均耗能不取整）
- * 目前打算换一个效果
+ * Title = "震波震震"
+ *
+ * Description = """
+ * 造成{Damage:diff()}点伤害。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "造成{Damage:diff()}点伤害"
+ *
+ * Flavor = "弹弹弹弹。"
  */
-/// <summary>
-/// 打出后挂起自身，后续每次打出牌时触发一次额外攻击（可触发3次）
-/// </summary>
 public sealed class KokiGroin() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 2,

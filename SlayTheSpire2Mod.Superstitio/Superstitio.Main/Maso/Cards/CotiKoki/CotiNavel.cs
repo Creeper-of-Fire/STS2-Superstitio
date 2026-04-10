@@ -11,9 +11,13 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
-/// <summary>
-/// 保留。对敌我双方造成伤害。获得易伤。造成狂暴次数的倍数的伤害。
-/// </summary>
+/**
+ * Title = "熊形拳"
+ *
+ * Description = "对敌人造成{CalculatedDamage:diff()}点伤害，对自身造成{CalculatedDamage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+ *
+ * Flavor = "笨重但致命的一击，如狂熊拍击般不顾一切。"
+ */
 public class CotiNavel() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 2,

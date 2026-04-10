@@ -8,9 +8,16 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
-/// <summary>
-/// 冷静 - 抽当前[orange]合力序列[/orange]总数的牌。\n释放所有[orange]合力序列[/orange]中的卡牌。
-/// </summary>
+/**
+ * Title = "冷静"
+ *
+ * Description = """
+ * 抽当前[orange]合力序列[/orange]总数的牌。
+ * 释放所有[orange]合力序列[/orange]中的卡牌。
+ * """
+ *
+ * Flavor = "冷静下来，重新思考。"
+ */
 public class CalmDown() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,

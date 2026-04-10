@@ -13,9 +13,18 @@ using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Base;
 
-/// <summary>
-/// 选择一张手牌，失去其当前费用4-3倍的血量，强制打出。挂起，打出任意牌 3 次后，抽 1 张牌。
-/// </summary>
+/**
+ * Title = "给你一拳"
+ *
+ * Description = """
+ * 选择一张手牌，失去其能量费用×{HpLoss:diff()}点生命，强制打出该牌。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "抽{DrawCards:diff()}张牌"
+ *
+ * Flavor = "忍一时之痛，换一瞬之机。"
+ */
 public class FistIn() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,

@@ -10,9 +10,18 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Base;
 
-/// <summary>
-/// 自慰 - 0费技能，挂起自身，获得4(6)点快感。打出任意2张牌后，抽1张牌。
-/// </summary>
+/**
+ * Title = "蓄势待发"
+ *
+ * Description = """
+ * 获得{Felix:diff()}点[pink]快感[/pink]。
+ * {CardHangingDescription}
+ * """
+ *
+ * HangingEffect = "抽{DrawCards:diff()}张牌"
+ *
+ * Flavor = "蓄势待发，只待一击。"
+ */
 public class Masturbate() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 0,

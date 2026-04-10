@@ -11,9 +11,17 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
-/// <summary>
-/// 禅意 - 移除{Damage:diff()}点[sine][red]腐朽[/red][/sine]。\n为{Cards:diff()}张[gold]手牌[/gold]添加[gold]消耗[/gold]。\n若选择的卡牌不能被打出，则将其[gold]消耗[/gold]。
-/// </summary>
+/**
+ * Title = "禅意"
+ *
+ * Description = """
+ * 移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。
+ * 为{Cards:diff()}张[gold]手牌[/gold]添加[gold]消耗[/gold]。
+ * 若选择的卡牌不能被打出，则将其[gold]消耗[/gold]。
+ * """
+ *
+ * Flavor = "禅意境界，看破红尘。"
+ */
 public class ZenState() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,

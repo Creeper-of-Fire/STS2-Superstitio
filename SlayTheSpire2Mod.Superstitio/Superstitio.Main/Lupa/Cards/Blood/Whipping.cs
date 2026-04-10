@@ -12,9 +12,16 @@ using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
-/// <summary>
-/// 掌握风暴 - 对 所有敌人 造成 !D! 点 伤害 。 所造成伤害每有 !M! 点，获得 %d 点 快感
-/// </summary>
+/**
+ * Title = "掌握风暴"
+ *
+ * Description = """
+ * 对所有敌人造成{Damage:diff()}点伤害。
+ * 所造成伤害每有{DamageToFelixRate:diff()}点，获得{Felix:diff()}点[pink]快感[/pink]。
+ * """
+ *
+ * Flavor = "掌握风暴的力量，横扫一切敌人。"
+ */
 public class Whipping() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,

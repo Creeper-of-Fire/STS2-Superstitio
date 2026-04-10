@@ -10,9 +10,18 @@ using Superstitio.Main.Features.Milk;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Rage;
-/// <summary> "WHISTLE.description": "",
-/// 以血蒙眼 - 造成{Damage:diff()}点伤害。\n[gold]击晕[/gold]该敌人。\n给予{MilkPower:diff()}仁慈。
-/// </summary>
+
+/**
+ * Title = "以血蒙眼"
+ *
+ * Description = """
+ * 对敌人造成{Damage:diff()}点伤害。
+ * [gold]击晕[/gold]该敌人。
+ * 给予{Power:diff()}层[pink]仁慈[/pink]。
+ * """
+ *
+ * Flavor = "用血液蒙住眼睛，感受纯粹的力量。"
+ */
 public class BlindfoldWithMilk() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 2,
