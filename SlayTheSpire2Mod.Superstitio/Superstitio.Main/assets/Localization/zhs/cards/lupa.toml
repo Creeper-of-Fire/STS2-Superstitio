@@ -3,3 +3,9 @@ title = "蓄势待发"
 description = "获得{Felix:diff()}点[pink]快感[/pink]。\n{CardHangingDescription}"
 hanging_effect = "抽{DrawCards:diff()}张牌"
 flavor = "蓄势待发，只待一击。"
+
+[JuicyPussy]
+title = "一怒之下"
+description = "达到[pink]顶峰[/pink]时，移除[blue]{JuicyPussyPower:diff()}[/blue]点[sine][red]腐朽[/red][/sine]。"
+power.description = "达到[pink]顶峰[/pink]时，移除[sine][red]腐朽[/red][/sine]。"
+power.smartDescription = "达到[pink]顶峰[/pink]时，移除[blue]{Amount}[/blue]点[sine][red]腐朽[/red][/sine]。"

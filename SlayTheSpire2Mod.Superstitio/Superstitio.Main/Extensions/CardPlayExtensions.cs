@@ -1,5 +1,7 @@
-﻿using MegaCrit.Sts2.Core.Entities.Cards;
+﻿using System.Diagnostics.CodeAnalysis;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 
 namespace Superstitio.Main.Extensions;
 
@@ -20,5 +22,13 @@ public static class CardPlayExtensions
             ArgumentNullException.ThrowIfNull(cardPlay?.Target);
             return cardPlay.Target;
         }
+    }
+
+    extension(CardPlay cardPlay)
+    {
+        /// <summary>
+        /// 得到卡牌的打出者/拥有者
+        /// </summary>
+        public Player CardPlayer => cardPlay.Card.Owner;
     }
 }

@@ -98,7 +98,7 @@ public abstract record HangingCardToken(
     /// <summary>
     /// 释放卡牌
     /// </summary>
-    protected async Task UnHangCard()
+    public async Task UnHangCard()
     {
         if (this.CombatState is null)
             return;

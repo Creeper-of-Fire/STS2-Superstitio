@@ -160,6 +160,11 @@ public static class HangingStaticLocs
 
     public static LocString SequenceName => KeywordLocString(HangingKey, "Sequence", "name");
     public static LocString SequenceDescription => KeywordLocString(HangingKey, "Sequence", "description");
+    
+    public static IHoverTip SequenceHoverTip => new HoverTip(
+        SequenceName,
+        SequenceDescription
+    );
 
     public static LocString GetTypeKeyword(HangingType type) => KeywordLocString(HangingKey, type.ToString(), "keyword");
 
@@ -225,7 +230,7 @@ public static class HangingDescriptionBuilder
             );
 
             yield return new HoverTip(keyword, generalDesc);
-            yield return new HoverTip(SequenceName, SequenceDescription);
+            yield return SequenceHoverTip;
         }
 
         yield return new HoverTip(keywordTitle, description);
