@@ -18,17 +18,17 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  *
  * Description = """
  * 在[gold]抽牌堆[/gold]中添加{Cards:diff()}张[gold]伤口[/gold]。
- * 回合结束时，保留你所有的手牌。
- * 每当你打出卡牌，抽[blue]{SamsaraPower:diff()}[/blue]张牌。
+ * 你在回合结束时不再自动丢弃所有[gold]手牌[/gold]。
+ * 每当你打出卡牌，抽{SamsaraPower:diff()}张牌。
  * """
  *
  * Power.Description = """
- * 回合结束时，保留你所有的手牌。
+ * 你在回合结束时不再自动丢弃所有[gold]手牌[/gold]。
  * 每当你打出卡牌，抽牌。
  * """
  *
  * Power.SmartDescription = """
- * 回合结束时，保留你所有的手牌。
+ * 你在回合结束时不再自动丢弃所有[gold]手牌[/gold]。
  * 每当你打出卡牌，抽[blue]{Amount}[/blue]张牌。
  * """
  *
@@ -88,6 +88,6 @@ public class Samsara() : LupaBaseCard(new CardInitMessage
             addedByPlayer: false
         );
 
-        await PowerCmd.ApplyByCard<SamsaraPower>(this, this.Owner);
+        await PowerCmd.ApplyByCard<SamsaraPower>(this, this.Owner.Creature);
     }
 }

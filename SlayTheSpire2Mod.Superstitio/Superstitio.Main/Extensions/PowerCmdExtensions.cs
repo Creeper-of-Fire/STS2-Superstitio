@@ -16,6 +16,25 @@ public static class PowerCmdExtensions
         /// <summary>
         /// 
         /// </summary>
+        public static async Task<T?> DecreByCard<T>(
+            CardModel card,
+            Creature target,
+            decimal? amount = null,
+            bool silent = false
+        ) where T : PowerModel
+        {
+            return await PowerCmd.Apply<T>(
+                target: target,
+                amount: -(amount ?? card.DynamicVars.GetVarOrThrow(typeof(T).Name).BaseValue),
+                applier: card.Owner.Creature,
+                cardSource: card,
+                silent: silent
+            );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static async Task<T?> ApplyByCard<T>(
             CardModel card,
             Creature target,
@@ -30,19 +49,6 @@ public static class PowerCmdExtensions
                 cardSource: card,
                 silent: silent
             );
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public static async Task<T?> ApplyByCard<T>(
-            CardModel card,
-            Player target,
-            decimal? amount = null,
-            bool silent = false
-        ) where T : PowerModel
-        {
-            return await PowerCmd.ApplyByCard<T>(card, target.Creature, amount, silent);
         }
     }
 }

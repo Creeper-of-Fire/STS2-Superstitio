@@ -46,13 +46,13 @@ flavor = "寄托了人类未来的魔神……前进！"
 
 [CotiEye]
 title = "蛇形拳"
-description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。\n{CardHangingDescription}"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层[gold]虚弱[/gold]。\n{CardHangingDescription}"
 hangingEffect = "将[gold]龙形拳[/gold]放入手中"
 flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
 
 [CotiEar]
 title = "龙形拳"
-description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。\n{CardHangingDescription}"
+description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n{CardHangingDescription}"
 hangingEffect = "将[gold]蛇形拳[/gold]放入手中"
 flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
 

@@ -11,7 +11,7 @@ namespace Superstitio.Main.Lupa.Cards.Blood;
 /**
  * Title = "战吼"
  *
- * Description = "获得在场敌人数量+1次的{Block:diff()}点格挡。"
+ * Description = "获得在场敌人数量+1次的{Block:diff()}点[gold]格挡[/gold]。"
  *
  * Flavor = "战吼震天，震慑敌胆。"
  */

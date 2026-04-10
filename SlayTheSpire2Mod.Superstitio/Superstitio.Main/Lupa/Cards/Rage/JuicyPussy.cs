@@ -17,7 +17,7 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
 /**
  * Title = "一怒之下"
  *
- * Description = "达到[pink]顶峰[/pink]时，移除[blue]{JuicyPussyPower:diff()}[/blue]点[sine][red]腐朽[/red][/sine]。"
+ * Description = "达到[pink]顶峰[/pink]时，移除{JuicyPussyPower:diff()}点[sine][red]腐朽[/red][/sine]。"
  *
  * Power.Description = "达到[pink]顶峰[/pink]时，移除[sine][red]腐朽[/red][/sine]。"
  *
@@ -62,6 +62,6 @@ public class JuicyPussy() : LupaBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.ApplyByCard<JuicyPussyPower>(this, this.Owner);
+        await PowerCmd.ApplyByCard<JuicyPussyPower>(this, this.Owner.Creature);
     }
 }

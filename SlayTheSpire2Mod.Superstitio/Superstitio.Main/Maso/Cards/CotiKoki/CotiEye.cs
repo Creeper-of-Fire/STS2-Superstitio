@@ -1,6 +1,7 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -17,7 +18,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  * Title = "龙形拳"
  *
  * Description = """
- * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。
+ * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{FrailPower:diff()}层[gold]脆弱[/gold]。
  * {CardHangingDescription}
  * """
  *
@@ -41,8 +42,15 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(2, ValueProp.Move).WithUpgrade(1),
         new BlockVar(4, ValueProp.Move).WithUpgrade(1), // 这里借用BlockVar来表示移除腐朽的数值
-        new PowerVar<FrailPower>(1),
+        new PowerVar<FrailPower>(1).AddToolTips(),
         new RepeatVar(2)
+    ];
+
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromCard<CotiEye>(),
     ];
 
     /// <inheritdoc />
@@ -68,7 +76,7 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
  * Title = "蛇形拳"
  *
  * Description = """
- * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层虚弱。
+ * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。对自身造成{Damage:diff()}点伤害。获得{WeakPower:diff()}层[gold]虚弱[/gold]。
  * {CardHangingDescription}
  * """
  *
@@ -92,8 +100,15 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(4, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(3),
-        new PowerVar<WeakPower>(1),
+        new PowerVar<WeakPower>(1).AddToolTips(),
         new RepeatVar(2)
+    ];
+    
+    /// <inheritdoc />
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        ..base.ExtraHoverTips,
+        HoverTipFactory.FromCard<CotiEar>(),
     ];
 
     /// <inheritdoc />
