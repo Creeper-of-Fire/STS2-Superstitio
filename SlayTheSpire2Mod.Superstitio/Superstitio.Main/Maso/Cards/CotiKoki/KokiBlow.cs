@@ -49,7 +49,7 @@ public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
 
         var token = this.CreateHangingToken(async (_, _) =>
         {
-            await FelixManager.ModifyFelix(this.Owner.Creature, this.DynamicVars.Felix.BaseValue, this.Owner.Creature, this);
+            await FelixManager.ModifyFelix(this.Owner.Creature, this.DynamicVars.Felix.BaseFelix, this.Owner.Creature, this);
         });
 
         await HangingCardManager.HangCard(token, this);

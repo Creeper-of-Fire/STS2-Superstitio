@@ -52,7 +52,7 @@ public class CotiEar() : MasoBaseCard(new CardInitMessage
         await CorruptusManager.DecreaseCorruptus(this.Owner.Creature, this.DynamicVars.Block.BaseValue, this.Owner.Creature, this);
 
         // 自身获得脆弱
-        await PowerCmd.ApplyByCard<VulnerablePower>(this, this.Owner.Creature, 1);
+        await PowerCmd.ApplyByCard<VulnerablePower>(this, this.Owner.Creature);
 
         // 把 CotiEye 加入手牌
         var cotiEye = this.CombatState?.CreateCard<CotiEye>(this.Owner);
@@ -99,7 +99,7 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
         await DamageCmd.AutoAttack(this, this.Owner.Creature).Execute(choiceContext);
 
         // 获得虚弱
-        await PowerCmd.ApplyByCard<WeakPower>(this, this.Owner.Creature, 1);
+        await PowerCmd.ApplyByCard<WeakPower>(this, this.Owner.Creature);
 
         // 挂起：打出3次牌后加入 CotiEar
         var token = this.CreateHangingToken(async (_, _) =>

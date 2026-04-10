@@ -78,7 +78,7 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
 
         // 创建挂起令牌
         var token = this.CreateHangingToken(async (context, _) =>
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true));
+            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner));
 
         // 挂起自身
         await HangingCardManager.HangCard(token, this);

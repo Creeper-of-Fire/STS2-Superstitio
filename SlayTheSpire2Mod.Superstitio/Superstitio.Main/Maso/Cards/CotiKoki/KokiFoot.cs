@@ -62,7 +62,7 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
 
         var token = this.CreateHangingToken(async (context, _) =>
         {
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true);
+            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner);
         });
         await HangingCardManager.HangCard(token, this);
     }

@@ -34,7 +34,7 @@ public class CotiNipple() : MasoBaseCard(new CardInitMessage
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(5, ValueProp.Move).WithUpgrade(2),
-        new PowerVar<MilkPower>(nameof(Milk), Milk),
+        new PowerVar<MilkPower>(Milk),
         new RepeatVar(2)
     ];
 
@@ -49,7 +49,7 @@ public class CotiNipple() : MasoBaseCard(new CardInitMessage
                 continue;
 
             await DamageCmd.AutoAttack(this, target, forceAttackTarget: true).Execute(choiceContext);
-            await PowerCmd.ApplyByCard<MilkPower>(this, target, (int)this.DynamicVars.GetVarOrThrow(nameof(Milk)).BaseValue);
+            await PowerCmd.ApplyByCard<MilkPower>(this, target);
         }
     }
 }

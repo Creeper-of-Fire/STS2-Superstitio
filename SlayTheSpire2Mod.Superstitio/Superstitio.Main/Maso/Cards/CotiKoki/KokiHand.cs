@@ -48,7 +48,7 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
 
         var token = this.CreateHangingToken(async (_, _) =>
         {
-            await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature, this.DynamicVars.Strength.BaseValue);
+            await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature);
         });
 
         await HangingCardManager.HangCard(token, this);

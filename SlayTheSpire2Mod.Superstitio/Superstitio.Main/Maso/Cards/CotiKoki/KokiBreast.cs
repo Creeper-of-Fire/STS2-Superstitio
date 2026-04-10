@@ -34,13 +34,13 @@ public class KokiBreast() : MasoBaseCard(new CardInitMessage
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),
-        new PowerVar<MilkPower>(nameof(Milk), Milk).WithUpgrade(MilkUpgrade)
+        new PowerVar<MilkPower>(Milk).WithUpgrade(MilkUpgrade)
     ];
 
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
-        await PowerCmd.ApplyByCard<MilkPower>(this, cardPlay.GetTargetOrThrow(), this.DynamicVars.GetVarOrThrow(nameof(Milk)).BaseValue);
+        await PowerCmd.ApplyByCard<MilkPower>(this, cardPlay.GetTargetOrThrow());
     }
 }

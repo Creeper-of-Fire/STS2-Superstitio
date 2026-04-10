@@ -43,6 +43,6 @@ public class CotiNavel() : MasoBaseCard(new CardInitMessage
         await DamageCmd.AutoAttack(this, this.Owner.Creature).Execute(choiceContext);
 
         // 自身获得易伤
-        await PowerCmd.ApplyByCard<VulnerablePower>(this, this.Owner.Creature, this.DynamicVars.Vulnerable.BaseValue);
+        await PowerCmd.ApplyByCard<VulnerablePower>(this, this.Owner.Creature);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.Extensions;
 
@@ -14,24 +16,33 @@ public static class PowerCmdExtensions
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="card"></param>
-        /// <param name="target"></param>
-        /// <param name="amount"></param>
-        /// <param name="silent"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public static async Task<T?> ApplyByCard<T>(
             CardModel card,
             Creature target,
-            decimal amount,
+            decimal? amount = null,
             bool silent = false
         ) where T : PowerModel
-            => await PowerCmd.Apply<T>(
+        {
+            return await PowerCmd.Apply<T>(
                 target: target,
-                amount: amount,
+                amount: amount ?? card.DynamicVars.GetVarOrThrow(typeof(T).Name).BaseValue,
                 applier: card.Owner.Creature,
                 cardSource: card,
                 silent: silent
             );
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static async Task<T?> ApplyByCard<T>(
+            CardModel card,
+            Player target,
+            decimal? amount = null,
+            bool silent = false
+        ) where T : PowerModel
+        {
+            return await PowerCmd.ApplyByCard<T>(card, target.Creature, amount, silent);
+        }
     }
 }

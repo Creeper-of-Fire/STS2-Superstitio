@@ -36,7 +36,7 @@ public class KokiLegPit() : MasoBaseCard(new CardInitMessage
         var attackCommand = await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
         foreach (var unused in attackCommand.Results.ToList().Where(it => it.UnblockedDamage > 0))
         {
-            await CardPileCmd.Draw(choiceContext, this.DynamicVars.DrawCards.IntValue, this.Owner, fromHandDraw: true);
+            await CardPileCmd.Draw(choiceContext, this.DynamicVars.DrawCards.IntValue, this.Owner);
         }
     }
 }

@@ -63,7 +63,7 @@ public class Masturbate() : LupaBaseCard(new CardInitMessage
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 获取快感值
-        decimal felixAmount = this.DynamicVars.Felix.BaseValue;
+        decimal felixAmount = this.DynamicVars.Felix.BaseFelix;
 
         // 使用 FelixManager 增加快感
         await FelixManager.ModifyFelix(this.Owner.Creature, felixAmount, this.Owner.Creature, cardPlay.Card);
@@ -71,7 +71,7 @@ public class Masturbate() : LupaBaseCard(new CardInitMessage
         // 创建挂起令牌
         var token = this.CreateHangingToken(async (context, _) =>
         {
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner, fromHandDraw: true);
+            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner);
         });
 
         // 挂起自身

@@ -55,6 +55,14 @@ public static class DynamicVarExtensions
         {
             return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = extraHoverTips };
         }
+        
+        /// <summary>
+        /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
+        /// </summary>
+        public DynamicVarSpec AddToolTips(IHoverTip extraHoverTip)
+        {
+            return dynamicVar.AddToolTips([extraHoverTip]);
+        }
 
         /// <summary>
         /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
@@ -62,6 +70,17 @@ public static class DynamicVarExtensions
         public DynamicVarSpec AddToolTips<TPower>() where TPower : PowerModel
         {
             return new DynamicVarSpec(dynamicVar) { ExtraHoverTips = [FromPower<TPower>()] };
+        }
+    }
+    
+    extension(EnergyVar dynamicVar)
+    {
+        /// <summary>
+        /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
+        /// </summary>
+        public DynamicVarSpec AddToolTips(CardModel card)
+        {
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = [ForEnergy(card)] };
         }
     }
 
@@ -93,6 +112,15 @@ public static class DynamicVarExtensions
         {
             return varSpec with { ExtraHoverTips = [..varSpec.ExtraHoverTips, ..extraHoverTips] };
         }
+
+        /// <summary>
+        /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
+        /// </summary>
+        public DynamicVarSpec AddToolTips(IHoverTip extraHoverTip)
+        {
+            return varSpec.AddToolTips([extraHoverTip]);
+        }
+        
 
         /// <summary>
         /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
