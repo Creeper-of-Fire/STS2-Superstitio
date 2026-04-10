@@ -1,7 +1,7 @@
 ﻿[HangingCardPower]
 title = "挂起"
 description = "{HangingDescription}"
-basic_description = "挂起的效果。"
+basicDescription = "挂起的效果。"
 
 [FelixPower]
 title = "快感"

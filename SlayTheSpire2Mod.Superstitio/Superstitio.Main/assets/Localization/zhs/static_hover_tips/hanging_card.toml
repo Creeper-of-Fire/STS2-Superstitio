@@ -1,7 +1,7 @@
 ﻿[Hanging]
-general_description = "打出后，送入[orange]{SequenceName}[/orange]而非牌堆，直到效果耗尽。"
-card_description_frame = "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
-keyword_title = "{HangingKeyword}效果"
+generalDescription = "打出后，送入[orange]{SequenceName}[/orange]而非牌堆，直到效果耗尽。"
+cardDescriptionFrame = "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
+keywordTitle = "{HangingKeyword}效果"
 
 [Hanging.Sequence]
 name = "合力序列"

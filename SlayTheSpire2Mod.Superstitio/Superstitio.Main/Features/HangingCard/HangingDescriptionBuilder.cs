@@ -71,10 +71,10 @@ public abstract record LocTemplate(string LocPrefix, params string[] Keys)
 }
 
 /// <summary>
-/// 对应 [Hanging] general_description
+/// 对应 [Hanging] generalDescription
 /// "打出后，送入[orange]{SequenceName}[/orange]而非牌堆，直到效果耗尽。"
 /// </summary>
-public record LocGeneralDescription() : LocTemplate(HangingKey, "general_description")
+public record LocGeneralDescription() : LocTemplate(HangingKey, "generalDescription")
 {
     // 参数名直接对应 TOML 里的 {SequenceName}
     public LocString Fill(LocString SequenceName)
@@ -86,10 +86,10 @@ public record LocGeneralDescription() : LocTemplate(HangingKey, "general_descrip
 }
 
 /// <summary>
-/// 对应 [Hanging] card_description_frame
+/// 对应 [Hanging] cardDescriptionFrame
 /// "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
 /// </summary>
-public record LocCardDescriptionFrame() : LocTemplate(HangingKey, "card_description_frame")
+public record LocCardDescriptionFrame() : LocTemplate(HangingKey, "cardDescriptionFrame")
 {
     public LocString Fill(LocString HangingKeyword, LocString HangingDescription)
     {
@@ -101,10 +101,10 @@ public record LocCardDescriptionFrame() : LocTemplate(HangingKey, "card_descript
 }
 
 /// <summary>
-/// 对应 [Hanging] keyword_title
+/// 对应 [Hanging] keywordTitle
 /// "{HangingKeyword}效果"
 /// </summary>
-public record LocKeywordTitle() : LocTemplate(HangingKey, "keyword_title")
+public record LocKeywordTitle() : LocTemplate(HangingKey, "keywordTitle")
 {
     public LocString Fill(LocString HangingKeyword)
     {

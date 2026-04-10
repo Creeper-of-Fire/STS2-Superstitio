@@ -84,7 +84,7 @@ public abstract class CardPoolSelectionRelic : CustomRelicModel, IHoldCardPoolSe
             return
             [
                 new HoverTip(
-                    SuperstitioLocStringFactory.ExtendLocString("CARD_POOL", "tip", "subpool_list_tip", "title"),
+                    SuperstitioLocStringFactory.ExtendLocString("CARD_POOL", "tip", "subpoolListTip", "title"),
                     poolList
                 )
             ];

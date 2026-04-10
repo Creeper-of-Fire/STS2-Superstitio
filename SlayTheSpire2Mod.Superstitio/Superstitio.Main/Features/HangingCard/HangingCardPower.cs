@@ -41,7 +41,7 @@ public class HangingCardPower : CustomPowerModel, IHangingCarrier
     /// <summary>
     /// 基础描述
     /// </summary>
-    public LocString BasicDescription => new(locTable, "basic_description");
+    public LocString BasicDescription => new(locTable, "basicDescription");
 
     /// <summary>
     /// 在 hover 提示中显示被吸收的卡牌
