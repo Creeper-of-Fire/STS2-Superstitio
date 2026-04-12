@@ -10,17 +10,12 @@ namespace Superstitio.Main.Features.Milk;
 /// 在下一次攻击后，给予被攻击者[blue]{Amount}[/blue]点临时生命。（目前以格挡代替）
 /// TODO 临时生命还没有做好。或者也许召唤一个召唤物？
 /// </summary>
-public class MilkPower : SuperstitioBasePower
+public class MilkPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Debuff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => false;
-
+    Type = PowerType.Debuff,
+    InitStackType = PowerInitMessage.StackStyle.Normal
+})
+{
     /// <inheritdoc />
     public override async Task AfterAttack(AttackCommand command)
     {

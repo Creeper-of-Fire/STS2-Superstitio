@@ -13,17 +13,12 @@ namespace Superstitio.Main.Features.HangingCard;
 /// <summary>
 /// 挂起卡牌
 /// </summary>
-public class HangingCardPower : SuperstitioBasePower, IHangingCarrier
+public class HangingCardPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Buff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Single;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => true;
-
+    Type = PowerType.Buff,
+    InitStackType = PowerInitMessage.StackStyle.MultiCounter
+}), IHangingCarrier
+{
     /// <inheritdoc />
     public override LocString Description
     {

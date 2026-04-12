@@ -54,11 +54,12 @@ public class Samsara() : LupaBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc />
-    public sealed class SamsaraPower : PowerCardPower<Samsara>
+    public sealed class SamsaraPower() : SimpleCardPower<Samsara>(new PowerInitMessage
     {
-        /// <inheritdoc />
-        public override PowerStackType StackType => PowerStackType.Counter;
-
+        Type = PowerType.Buff,
+        InitStackType = PowerInitMessage.StackStyle.Normal
+    })
+    {
         /// <inheritdoc />
         public override bool ShouldFlush(Player player)
         {

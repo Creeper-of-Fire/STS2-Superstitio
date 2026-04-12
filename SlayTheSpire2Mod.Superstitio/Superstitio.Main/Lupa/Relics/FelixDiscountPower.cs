@@ -11,17 +11,12 @@ namespace Superstitio.Main.Lupa.Relics;
 /// 快感爆发带来的减费效果
 /// 层数 = 减费数值 = 可使用的次数
 /// </summary>
-public class FelixDiscountPower : SuperstitioBasePower
+public class FelixDiscountPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Buff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => false;
-
+    Type = PowerType.Buff,
+    InitStackType = PowerInitMessage.StackStyle.Normal
+})
+{
     private bool IsCheckingFelixDiscount { get; set; } = false;
 
     /// <summary>

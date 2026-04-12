@@ -21,7 +21,7 @@
 //     ];
 //
 //     /// <inheritdoc cref="FastWindUp"/>
-//     public class FastWindUpPower : PowerCardPower<FastWindUp>, IAfterClimaxReached
+//     public class FastWindUpPower : SimpleCardPower<FastWindUp>, IAfterClimaxReached
 //     {
 //         /// <inheritdoc />
 //         public async Task AfterClimaxReached(Creature powerOwner, FelixPower felixPower, Creature? applier, CardModel? cardSource)

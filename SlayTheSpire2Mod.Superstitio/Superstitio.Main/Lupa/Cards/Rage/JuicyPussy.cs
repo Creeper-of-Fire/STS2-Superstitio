@@ -44,14 +44,12 @@ public class JuicyPussy() : LupaBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc cref="JuicyPussy"/>
-    public class JuicyPussyPower : PowerCardPower<JuicyPussy>, IAfterClimaxReached
+    public class JuicyPussyPower() : SimpleCardPower<JuicyPussy>(new PowerInitMessage
     {
-        /// <inheritdoc />
-        public override PowerStackType StackType => PowerStackType.Counter;
-
-        /// <inheritdoc />
-        public override bool IsInstanced => false;
-
+        Type = PowerType.Debuff,
+        InitStackType = PowerInitMessage.StackStyle.Normal
+    }), IAfterClimaxReached
+    {
         /// <inheritdoc />
         public async Task AfterClimaxReached(Creature powerOwner, FelixPower felixPower, Creature? applier, CardModel? cardSource)
         {

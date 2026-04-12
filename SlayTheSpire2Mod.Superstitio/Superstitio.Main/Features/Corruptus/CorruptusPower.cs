@@ -10,17 +10,12 @@ namespace Superstitio.Main.Features.Corruptus;
 /// <summary>
 /// 
 /// </summary>
-public class CorruptusPower : SuperstitioBasePower
+public class CorruptusPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Buff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => false;
-
+    Type = PowerType.Buff,
+    InitStackType = PowerInitMessage.StackStyle.Normal
+})
+{
     /// <inheritdoc />
     public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
     {

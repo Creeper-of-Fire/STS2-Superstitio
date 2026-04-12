@@ -14,17 +14,12 @@ namespace Superstitio.Main.Features.Felix;
 /// <summary>
 /// 快感
 /// </summary>
-public class FelixPower : SuperstitioBasePower
+public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Buff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => false;
-
+    Type = PowerType.Buff,
+    InitStackType = PowerInitMessage.StackStyle.Normal
+})
+{
     private const int AngerThreshold = 10;
 
     private int MaxThresholdReachedThisTurn { get; set; } = 0;
@@ -147,17 +142,12 @@ public static class HookExtension
 /// <summary>
 /// 顶峰记录用 Power
 /// </summary>
-public class ClimaxRecordPower : SuperstitioBasePower
+public class ClimaxRecordPower() : SuperstitioBasePower(new PowerInitMessage
 {
-    /// <inheritdoc />
-    public override PowerType Type => PowerType.Buff;
-
-    /// <inheritdoc />
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <inheritdoc />
-    public override bool IsInstanced => false;
-
+    Type = PowerType.Buff,
+    InitStackType = PowerInitMessage.StackStyle.Normal
+})
+{
     /// <inheritdoc />
     protected override bool IsVisibleInternal => false;
 }
