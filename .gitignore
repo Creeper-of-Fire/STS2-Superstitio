@@ -91,6 +91,9 @@ concepts.*
 /STS2_Localization_Export/
 /NameRelink/
 
+# LLM生产出来的垃圾堆
+/agent/
+
 # Godot部分
 /Godot/
 
