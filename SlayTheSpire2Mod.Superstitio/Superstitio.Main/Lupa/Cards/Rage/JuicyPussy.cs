@@ -19,11 +19,11 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  *
  * Description = "达到[pink]顶峰[/pink]时，移除{JuicyPussyPower:diff()}点[sine][red]腐朽[/red][/sine]。"
  *
+ * Flavor = "这就是为什么我不穿内裤。"
+ *
  * Power.Description = "达到[pink]顶峰[/pink]时，移除[sine][red]腐朽[/red][/sine]。"
  *
  * Power.SmartDescription = "达到[pink]顶峰[/pink]时，移除[blue]{Amount}[/blue]点[sine][red]腐朽[/red][/sine]。"
- *
- * Flavor = "这就是为什么我不穿内裤。"
  *
  * Sfw.Title = "怒气"
  *

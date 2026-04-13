@@ -23,18 +23,19 @@ namespace Superstitio.Main.Maso.Cards.Self;
  * 如果你只有1点生命，免疫任何非攻击伤害。
  * """
  *
+ * Flavor = "好刺激，好有趣，还想再来。"
+ *
  * Power.Description = "当你要被杀死时，免死并回复到1点生命。"
  *
  * Power.SmartDescription = "下[blue]{Amount}[/blue]次，当你要被杀死时，免死并回复到1点生命。"
  *
  * AtDeathDoorPower.Description = "如果你只有1点生命，免疫任何非攻击伤害。"
  *
- * Flavor = "好刺激，好有趣，还想再来。"
- *
  * Sfw.Title = "重整旗鼓"
  *
  * Sfw.Flavor = "再来……我不服。"
  */
+[IsGuro]
 public class DeathDoor() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,

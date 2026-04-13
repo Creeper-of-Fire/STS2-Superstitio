@@ -32,6 +32,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * Sfw.Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
  */
+[Pool(typeof(TokenCardPool))]
 public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 {
     BaseCost = 0,

@@ -161,57 +161,74 @@ def process_cs_file(cs_file: Path, loc_data: dict):
 
         # 向上扫描旧注释
         # 范围：从类声明行上方一行开始，直到遇到代码或空行超过一定限制
-        comment_start_idx = idx
+
+        scan_idx = idx - 1
+        keep_line = []
+
+        # 只要上方是 注释、Attribute 或 空行，就持续向上扫描
+        last_useful_idx = idx
+
         in_multiline_comment = False
 
-        for j in range(idx - 1, -1, -1):
-            prev_line = new_lines[j].strip()
+        while scan_idx >= 0:
+            line_raw = new_lines[scan_idx]
+            line_strip = line_raw.strip()
 
-            # 如果是空行，继续向上找（但我们要清理掉它）
-            if not prev_line:
-                comment_start_idx = j
-                continue
-
-            # 跳过 Attribute 所在的行 (例如 [Config(xx)])
-            if prev_line.startswith('[') and prev_line.endswith(']'):
-                comment_start_idx = j
+            # 1. 如果是空行，记录位置并继续（但不存入 keep_line）
+            if not line_strip:
+                last_useful_idx = scan_idx
+                scan_idx -= 1
                 continue
 
-            # 匹配块注释结束
-            if prev_line.endswith("*/"):
-                in_multiline_comment = True
-                comment_start_idx = j
-                continue
-            # 匹配块注释开始
-            if prev_line.startswith("/*") or prev_line.startswith("/**"):
-                in_multiline_comment = False
-                comment_start_idx = j
-                continue
-            # 在块注释内部
-            if in_multiline_comment:
-                comment_start_idx = j
-                continue
-            # 匹配单行注释
-            if prev_line.startswith("///") or prev_line.startswith("//"):
-                comment_start_idx = j
+            # 2. 如果是 Attribute (例如 [Card])
+            # 注意：简单的 startswith('[') 可能会误判，但在类上方通常是 Attribute
+            if line_strip.startswith('[') and line_strip.endswith(']'):
+                keep_line.insert(0, line_raw) # 保留这一行原始文本
+                last_useful_idx = scan_idx
+                scan_idx -= 1
                 continue
 
-            # 如果碰到既不是注释也不是空行的东西，停止扫描
+            # 3. 如果是块注释结束
+            if line_strip.endswith("*/"):
+                in_block_comment = True
+                last_useful_idx = scan_idx
+                scan_idx -= 1
+                continue
+
+            # 4. 如果是块注释开始
+            if line_strip.startswith("/*") or line_strip.startswith("/**"):
+                in_block_comment = False
+                last_useful_idx = scan_idx
+                scan_idx -= 1
+                continue
+
+            # 5. 如果在块注释内部或者是单行注释
+            if in_block_comment or line_strip.startswith("//") or line_strip.startswith("///") or line_strip.startswith("*"):
+                last_useful_idx = scan_idx
+                scan_idx -= 1
+                continue
+
+            # 6. 碰到其他任何东西（如代码、namespace、using），停止扫描
             break
-
+            
         # 3. 构造新内容
         new_comment = build_block_comment(loc_data[class_name], indent)
 
         # 替换范围 [comment_start_idx : idx] 为新注释
         # 注意：要在注释上方留一个空行，如果它前面有代码的话
         replacement = []
-        if comment_start_idx > 0 and new_lines[comment_start_idx - 1].strip():
-            replacement.append("\n")  # 补一个空行
-
+        if last_useful_idx > 0 and new_lines[last_useful_idx - 1].strip():
+            replacement.append("\n")
+            
+        # 放入新注释
         replacement.append(new_comment + "\n")
 
-        # 执行切片替换
-        new_lines[comment_start_idx: idx] = replacement
+        # 放入保留下来的 Attributes
+        if keep_line:
+            replacement.extend(keep_line)
+
+        # 替换范围 [last_useful_idx : idx]
+        new_lines[last_useful_idx : idx] = replacement
 
     # 4. 写回文件
     with open(cs_file, 'w', encoding='utf-8-sig') as f:
