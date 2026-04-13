@@ -79,7 +79,7 @@ public class DeathDoor() : MasoBaseCard(new CardInitMessage
         /// <inheritdoc />
         public override async Task BeforeApplied(
             Creature target,
-            Decimal amount,
+            decimal amount,
             Creature? applier,
             CardModel? cardSource)
         {

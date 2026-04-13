@@ -45,8 +45,8 @@ public static class BaseLibColorCompensation
         float baseTextureLuminance = 0.65f; // 底图平均颜色？猜测值
         
         // 1. 底图补偿：目标颜色 / 底图颜色
-        Color baseTex = baseTextureColor ?? new Color(baseTextureLuminance, baseTextureLuminance, baseTextureLuminance); 
-        Vector3 compensated = new Vector3(
+        var baseTex = baseTextureColor ?? new Color(baseTextureLuminance, baseTextureLuminance, baseTextureLuminance); 
+        var compensated = new Vector3(
             targetRgb.R / Mathf.Max(baseTex.R, 0.001f),
             targetRgb.G / Mathf.Max(baseTex.G, 0.001f),
             targetRgb.B / Mathf.Max(baseTex.B, 0.001f)
@@ -66,7 +66,7 @@ public static class BaseLibColorCompensation
             // 低饱和度颜色：只做 Saturation 逆变换，不做 Hue 旋转
             // 这样可以保持原始色相，避免偏移
             float invS = 1.0f / Mathf.Max(s, 0.001f);
-            Basis satInvMatrix = new Basis(
+            var satInvMatrix = new Basis(
                 new Vector3(1, 0, 0),
                 new Vector3(0, invS, 0),
                 new Vector3(0, 0, invS)
@@ -82,14 +82,14 @@ public static class BaseLibColorCompensation
             float sinH = Mathf.Sin(-angle);
             float cosH = Mathf.Cos(-angle);
 
-            Basis hueInvMatrix = new Basis(
+            var hueInvMatrix = new Basis(
                 new Vector3(1, 0, 0),
                 new Vector3(0, cosH, -sinH),
                 new Vector3(0, sinH, cosH)
             );
 
             float invS = 1.0f / Mathf.Max(s, 0.001f);
-            Basis satInvMatrix = new Basis(
+            var satInvMatrix = new Basis(
                 new Vector3(1, 0, 0),
                 new Vector3(0, invS, 0),
                 new Vector3(0, 0, invS)
@@ -99,7 +99,7 @@ public static class BaseLibColorCompensation
         }
 
         // 5. 应用逆变换到补偿后的颜色
-        Vector3 vec = totalInvMatrix * compensated;
+        var vec = totalInvMatrix * compensated;
 
         // 6. Value 补偿
         vec /= Mathf.Max(v, 0.001f);

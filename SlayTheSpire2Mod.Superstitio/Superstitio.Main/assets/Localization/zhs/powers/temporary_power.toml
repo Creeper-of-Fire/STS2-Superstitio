@@ -1,0 +1,5 @@
+﻿[TemporaryPower]
+power.description = "在本回合结束前获得[gold]{PowerName}[/gold]。"
+power.smartDescription = "在本回合结束前失去[blue]{Amount}[/blue]点[gold]{PowerName}[/gold]。"
+down.description = "在本回合结束前失去[gold]{PowerName}[/gold]。"
+down.smartDescription = "在本回合结束前失去[blue]{Amount}[/blue]点[gold]{PowerName}[/gold]。"

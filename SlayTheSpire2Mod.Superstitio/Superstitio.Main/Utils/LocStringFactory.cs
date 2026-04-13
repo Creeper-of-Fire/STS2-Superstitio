@@ -24,6 +24,18 @@ public class LocStringFactory(string baseLibPrefix)
     public string BaseLibPrefix { get; } = baseLibPrefix;
 
     /// <summary>
+    /// 创建一个指向特定本地化表的 <see cref="LocString"/>。
+    /// </summary>
+    /// <param name="locTable">本地化表</param>
+    /// <param name="locPrefix">本地化键的前缀，将自动移除命名空间前缀。</param>
+    /// <param name="locEntryKeys">本地化键的后续部分。</param>
+    /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
+    public LocString CreateLocString(string locTable,string locPrefix, params IEnumerable<string> locEntryKeys)
+    {
+        return new LocString(locTable, string.Join(".", [this.BaseLibPrefix + locPrefix.RemovePrefix(), ..locEntryKeys]));
+    }
+
+    /// <summary>
     /// 创建一个指向通用扩展本地化表的 <see cref="LocString"/>。
     /// </summary>
     /// <param name="locPrefix">本地化键的前缀，将自动移除命名空间前缀。</param>
@@ -31,7 +43,7 @@ public class LocStringFactory(string baseLibPrefix)
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public LocString ExtendLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return new LocString(GeneralExtendLocTable, string.Join(".", [this.BaseLibPrefix + locPrefix.RemovePrefix(), ..locEntryKeys]));
+        return this.CreateLocString(GeneralExtendLocTable, locPrefix, locEntryKeys);
     }
 
     /// <summary>
@@ -42,6 +54,6 @@ public class LocStringFactory(string baseLibPrefix)
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public LocString KeywordLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return new LocString(KeywordLocTable, string.Join(".", [this.BaseLibPrefix + locPrefix.RemovePrefix(), ..locEntryKeys]));
+        return this.CreateLocString(KeywordLocTable, locPrefix, locEntryKeys);
     }
 }

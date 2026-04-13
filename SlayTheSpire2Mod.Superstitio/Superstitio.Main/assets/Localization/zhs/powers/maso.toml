@@ -1,9 +1,4 @@
-﻿[HangingCardPower]
-title = "挂起"
-description = "{HangingDescription}"
-basicDescription = "挂起的效果。"
-
-[FelixPower]
+﻿[FelixPower]
 title = "快感"
 description = "每累积[blue]10[/blue]层，达到一次[pink]顶峰[/pink]，触发特定效果。\n回合结束时失去。"
 

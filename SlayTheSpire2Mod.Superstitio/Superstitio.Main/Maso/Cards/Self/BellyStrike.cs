@@ -49,7 +49,7 @@ public class BellyStrike() : MasoBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc />
-    public class BellyStrikePower : TemporaryStrengthPower
+    public class BellyStrikePower : TemporaryPower<StrengthPower>
     {
         /// <inheritdoc />
         public override AbstractModel OriginModel => ModelDb.Card<SetupStrike>();
