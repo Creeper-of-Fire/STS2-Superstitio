@@ -23,7 +23,7 @@ public class MeasureDick() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Skill,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Common,
     Target = TargetType.Self
 })
 {

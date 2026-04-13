@@ -33,7 +33,7 @@ public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 0,
     Type = CardType.Attack,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Common,
     Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {

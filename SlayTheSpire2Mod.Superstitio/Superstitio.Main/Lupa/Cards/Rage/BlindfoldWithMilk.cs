@@ -30,7 +30,7 @@ public class BlindfoldWithMilk() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 2,
     Type = CardType.Attack,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Rare,
     Target = TargetType.AnyEnemy
 })
 {

@@ -27,7 +27,7 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  */
 public class CalmDown() : LupaBaseCard(new CardInitMessage
 {
-    BaseCost = 1,
+    BaseCost = 0,
     Type = CardType.Skill,
     Rarity = CardRarity.Common,
     Target = TargetType.Self

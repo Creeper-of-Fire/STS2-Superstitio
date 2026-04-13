@@ -25,7 +25,7 @@ public class CotiNipple() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Attack,
-    Rarity = CardRarity.Common,
+    Rarity = CardRarity.Uncommon,
     Target = TargetType.RandomEnemy
 })
 {

@@ -30,7 +30,7 @@ public class Whipping() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Attack,
-    Rarity = CardRarity.Rare,
+    Rarity = CardRarity.Common,
     Target = TargetType.AllEnemies
 })
 {

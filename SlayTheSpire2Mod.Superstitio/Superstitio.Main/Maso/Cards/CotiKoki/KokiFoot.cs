@@ -35,7 +35,7 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Attack,
-    Rarity = CardRarity.Uncommon,
+    Rarity = CardRarity.Common,
     Target = TargetType.AnyEnemy,
 }), IWithHangingConfigCard
 {

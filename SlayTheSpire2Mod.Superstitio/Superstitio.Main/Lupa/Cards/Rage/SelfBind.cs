@@ -27,7 +27,7 @@ public class SelfBind() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 1,
     Type = CardType.Power,
-    Rarity = CardRarity.Common,
+    Rarity = CardRarity.Uncommon,
     Target = TargetType.Self
 })
 {
