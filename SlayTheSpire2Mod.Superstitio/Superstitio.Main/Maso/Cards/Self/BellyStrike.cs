@@ -16,7 +16,7 @@ namespace Superstitio.Main.Maso.Cards.Self;
  * Title = "腹部打击"
  *
  * Description = """
- * 对目标造成{Damage:diff()}伤害，本回合给予{StrengthPower:diff()}力量。
+ * 对目标造成{CalculatedDamage:diff()}伤害，本回合给予{StrengthPower:diff()}力量。
  * 鞭策 (对自己/队友使用时触发的额外效果。)：只造成一半的伤害，翻倍其力量。
  * 目前，敌我双方任意角色可选的逻辑还没有做出来。所以这张卡会在之后才实现选择己方的功能
  * """

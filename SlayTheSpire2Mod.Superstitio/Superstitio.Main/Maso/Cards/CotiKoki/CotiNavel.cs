@@ -13,7 +13,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
 /**
  * Title = "性交-插入：肚脐"
  *
- * Description = "对敌人造成{Damage:diff()}点伤害，对自身造成{Damage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+ * Description = "对全体敌人造成{Damage:diff()}点伤害，\n对自身造成{Damage:diff()}点伤害。\n获得{VulnerablePower:diff()}层易伤。"
  *
  * Flavor = "洞必试，试必捅。射进腹腔里会宫外孕吗？"
  *
