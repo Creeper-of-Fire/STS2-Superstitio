@@ -14,7 +14,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.Base;
 
 /**
- * Title = "给你一拳"
+ * Title = "拳头插入"
  *
  * Description = """
  * 选择一张手牌，失去其能量费用×{HpLoss:diff()}点生命，强制打出该牌。
@@ -25,7 +25,11 @@ namespace Superstitio.Main.Maso.Cards.Base;
  *
  * HangingEffect = "抽{DrawCards:diff()}张牌"
  *
- * Flavor = "忍一时之痛，换一瞬之机。"
+ * Flavor = "再深一点会更好。"
+ *
+ * Sfw.Title = "强制打出"
+ *
+ * Sfw.Flavor = "忍一时之痛，换一瞬之机。"
  */
 public class FistIn() : MasoBaseCard(new CardInitMessage
 {

@@ -59,6 +59,11 @@ class LocalizationProcessor(BaseProcessor):
         # 本地化由于逻辑复杂（扫描代码），保持原有清空逻辑，但记录产出的文件
         target_loc_dir = self.staging_dir / self.mod_id / "localization"
 
+        # 删除旧的本地化目录
+        if target_loc_dir.exists():
+            console.print(f"  [Loc] 清理旧目录: {target_loc_dir}")
+            shutil.rmtree(target_loc_dir)
+
         console.print(f"  [Loc] 处理本地化: {folder_path.name}")
         process_localization(
             assets_dir=self.assets_dir,

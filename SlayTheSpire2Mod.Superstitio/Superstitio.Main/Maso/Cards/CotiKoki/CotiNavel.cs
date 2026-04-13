@@ -6,24 +6,27 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
-using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "熊形拳"
+ * Title = "性交-插入：肚脐"
  *
- * Description = "对敌人造成{CalculatedDamage:diff()}点伤害，对自身造成{CalculatedDamage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+ * Description = "对敌人造成{Damage:diff()}点伤害，对自身造成{Damage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
  *
- * Flavor = "笨重但致命的一击，如狂熊拍击般不顾一切。"
+ * Flavor = "洞必试，试必捅。射进腹腔里会宫外孕吗？"
+ *
+ * Sfw.Title = "熊形拳"
+ *
+ * Sfw.Flavor = "笨重但致命的一击，如狂熊拍击般不顾一切。"
  */
 public class CotiNavel() : MasoBaseCard(new CardInitMessage
 {
     BaseCost = 2,
     Type = CardType.Attack,
-    Rarity = CardRarity.Rare,
-    Target = TargetType.AnyEnemy,
+    Rarity = CardRarity.Uncommon,
+    Target = TargetType.AllEnemies,
 })
 {
     /// <inheritdoc />
@@ -33,9 +36,7 @@ public class CotiNavel() : MasoBaseCard(new CardInitMessage
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<VulnerablePower>(1).AddToolTips(),
-        new ExtraDamageVar(3).WithUpgrade(1),
-        new CalculationBaseVar(15).WithUpgrade(5),
-        new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) => FelixManager.GetClimaxRecord(card.Owner.Creature).Count()),
+        new DamageVar(22,ValueProp.Move).WithUpgrade(7),
     ];
 
     /// <inheritdoc />

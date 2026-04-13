@@ -16,7 +16,14 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  * 释放所有[orange]合力序列[/orange]中的卡牌。
  * """
  *
- * Flavor = "冷静下来，重新思考。"
+ * Flavor = """
+ * 冥想……冷静，冷静，冥想……果然还是好想自慰。
+ * o(TヘTo)
+ * """
+ *
+ * Sfw.Title = "冷静"
+ *
+ * Sfw.Flavor = "冷静下来，重新思考。"
  */
 public class CalmDown() : LupaBaseCard(new CardInitMessage
 {

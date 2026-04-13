@@ -11,15 +11,17 @@ using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Maso.Base;
+using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso.Cards.Self;
 
 /**
  * Title = "濒死体验"
  *
- * TitleSFW = "重整旗鼓"
- *
- * Description = "下{DeathDoorPower:diff()}次，当你要被杀死时，免死并回复到1点生命。\n如果你只有1点生命，免疫任何非攻击伤害。"
+ * Description = """
+ * 下{DeathDoorPower:diff()}次，当你要被杀死时，免死并回复到1点生命。
+ * 如果你只有1点生命，免疫任何非攻击伤害。
+ * """
  *
  * Power.Description = "当你要被杀死时，免死并回复到1点生命。"
  *
@@ -28,6 +30,10 @@ namespace Superstitio.Main.Maso.Cards.Self;
  * AtDeathDoorPower.Description = "如果你只有1点生命，免疫任何非攻击伤害。"
  *
  * Flavor = "好刺激，好有趣，还想再来。"
+ *
+ * Sfw.Title = "重整旗鼓"
+ *
+ * Sfw.Flavor = "再来……我不服。"
  */
 public class DeathDoor() : MasoBaseCard(new CardInitMessage
 {

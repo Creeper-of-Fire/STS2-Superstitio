@@ -64,7 +64,7 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
         var combatState = this.Owner.CombatState;
         if (runState is null || combatState is null)
             return;
-        // 调用达到顶峰后的钩子方法
+        // 调用达到高潮后的钩子方法
         await Hook.AfterClimaxReached(
             runState: runState,
             combatState: combatState,
@@ -98,13 +98,13 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
 }
 
 /// <summary>
-/// 达到顶峰后事件接口
-/// 允许监听者在角色达到顶峰时执行自定义逻辑
+/// 达到高潮后事件接口
+/// 允许监听者在角色达到高潮时执行自定义逻辑
 /// </summary>
 public interface IAfterClimaxReached
 {
     /// <summary>
-    /// 当达到顶峰时调用
+    /// 当达到高潮时调用
     /// </summary>
     /// <param name="powerOwner">快感Buff的所有者</param>
     /// <param name="felixPower">Buff自身</param>
@@ -115,14 +115,14 @@ public interface IAfterClimaxReached
 }
 
 /// <summary>
-/// 钩子扩展类 - 提供达到顶峰后的事件分发功能
+/// 钩子扩展类 - 提供达到高潮后的事件分发功能
 /// </summary>
 public static class HookExtension
 {
     extension(Hook)
     {
         /// <summary>
-        /// 分发达到顶峰事件给所有监听者
+        /// 分发达到高潮事件给所有监听者
         /// </summary>
         public static async Task AfterClimaxReached(IRunState runState, CombatState? combatState, Creature powerOwner,
             FelixPower felixPower, Creature? applier, CardModel? cardSource)
@@ -140,7 +140,7 @@ public static class HookExtension
 }
 
 /// <summary>
-/// 顶峰记录用 Power
+/// 高潮记录用 Power
 /// </summary>
 public class ClimaxRecordPower() : SuperstitioBasePower(new PowerInitMessage
 {
@@ -184,10 +184,10 @@ public static class FelixManager
     }
 
     /// <summary>
-    /// 获取目标的顶峰记录
+    /// 获取目标的高潮记录
     /// </summary>
     /// <param name="target">目标生物</param>
-    /// <returns>包含其所有顶峰记录的 enumerable，可进一步过滤/处理</returns>
+    /// <returns>包含其所有高潮记录的 enumerable，可进一步过滤/处理</returns>
     public static IEnumerable<PowerReceivedEntry> GetClimaxRecord(Creature target)
     {
         return CombatManager.Instance.History.Entries.OfType<PowerReceivedEntry>()

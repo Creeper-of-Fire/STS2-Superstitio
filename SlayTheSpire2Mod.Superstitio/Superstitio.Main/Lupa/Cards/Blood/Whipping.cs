@@ -13,14 +13,18 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
 /**
- * Title = "掌握风暴"
+ * Title = "鞭打"
  *
  * Description = """
  * 对所有敌人造成{Damage:diff()}点伤害。
  * 所造成伤害每有{DamageToFelixRate:diff()}点，获得{Felix:diff()}点[pink]快感[/pink]。
  * """
  *
- * Flavor = "掌握风暴的力量，横扫一切敌人。"
+ * Flavor = ""
+ *
+ * Sfw.Title = "掌握风暴"
+ *
+ * Sfw.Flavor = "闪电风暴接近中。"
  */
 public class Whipping() : LupaBaseCard(new CardInitMessage
 {

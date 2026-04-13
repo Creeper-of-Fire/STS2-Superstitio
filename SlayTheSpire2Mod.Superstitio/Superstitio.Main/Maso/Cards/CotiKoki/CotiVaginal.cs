@@ -11,11 +11,15 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "燕形拳"
+ * Title = "性交-插入：阴道"
  *
  * Description = "对敌人造成{Damage:diff()}点伤害。触发所有[orange]伴随[/orange]效果。"
  *
- * Flavor = "矫健如燕，在空中穿梭，引动后续的所有杀招。"
+ * Flavor = "朴实无华。如果没有其他东西助兴的话就会困得想睡觉。"
+ *
+ * Sfw.Title = "燕形拳"
+ *
+ * Sfw.Flavor = "矫健如燕，在空中穿梭，引动后续的所有杀招。"
  */
 public class CotiVaginal() : MasoBaseCard(new CardInitMessage
 {

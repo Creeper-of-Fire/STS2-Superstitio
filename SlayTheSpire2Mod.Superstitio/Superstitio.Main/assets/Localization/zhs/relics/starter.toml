@@ -2,7 +2,7 @@
 title = "苦行印记"
 description = """
 单次每获得[blue]3[/blue]点[sine][red]腐朽[/red][/sine]，获得[blue]2[/blue]点[pink]快感[/pink]。
-达到[pink]顶峰[/pink]时，移除[blue]5[/blue]点[sine][red]腐朽[/red][/sine]。
+达到[pink]高潮[/pink]时，移除[blue]5[/blue]点[sine][red]腐朽[/red][/sine]。
 """
 flavor = "在苦痛中，她找到了力量的真谛。"
 
@@ -10,6 +10,6 @@ flavor = "在苦痛中，她找到了力量的真谛。"
 title = "欢愉印记"
 description = """
 每消耗[blue]1[/blue]点{Energy:energyIcons()}能量，获得[blue]2[/blue]点[pink]快感[/pink]。
-达到[pink]顶峰[/pink]时，获得[blue]1[/blue]层[gold]费用减免[/gold]。
+达到[pink]高潮[/pink]时，获得[blue]1[/blue]层[gold]费用减免[/gold]。
 """
 flavor = "她的攻势如潮水，连绵不绝，无穷无尽。"

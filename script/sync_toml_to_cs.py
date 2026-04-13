@@ -14,6 +14,7 @@ FOLDER_MAPPING = {
     "Lupa/Cards/Blood": "cards/lupa.toml",
     "Lupa/Cards/Rage": "cards/lupa.toml",
     "Maso/Cards/Base": "cards/maso.toml",
+    "Maso/Cards/Self": "cards/maso.toml",
     "Maso/Cards/CotiKoki": "cards/cotikoki.toml",
 }
 
@@ -53,6 +54,7 @@ def load_toml_data(toml_path: Path) -> dict:
         content = f.read().strip()
         return dict(tomlkit.parse(content)) if content else {}
 
+
 def flatten_for_display(card_data: dict, parent_key: str = '') -> dict:
     """
     将嵌套字典展平用于显示（仅用于生成注释内容）
@@ -67,8 +69,13 @@ def flatten_for_display(card_data: dict, parent_key: str = '') -> dict:
             items.append((new_key, v))
     return dict(items)
 
+
 def format_value(val: str, indent: str) -> str:
     val_str = str(val).strip()
+
+    if not val_str:
+        return '""'
+
     if "\n" in val_str or "\\n" in val_str:
         content = val_str.replace("\\n", "\n")
         lines = content.split('\n')
@@ -101,9 +108,9 @@ def build_block_comment(card_data: dict, indent: str) -> str:
         # 跳过需要排除的键
         if key in EXCLUDED_KEYS:
             continue
-        # 跳过空值
-        if not val:
-            continue
+        # # 跳过空值
+        # if not val:
+        #     continue
 
         # 转换键名: title -> Title, power.description -> Power.Description
         display_name = '.'.join(convert_to_pascal_case(part) for part in key.split('.'))
@@ -162,6 +169,11 @@ def process_cs_file(cs_file: Path, loc_data: dict):
 
             # 如果是空行，继续向上找（但我们要清理掉它）
             if not prev_line:
+                comment_start_idx = j
+                continue
+
+            # 跳过 Attribute 所在的行 (例如 [Config(xx)])
+            if prev_line.startswith('[') and prev_line.endswith(']'):
                 comment_start_idx = j
                 continue
 

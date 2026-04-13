@@ -46,7 +46,9 @@ class BaseProcessor(ABC):
     def process(self, data: Dict[str, Any], context: LocalizationContext) -> Dict[str, Any]:
         """
         处理本地化数据
-        :param data: 当前语言的所有数据聚合字典，格式为 {category: {top_key: {nested_data}}}
+        :param data: 聚合字典，格式为 {virtual_path: {top_key: {nested_data}}}
+                     注意：这里的 virtual_path 可以是相对路径（如 'cards', 'sfw/cards'），
+                     框架会根据这个路径自动在输出目录中建立相应的子目录。
         :param context: 上下文（含 mod_id, lang 等）
         :return: 处理后的字典
         """
@@ -73,6 +75,53 @@ class LocalizationPipeline:
 # 具体处理器实现
 # ==========================================
 
+class VariantSplitter(BaseProcessor):
+    """
+    变体分离器：
+    专门识别特定前缀（如 sfw, nsfw, guro），将其数据从主分类中抽取出来，
+    并重定向到新的目录地址（如从 cards 重定向到 sfw/cards）。
+    """
+    VARIANTS = {"sfw", "nsfw", "guro"}
+
+    def process(self, data: Dict[str, Any], context: LocalizationContext) -> Dict[str, Any]:
+        # 使用 list 包装 items 以允许在迭代时修改源字典
+        for virtual_path, cat_data in list(data.items()):
+            for top_key, fields in cat_data.items():
+                if not isinstance(fields, dict):
+                    continue
+
+                for variant in self.VARIANTS:
+                    # 场景 1：标准 TOML 嵌套。例如 sfw.title = "..." 会被解析为 {"sfw": {"title": "..."}}
+                    if variant in fields and isinstance(fields[variant], dict):
+                        variant_data = fields.pop(variant)
+                        self._redirect_to_variant_path(data, virtual_path, variant, top_key, variant_data)
+
+                    # 场景 2：后备方案，防御扁平字符串键。例如用户带引号写了 "sfw.title" = "..."
+                    keys_to_delete = []
+                    for k, v in fields.items():
+                        if k.startswith(f"{variant}."):
+                            sub_key = k[len(variant) + 1:]
+                            self._redirect_to_variant_path(data, virtual_path, variant, top_key, {sub_key: v})
+                            keys_to_delete.append(k)
+
+                    for k in keys_to_delete:
+                        fields.pop(k)
+
+        return data
+
+    def _redirect_to_variant_path(self, data, base_path, variant, top_key, variant_data):
+        """修改目录地址：通过赋予新的虚拟路径将数据重定向"""
+        # 构建新的相对目录，例如 'cards' -> 'sfw/cards'
+        variant_path = f"{variant}/{base_path}"
+
+        if variant_path not in data:
+            data[variant_path] = {}
+        if top_key not in data[variant_path]:
+            data[variant_path][top_key] = {}
+
+        data[variant_path][top_key].update(variant_data)
+
+
 class CardPowerExtractor(BaseProcessor):
     """
     特殊处理：
@@ -81,45 +130,34 @@ class CardPowerExtractor(BaseProcessor):
     """
 
     def process(self, data: Dict[str, Any], context: LocalizationContext) -> Dict[str, Any]:
-        # 确保全部为小写分类名
-        cards_category = data.get("cards", {})
-        if not cards_category:
-            return data
+        # 匹配任何以 'cards' 结尾的虚拟路径 (例如 'cards', 'sfw/cards')
+        categories_to_process = [path for path in data.keys() if path.split('/')[-1] == 'cards']
 
-        # 确保 powers 类别存在
-        powers_category = data.setdefault("powers", {})
+        for cat_path in categories_to_process:
+            cards_category = data[cat_path]
+            if not cards_category:
+                continue
 
-        for card_id, card_data in cards_category.items():
-            if isinstance(card_data, dict):
-                # 找出所有以 'power' 结尾的字段（不区分大小写）
-                power_fields = [
-                    key for key in card_data.keys()
-                    if key.lower().endswith('power')
-                ]
+            # 推导对应的 powers 路径 (例如 'sfw/cards' -> 'sfw/powers')
+            prefix = cat_path[:-len('cards')]
+            powers_cat_path = f"{prefix}powers"
+            powers_category = data.setdefault(powers_cat_path, {})
 
-                for power_field in power_fields:
-                    # 提取 power 数据并从原来的卡牌中移除
-                    power_data = card_data.pop(power_field)
+            for card_id, card_data in list(cards_category.items()):
+                if isinstance(card_data, dict):
+                    power_fields = [key for key in card_data.keys() if key.lower().endswith('power')]
 
-                    # 确定 power_id
-                    # 如果字段名就是 "power"（不区分大小写），使用 "Power" 后缀
-                    # 否则使用原字段名（保持原始大小写）
-                    if power_field.lower() == 'power':
-                        power_id = f"{card_id}Power"
-                    else:
-                        # 对于 "xxxpower" 字段，直接使用原字段名作为后缀
-                        power_id = inflection.camelize(power_field)
+                    for power_field in power_fields:
+                        power_data = card_data.pop(power_field)
+                        power_id = f"{card_id}Power" if power_field.lower() == 'power' else inflection.camelize(power_field)
 
-                    # 如果该 power_id 已经存在，则合并；否则新建
-                    if power_id not in powers_category:
-                        powers_category[power_id] = {}
+                        if power_id not in powers_category:
+                            powers_category[power_id] = {}
 
-                    # 如果 power_data 是字典，直接更新；否则包装为字典
-                    if isinstance(power_data, dict):
-                        powers_category[power_id].update(power_data)
-                    else:
-                        # 如果提取的数据不是字典，将其存储为 NAME 字段
-                        powers_category[power_id]["NAME"] = power_data
+                        if isinstance(power_data, dict):
+                            powers_category[power_id].update(power_data)
+                        else:
+                            powers_category[power_id]["NAME"] = power_data
 
         return data
 
@@ -194,7 +232,7 @@ def process_localization(assets_dir, mod_id, output_dir):
                                 data = tomllib.loads(decoded_content)
                                 aggregated_data[lang][category_name].update(data)
                                 break
-                            except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+                            except (UnicodeDecodeError):
                                 continue
                         else:
                             # 所有编码都失败
@@ -208,8 +246,13 @@ def process_localization(assets_dir, mod_id, output_dir):
     # 构建并执行流水线
     print("正在执行数据处理流水线...")
     pipeline = LocalizationPipeline()
-    # 注册你的处理器（执行顺序很重要，先提取，再加前缀）
+    # 第一次分离：处理根节点上的 sfw.title 和 sfw.power
+    pipeline.add_processor(VariantSplitter())
+    # 提取能力：扫描 cards 和提取出的 sfw/cards，将其拆分至 powers 和 sfw/powers
     pipeline.add_processor(CardPowerExtractor())
+    # 第二次分离：处理诸如 power.sfw.name 这种因 Extractor 提升了层级而暴露出的变体
+    pipeline.add_processor(VariantSplitter())
+    # 统一添加 Mod 前缀
     pipeline.add_processor(ModIdPrefixer())
 
     processed_data = {}
@@ -221,19 +264,53 @@ def process_localization(assets_dir, mod_id, output_dir):
     # 最终扁平化并写入 JSON
     print("正在扁平化数据并生成 JSON...")
     for lang, categories_data in processed_data.items():
-        for category, cat_data in categories_data.items():
-            # 在这里进行最后的扁平化
-            # 经过 ModIdPrefixer，此时字典的顶层 Key 已经是加了前缀的格式，如 MODID-DEFEND_MASO
-            final_json_data = flatten_dict(cat_data)
+        # Step 1: 全部转化为扁平化字典
+        flattened_data = {}
+        for virtual_path, cat_data in categories_data.items():
+            f_data = flatten_dict(cat_data)
+            if f_data:
+                flattened_data[virtual_path] = f_data
 
-            # 如果分类没有任何数据（可能是空文件被处理），跳过
-            if not final_json_data:
-                continue
+        # Step 2: 处理继承链合并
+        # 定义继承顺序
+        variants_order = ['nsfw', 'guro', 'sfw']
 
+        # 找出当前语言中涉及的所有分类（如 cards, powers, relics）
+        all_categories = set()
+        for p in flattened_data.keys():
+            all_categories.add(p.split('/')[-1])
+
+        for cat in all_categories:
+            # 获取根基底 (无前缀的文件内容)
+            # 如果没有根基底，则从空字典开始
+            current_base = flattened_data.get(cat, {}).copy()
+
+            # 按顺序迭代：SFW -> NSFW -> Guro
+            for var in variants_order:
+                var_path = f"{var}/{cat}"
+
+                # 继承逻辑：
+                # 1. 复制上一级的累积内容作为底色
+                # 2. 如果当前变体文件夹有特殊定义，则覆盖上去
+                # 3. 更新累积内容供下一级继承
+
+                if var_path in flattened_data:
+                    # 如果变体有定义，将变体内容覆盖到基底上
+                    merged_content = current_base.copy()
+                    merged_content.update(flattened_data[var_path])
+                    flattened_data[var_path] = merged_content
+                    # 下一级将继承这个合并后的结果
+                    current_base = merged_content
+                else:
+                    # 如果变体没有定义该文件，则它完全等同于上一级的内容
+                    # 这样可以保证 sfw/cards.json 不存在时，nsfw/cards.json 也能拿到基础数据
+                    flattened_data[var_path] = current_base.copy()
+
+        # Step 3: 开始写入磁盘
+        for virtual_path, final_json_data in flattened_data.items():
             # 确定输出路径并写入文件
-            out_dir = output_path / mod_id / "localization" / lang
-            out_dir.mkdir(parents=True, exist_ok=True)
-            output_file = out_dir / f"{category}.json"
+            output_file = output_path / mod_id / "localization" / lang / f"{virtual_path}.json"
+            output_file.parent.mkdir(parents=True, exist_ok=True)
 
             # 如果文件已存在，加载旧内容进行合并
             existing_data = {}

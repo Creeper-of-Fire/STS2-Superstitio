@@ -12,7 +12,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "震波震震"
+ * Title = "性交-侍奉：素股"
  *
  * Description = """
  * 造成{Damage:diff()}点伤害。
@@ -21,7 +21,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * HangingEffect = "造成{Damage:diff()}点伤害"
  *
- * Flavor = "弹弹弹弹。"
+ * Flavor = "看上去就像是被十个人侵犯到溢出来了，实际上只是射在外面啦。"
+ *
+ * Sfw.Title = "震波震震"
+ *
+ * Sfw.Flavor = "弹弹弹弹。"
  */
 public sealed class KokiGroin() : MasoBaseCard(new CardInitMessage
 {

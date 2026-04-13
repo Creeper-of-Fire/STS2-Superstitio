@@ -47,10 +47,10 @@ public static class ResourceUtils
 
         bool useNSFWFolder;
 
-        if (isGuroCard && !SuperstitioModConfig.IsGuroEnabled)
+        if (isGuroCard && !SuperstitioModConfig.IsGuroImgEnabled)
             useNSFWFolder = false;
         else
-            useNSFWFolder = SuperstitioModConfig.IsNSFWEnabled;
+            useNSFWFolder = SuperstitioModConfig.IsNSFWImgEnabled;
 
         string sfw = useNSFWFolder ? "img" : "imgSFW";
 

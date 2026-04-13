@@ -27,7 +27,7 @@ public abstract class TemporaryPower<TPower>() : SuperstitioBasePower(new PowerI
 
     /// <summary>
     /// 这个机制仅因<see cref="Misery"/>卡牌而存在
-    /// 用法请参阅 <see cref="Misery.DoHackyThingsForSpecificPowers"/>
+    /// 用法请参阅 <see cref="Misery"/> 的 DoHackyThingsForSpecificPowers
     /// </summary>
     private bool ShouldIgnoreNextInstance { get; set; }
 

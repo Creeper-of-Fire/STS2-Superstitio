@@ -10,14 +10,18 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
 /**
- * Title = "结下束缚"
+ * Title = "自缚"
  *
  * Description = """
  * 获得{StrengthPower:diff()}层[gold]力量[/gold]。
  * 失去{DexterityPower:diff()}层[gold]敏捷[/gold]。
  * """
  *
- * Flavor = "束缚自己，获得更强大的力量。"
+ * Flavor = "加强魅惑，降低行动❤"
+ *
+ * Sfw.Title = "结下束缚"
+ *
+ * Sfw.Flavor = "束缚自己，获得更强大的力量。"
  */
 public class SelfBind() : LupaBaseCard(new CardInitMessage
 {

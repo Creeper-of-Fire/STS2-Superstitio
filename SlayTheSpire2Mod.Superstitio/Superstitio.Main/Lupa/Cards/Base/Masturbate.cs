@@ -11,7 +11,7 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Base;
 
 /**
- * Title = "蓄势待发"
+ * Title = "自慰"
  *
  * Description = """
  * 获得{Felix:diff()}点[pink]快感[/pink]。
@@ -20,7 +20,11 @@ namespace Superstitio.Main.Lupa.Cards.Base;
  *
  * HangingEffect = "抽{DrawCards:diff()}张牌"
  *
- * Flavor = "蓄势待发，只待一击。"
+ * Flavor = "何以解忧？聊以自慰。"
+ *
+ * Sfw.Title = "蓄势待发"
+ *
+ * Sfw.Flavor = "蓄势待发，只待一击。"
  */
 public class Masturbate() : LupaBaseCard(new CardInitMessage
 {

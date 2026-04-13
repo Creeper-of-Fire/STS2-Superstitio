@@ -36,7 +36,7 @@ public static class HoverTipCollectionExtensions
         {
             var tipList = tips.ToList();
 
-            if (locString.Exists())
+            if (locString.Exists() && !string.IsNullOrEmpty(locString.GetRawText()))
                 tipList.Add(new HoverTip(locString));
 
             return tipList;

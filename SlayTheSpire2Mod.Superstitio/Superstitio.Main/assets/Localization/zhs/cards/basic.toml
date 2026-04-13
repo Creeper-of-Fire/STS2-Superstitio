@@ -1,15 +1,28 @@
 ﻿[DefendLupa]
-title = "防御"
+title = "邀请"
 description = "获得{Block:diff()}点[gold]格挡[/gold]。"
+flavor = "这里面请。"
+sfw.title = "防御"
+sfw.flavor = ""
 
 [DefendMaso]
-title = "防御"
+title = "邀请"
 description = "获得{Block:diff()}点[gold]格挡[/gold]。"
-
-[StrikeMaso]
-title = "打击"
-description = "造成{Damage:diff()}点伤害。"
+flavor = "这里面请。"
+sfw.title = "防御"
+sfw.flavor = ""
 
 [StrikeLupa]
-title = "打击"
+title = "亲吻"
 description = "造成{Damage:diff()}点伤害。"
+flavor = "（づ￣3￣）づ╭❤～"
+sfw.title = "防御"
+sfw.flavor = ""
+
+[StrikeMaso]
+title = "亲吻"
+description = "造成{Damage:diff()}点伤害。"
+flavor = "（づ￣3￣）づ╭❤～"
+sfw.title = "防御"
+sfw.flavor = ""
+

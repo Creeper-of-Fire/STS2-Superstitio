@@ -32,7 +32,11 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  * 每当你打出卡牌，抽[blue]{Amount}[/blue]张牌。
  * """
  *
- * Flavor = "生死轮转，无穷无尽。"
+ * Flavor = "一切都只是轮回的一部分，何不放肆一点？"
+ *
+ * Sfw.Title = "轮转"
+ *
+ * Sfw.Flavor = "生死轮转，无穷无尽。"
  */
 public class Samsara() : LupaBaseCard(new CardInitMessage
 {

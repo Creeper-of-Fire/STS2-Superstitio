@@ -12,7 +12,7 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
 /**
- * Title = "以血蒙眼"
+ * Title = "以乳蒙眼"
  *
  * Description = """
  * 对敌人造成{Damage:diff()}点伤害。
@@ -20,7 +20,11 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  * 给予{MilkPower:diff()}层[pink]乳汁[/pink]。
  * """
  *
- * Flavor = "用血液蒙住眼睛，感受纯粹的力量。"
+ * Flavor = "这招如何？"
+ *
+ * Sfw.Title = "以血蒙眼"
+ *
+ * Sfw.Flavor = "这招如何？"
  */
 public class BlindfoldWithMilk() : LupaBaseCard(new CardInitMessage
 {

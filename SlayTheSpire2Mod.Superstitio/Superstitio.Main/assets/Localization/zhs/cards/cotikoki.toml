@@ -1,76 +1,126 @@
 [KokiFoot]
-title = "回旋踢"
+title = "性交-侍奉：足交"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hangingEffect = "抽{DrawCards:diff()}张牌"
+flavor = "最好是射鞋里，个人来说还是比较喜欢黏糊糊地走路。"
+[KokiFoot.sfw]
+title = "回旋踢"
 flavor = "[purple]造成15点伤害。\n抽2张牌。[/purple]"
 
 [KokiGroin]
-title = "震波震震"
+title = "性交-侍奉：素股"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hangingEffect = "造成{Damage:diff()}点伤害"
+flavor = "看上去就像是被十个人侵犯到溢出来了，实际上只是射在外面啦。"
+[KokiGroin.sfw]
+title = "震波震震"
 flavor = "弹弹弹弹。"
 
 [KokiBlow]
-title = "铁头撞击"
+title = "性交-侍奉：口交"
 description = "造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hangingEffect = "获得{Felix:diff()}点[pink]快感[/pink]"
+flavor = "听说有一些天人会把自己的牙齿都拔掉，就为了给别人口交时方便。有点可怕。"
+[KokiBlow.sfw]
+title = "铁头撞击"
 flavor = "用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。"
 
 [KokiArmpit]
-title = "肘击"
+title = "性交-侍奉：腋交"
 description = "{CardHangingDescription}"
 hangingEffect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品"
+flavor = "很想试试看被打火机一点点烧掉腋毛的感觉，可惜本小姐没有这种东西。"
+[KokiArmpit.sfw]
+title = "肘击"
 flavor = "曼巴永不退场。"
 
 [KokiHair]
-title = "辫子神功"
+title = "性交-侍奉：发交"
 description = "对敌人造成{Damage:diff()}点伤害。\n{CardHangingDescription}"
 hangingEffect = "将带有消耗的本牌复制加入手牌，其在被打出之前耗能变为0"
+flavor = "扯着有点疼，不会把我变成光头吧？"
+[KokiHair.sfw]
+title = "辫子神功"
 flavor = "鞭剪了，神留着，祖宗的东西再好，该割的时候就得割！再怎么变，也难不死咱。什么新玩意，都能玩到家，一变还得是绝活！"
 
 [KokiLegPit]
-title = "咬耳朵"
+title = "性交-侍奉：腿交"
 description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。每造成未被格挡的伤害，抽{DrawCards:diff()}张牌。"
+flavor = "轮奸的时候，如果没有位置就只有这样凑合了，不过好像也有人真的很喜欢？会有吗？"
+[KokiLegPit.sfw]
+title = "咬耳朵"
 flavor = "拳王专属。"
 
 [KokiHand]
-title = "升龙拳"
+title = "性交-侍奉：手交"
 description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。\n{CardHangingDescription}"
 hangingEffect = "获得{StrengthPower:diff()}层力量"
+flavor = "用手就能做好的事情却要用其他的部位。该说是你们需求太高了，还是我的两只手应付不过来了？"
+[KokiHand.sfw]
+title = "升龙拳"
 flavor = "前、下、前下，拳击！"
 
 [KokiBreast]
-title = "木兰飞弹"
+title = "性交-侍奉：乳交"
 description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]。"
+flavor = "养胸千日，用胸一时。胸越大，胸就能挺的越高。"
+[KokiBreast.sfw]
+title = "木兰飞弹"
 flavor = "寄托了人类未来的魔神……前进！"
 
 [CotiEye]
-title = "蛇形拳"
+title = "性交-插入：眼交"
 description = "对[gold]自身和敌人[/gold]各造成{Damage:diff()}点伤害{Repeat:diff()}次。\n获得{WeakPower:diff()}层[gold]虚弱[/gold]。\n{CardHangingDescription}"
 hangingEffect = "将[gold]龙形拳[/gold]放入手中"
+flavor = "也许是脑交。总的来说还是取决于肉棒的主人敢不敢用力吧。"
+[CotiEye.sfw]
+title = "蛇形拳"
 flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
 
 [CotiEar]
-title = "龙形拳"
+title = "性交-插入：耳奸"
 description = "对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。\n移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。\n获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n将[gold]蛇形拳[/gold]放入手中。"
+flavor = "是脑交！要是脑子有触觉就好了，哧溜。"
+[CotiEar.sfw]
+title = "龙形拳"
 flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
 
 [CotiNipple]
-title = "猴形拳"
+title = "性交-插入：乳孔"
 description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]，连续攻击{Repeat:diff()}次。"
+flavor = "大奶子特权。"
+[CotiNipple.sfw]
+title = "猴形拳"
 flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
 
 [CotiNavel]
+title = "性交-插入：肚脐"
+description = "对敌人造成{Damage:diff()}点伤害，对自身造成{Damage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+flavor = "洞必试，试必捅。射进腹腔里会宫外孕吗？"
+[CotiNavel.sfw]
 title = "熊形拳"
-description = "对敌人造成{CalculatedDamage:diff()}点伤害，对自身造成{CalculatedDamage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
 flavor = "笨重但致命的一击，如狂熊拍击般不顾一切。"
 
 [CotiThroat]
-title = "虎吼拳"
+title = "性交-插入：深喉"
 description = "对敌人造成{Damage:diff()}点伤害。如果有挂起的牌，获得{Energy:energyIcons()}。"
+flavor = "经过练习就不会反胃了，真好。"
+[CotiThroat.sfw]
+title = "虎吼拳"
 flavor = "如虎啸山林，其势不仅伤敌，更能振奋士气。"
 
 [CotiVaginal]
-title = "燕形拳"
+title = "性交-插入：阴道"
 description = "对敌人造成{Damage:diff()}点伤害。触发所有[orange]伴随[/orange]效果。"
+flavor = "朴实无华。如果没有其他东西助兴的话就会困得想睡觉。"
+[CotiVaginal.sfw]
+title = "燕形拳"
 flavor = "矫健如燕，在空中穿梭，引动后续的所有杀招。"
+
+[CotiAnal]
+title = "性交-插入：肛交"
+description = ""
+flavor = "常在旱路走，怎么会湿脚。"
+[CotiAnal.sfw]
+title = "鹞形拳"
+flavor = "轻盈而敏捷的拳法，如鹞鹰盘旋，伺机而动，攻其不备。"

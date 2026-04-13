@@ -15,7 +15,7 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Rage;
 
 /**
- * Title = "一怒之下"
+ * Title = "多汁小穴"
  *
  * Description = "达到[pink]顶峰[/pink]时，移除{JuicyPussyPower:diff()}点[sine][red]腐朽[/red][/sine]。"
  *
@@ -23,7 +23,11 @@ namespace Superstitio.Main.Lupa.Cards.Rage;
  *
  * Power.SmartDescription = "达到[pink]顶峰[/pink]时，移除[blue]{Amount}[/blue]点[sine][red]腐朽[/red][/sine]。"
  *
- * Flavor = "一怒之下，怒了一下。"
+ * Flavor = "这就是为什么我不穿内裤。"
+ *
+ * Sfw.Title = "怒气"
+ *
+ * Sfw.Flavor = "一怒之下，怒了一下。"
  */
 public class JuicyPussy() : LupaBaseCard(new CardInitMessage
 {

@@ -13,7 +13,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "升龙拳"
+ * Title = "性交-侍奉：手交"
  *
  * Description = """
  * 对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。
@@ -22,7 +22,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * HangingEffect = "获得{StrengthPower:diff()}层力量"
  *
- * Flavor = "前、下、前下，拳击！"
+ * Flavor = "用手就能做好的事情却要用其他的部位。该说是你们需求太高了，还是我的两只手应付不过来了？"
+ *
+ * Sfw.Title = "升龙拳"
+ *
+ * Sfw.Flavor = "前、下、前下，拳击！"
  */
 public class KokiHand() : MasoBaseCard(new CardInitMessage
 {

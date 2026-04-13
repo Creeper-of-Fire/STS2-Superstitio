@@ -1,11 +1,38 @@
 [FistIn]
-title = "给你一拳"
+title = "拳头插入"
 description = "选择一张手牌，失去其能量费用×{HpLoss:diff()}点生命，强制打出该牌。\n{CardHangingDescription}"
 selectionScreenPrompt = "选择一张牌打出。"
 hangingEffect = "抽{DrawCards:diff()}张牌"
+flavor = "再深一点会更好。"
+[FistIn.sfw]
+title = "强制打出"
 flavor = "忍一时之痛，换一瞬之机。"
 
 [Spark]
-title = "雷光一闪"
+title = "打屁股"
 description = "对自己造成{DamageSelf:diff()}点伤害，对敌人造成{Damage:diff()}点伤害。\n若自身[sine][red]腐朽[/red][/sine]大于等于{CorruptusThreshold:diff()}，额外造成一次伤害。"
+flavor = "啪！"
+[Spark.sfw]
+title = "雷光一闪"
 flavor = "以自身的痛楚引动雷电，痛得越深，劈得越狠。"
+
+[BellyStrike]
+title = "腹部打击"
+description = "对目标造成{Damage:diff()}伤害，本回合给予{StrengthPower:diff()}力量。\n鞭策 (对自己/队友使用时触发的额外效果。)：只造成一半的伤害，翻倍其力量。\n目前，敌我双方任意角色可选的逻辑还没有做出来。所以这张卡会在之后才实现选择己方的功能"
+flavor = "对着这里来！"
+[BellyStrike.sfw]
+title = "力量模式"
+flavor = "我是劳伦斯巴恩斯，他们叫我“先知”。"
+
+[DeathDoor]
+title = "濒死体验"
+description = "下{DeathDoorPower:diff()}次，当你要被杀死时，免死并回复到1点生命。\n如果你只有1点生命，免疫任何非攻击伤害。"
+flavor = "好刺激，好有趣，还想再来。"
+[DeathDoor.power]
+description = "当你要被杀死时，免死并回复到1点生命。"
+smartDescription = "下[blue]{Amount}[/blue]次，当你要被杀死时，免死并回复到1点生命。"
+[DeathDoor.atDeathDoorPower]
+description = "如果你只有1点生命，免疫任何非攻击伤害。"
+[DeathDoor.sfw]
+title = "重整旗鼓"
+flavor = "再来……我不服。"

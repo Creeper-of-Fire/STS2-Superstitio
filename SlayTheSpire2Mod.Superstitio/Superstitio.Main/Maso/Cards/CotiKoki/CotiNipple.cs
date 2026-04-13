@@ -11,11 +11,15 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "猴形拳"
+ * Title = "性交-插入：乳孔"
  *
  * Description = "对随机敌人造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]，连续攻击{Repeat:diff()}次。"
  *
- * Flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
+ * Flavor = "大奶子特权。"
+ *
+ * Sfw.Title = "猴形拳"
+ *
+ * Sfw.Flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
  */
 public class CotiNipple() : MasoBaseCard(new CardInitMessage
 {

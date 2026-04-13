@@ -11,11 +11,15 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "木兰飞弹"
+ * Title = "性交-侍奉：乳交"
  *
  * Description = "造成{Damage:diff()}点伤害，给予{MilkPower:diff()}层[pink]乳汁[/pink]。"
  *
- * Flavor = "寄托了人类未来的魔神……前进！"
+ * Flavor = "养胸千日，用胸一时。胸越大，胸就能挺的越高。"
+ *
+ * Sfw.Title = "木兰飞弹"
+ *
+ * Sfw.Flavor = "寄托了人类未来的魔神……前进！"
  */
 public class KokiBreast() : MasoBaseCard(new CardInitMessage
 {

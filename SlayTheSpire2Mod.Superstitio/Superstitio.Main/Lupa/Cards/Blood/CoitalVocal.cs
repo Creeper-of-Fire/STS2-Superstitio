@@ -9,11 +9,15 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
 /**
- * Title = "战吼"
+ * Title = "叫床"
  *
  * Description = "获得在场敌人数量+1次的{Block:diff()}点[gold]格挡[/gold]。"
  *
- * Flavor = "战吼震天，震慑敌胆。"
+ * Flavor = "兴之所至。"
+ *
+ * Sfw.Title = "战吼"
+ *
+ * Sfw.Flavor = "战吼震天，震慑敌胆。"
  */
 public class CoitalVocal() : LupaBaseCard(new CardInitMessage
 {

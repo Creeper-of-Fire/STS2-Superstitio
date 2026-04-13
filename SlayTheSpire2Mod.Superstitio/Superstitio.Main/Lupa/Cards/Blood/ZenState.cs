@@ -22,7 +22,11 @@ namespace Superstitio.Main.Lupa.Cards.Blood;
  *
  * SelectionScreenPrompt = "选择一张牌添加[gold]消耗[/gold]。"
  *
- * Flavor = "禅意境界，看破红尘。"
+ * Flavor = "保持不动……深呼吸……要维持这个姿势被干。"
+ *
+ * Sfw.Title = "禅意"
+ *
+ * Sfw.Flavor = "禅意境界，看破红尘。"
  */
 public class ZenState() : LupaBaseCard(new CardInitMessage
 {

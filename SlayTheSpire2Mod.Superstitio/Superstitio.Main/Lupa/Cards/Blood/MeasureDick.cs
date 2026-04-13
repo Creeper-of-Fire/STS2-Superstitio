@@ -9,11 +9,15 @@ using Superstitio.Main.Lupa.Base;
 namespace Superstitio.Main.Lupa.Cards.Blood;
 
 /**
- * Title = "投技"
+ * Title = "肚量"
  *
  * Description = "选择最多{Cards:diff()}张牌丢弃，获得其耗能变化量的{Energy:energyIcons()}，抽等量的牌。"
  *
- * Flavor = "投掷卡牌，获得能量。"
+ * Flavor = "看看谁插的最深？"
+ *
+ * Sfw.Title = "投技"
+ *
+ * Sfw.Flavor = "投掷卡牌，获得能量。"
  */
 public class MeasureDick() : LupaBaseCard(new CardInitMessage
 {

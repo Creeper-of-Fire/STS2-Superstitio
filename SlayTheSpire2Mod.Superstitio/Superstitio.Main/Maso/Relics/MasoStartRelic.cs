@@ -15,7 +15,7 @@ namespace Superstitio.Main.Maso.Relics;
 
 /// <summary>
 /// Maso 的初始遗物
-/// 单次获得的腐朽每有3点获得2点快感。达到顶峰时，移除5腐朽 。
+/// 单次获得的腐朽每有3点获得2点快感。达到高潮时，移除5腐朽 。
 /// </summary>
 [Pool(typeof(MasoRelicPool))]
 [CustomImgName("DevaBody")]

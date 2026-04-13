@@ -11,11 +11,15 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "虎吼拳"
+ * Title = "性交-插入：深喉"
  *
  * Description = "对敌人造成{Damage:diff()}点伤害。如果有挂起的牌，获得{Energy:energyIcons()}。"
  *
- * Flavor = "如虎啸山林，其势不仅伤敌，更能振奋士气。"
+ * Flavor = "经过练习就不会反胃了，真好。"
+ *
+ * Sfw.Title = "虎吼拳"
+ *
+ * Sfw.Flavor = "如虎啸山林，其势不仅伤敌，更能振奋士气。"
  */
 public class CotiThroat() : MasoBaseCard(new CardInitMessage
 {

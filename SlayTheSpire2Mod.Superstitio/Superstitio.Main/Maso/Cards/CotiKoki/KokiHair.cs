@@ -12,7 +12,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "辫子神功"
+ * Title = "性交-侍奉：发交"
  *
  * Description = """
  * 对敌人造成{Damage:diff()}点伤害。
@@ -21,7 +21,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * HangingEffect = "将带有消耗的本牌复制加入手牌，其在被打出之前耗能变为0"
  *
- * Flavor = "鞭剪了，神留着，祖宗的东西再好，该割的时候就得割！再怎么变，也难不死咱。什么新玩意，都能玩到家，一变还得是绝活！"
+ * Flavor = "扯着有点疼，不会把我变成光头吧？"
+ *
+ * Sfw.Title = "辫子神功"
+ *
+ * Sfw.Flavor = "鞭剪了，神留着，祖宗的东西再好，该割的时候就得割！再怎么变，也难不死咱。什么新玩意，都能玩到家，一变还得是绝活！"
  */
 public class KokiHair() : MasoBaseCard(new CardInitMessage
 {

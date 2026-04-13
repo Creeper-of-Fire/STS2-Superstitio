@@ -17,7 +17,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "龙形拳"
+ * Title = "性交-插入：耳奸"
  *
  * Description = """
  * 对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。
@@ -26,9 +26,12 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  * 将[gold]蛇形拳[/gold]放入手中。
  * """
  *
- * Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
+ * Flavor = "是脑交！要是脑子有触觉就好了，哧溜。"
+ *
+ * Sfw.Title = "龙形拳"
+ *
+ * Sfw.Flavor = "龙影变幻莫测，连自己的心神也为之震颤。"
  */
-[Pool(typeof(TokenCardPool))]
 public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 {
     BaseCost = 0,
@@ -76,7 +79,7 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 }
 
 /**
- * Title = "蛇形拳"
+ * Title = "性交-插入：眼交"
  *
  * Description = """
  * 对[gold]自身和敌人[/gold]各造成{Damage:diff()}点伤害{Repeat:diff()}次。
@@ -86,7 +89,11 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
  *
  * HangingEffect = "将[gold]龙形拳[/gold]放入手中"
  *
- * Flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
+ * Flavor = "也许是脑交。总的来说还是取决于肉棒的主人敢不敢用力吧。"
+ *
+ * Sfw.Title = "蛇形拳"
+ *
+ * Sfw.Flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
  */
 public class CotiEye() : MasoBaseCard(new CardInitMessage
 {

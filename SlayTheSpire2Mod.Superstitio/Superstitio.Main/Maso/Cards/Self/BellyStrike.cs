@@ -13,7 +13,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.Self;
 
 /**
- * Title = "力量模式"
+ * Title = "腹部打击"
  *
  * Description = """
  * 对目标造成{Damage:diff()}伤害，本回合给予{StrengthPower:diff()}力量。
@@ -21,7 +21,11 @@ namespace Superstitio.Main.Maso.Cards.Self;
  * 目前，敌我双方任意角色可选的逻辑还没有做出来。所以这张卡会在之后才实现选择己方的功能
  * """
  *
- * Flavor = "我是劳伦斯巴恩斯，他们叫我“先知”。"
+ * Flavor = "对着这里来！"
+ *
+ * Sfw.Title = "力量模式"
+ *
+ * Sfw.Flavor = "我是劳伦斯巴恩斯，他们叫我“先知”。"
  */
 public class BellyStrike() : MasoBaseCard(new CardInitMessage
 {
@@ -39,8 +43,9 @@ public class BellyStrike() : MasoBaseCard(new CardInitMessage
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<StrengthPower>(TemporaryStrength)
-            .AddToolTips<StrengthPower>(),
+            .AddToolTips(),
         new CalculationBaseVar(Damage).WithUpgrade(DamageUpgrade),
+        new ExtraDamageVar(0),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((_, target) =>
         {
             if (target is null || !target.IsPlayer) return 1m;

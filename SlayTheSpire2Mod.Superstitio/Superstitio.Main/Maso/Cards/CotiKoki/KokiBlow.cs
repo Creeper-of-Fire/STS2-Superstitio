@@ -14,7 +14,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "铁头撞击"
+ * Title = "性交-侍奉：口交"
  *
  * Description = """
  * 造成{Damage:diff()}点伤害。
@@ -23,7 +23,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * HangingEffect = "获得{Felix:diff()}点[pink]快感[/pink]"
  *
- * Flavor = "用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。"
+ * Flavor = "听说有一些天人会把自己的牙齿都拔掉，就为了给别人口交时方便。有点可怕。"
+ *
+ * Sfw.Title = "铁头撞击"
+ *
+ * Sfw.Flavor = "用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。"
  */
 public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
 {

@@ -13,7 +13,7 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "回旋踢"
+ * Title = "性交-侍奉：足交"
  *
  * Description = """
  * 造成{Damage:diff()}点伤害。
@@ -22,7 +22,11 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  *
  * HangingEffect = "抽{DrawCards:diff()}张牌"
  *
- * Flavor = """
+ * Flavor = "最好是射鞋里，个人来说还是比较喜欢黏糊糊地走路。"
+ *
+ * Sfw.Title = "回旋踢"
+ *
+ * Sfw.Flavor = """
  * [purple]造成15点伤害。
  * 抽2张牌。[/purple]
  * """

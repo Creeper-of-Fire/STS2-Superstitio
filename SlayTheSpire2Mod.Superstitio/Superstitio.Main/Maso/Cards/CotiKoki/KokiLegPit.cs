@@ -12,11 +12,15 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "咬耳朵"
+ * Title = "性交-侍奉：腿交"
  *
  * Description = "对敌人造成{Damage:diff()}点伤害，连续攻击{Repeat:diff()}次。每造成未被格挡的伤害，抽{DrawCards:diff()}张牌。"
  *
- * Flavor = "拳王专属。"
+ * Flavor = "轮奸的时候，如果没有位置就只有这样凑合了，不过好像也有人真的很喜欢？会有吗？"
+ *
+ * Sfw.Title = "咬耳朵"
+ *
+ * Sfw.Flavor = "拳王专属。"
  */
 public class KokiLegPit() : MasoBaseCard(new CardInitMessage
 {

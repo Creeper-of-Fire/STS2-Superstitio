@@ -129,7 +129,7 @@ def update_toml_table(target_table, tags_dict):
             target_table[k_str] = val
 
 
-def merge_and_sort_keys(old_keys, new_keys,  class_name):
+def merge_and_sort_keys(old_keys, new_keys, class_name):
     """
     实现 ABCDE + AEXB = AEXCDB 的排序逻辑
     """
@@ -165,7 +165,11 @@ def merge_and_sort_keys(old_keys, new_keys,  class_name):
                 idx = final_list.index(prev_key)
                 final_list.insert(idx + 1, k)
 
-    return final_list
+    # 在 TOML 中，普通属性必须写在子表 [Section.Sub] 之前
+    # 我们按原有的逻辑排好序后，提取出所有 key，把不含点的排在前面，含点的排在后面
+    base_keys = [k for k in final_list if "." not in k]
+    dotted_keys = [k for k in final_list if "." in k]
+    return base_keys + dotted_keys
 
 
 def sync():
@@ -220,26 +224,49 @@ def sync():
             # 合并实际内容
             merged_values = {**old_flat_dict, **cs_tags}
 
-            # 创建 Table，但使用 dotted keys 风格
+            # 创建主类 Table
             new_table = tomlkit.table()
-            for k in sorted_keys:
-                v = merged_values[k]
-                # val = toml_string(v, multiline=True) if "\n" in v else v
-                val = v
 
+            for k in sorted_keys:
+                val = merged_values[k]
                 if "." in k:
-                    # 只有包含点号的键才使用 toml_key 列表模式以生成 dotted key (a.b = ...)
-                    new_table.add(toml_key(k.split('.')), val)
+                    # 处理嵌套，例如 "sfw.title"
+                    parts = k.split('.')
+                    curr = new_table
+                    for i, part in enumerate(parts[:-1]):
+                        if part not in curr:
+                            curr.add(part, tomlkit.table())
+                        curr = curr[part]
+                    curr[parts[-1]] = val
                 else:
-                    # 普通键直接赋值，避免 tomlkit 内部 NonExistentKey 错误
+                    # 基础键
                     new_table[k] = val
 
             doc[class_id] = new_table
 
-        with open(target_path, 'w', encoding='utf-8') as f:
-            f.write(tomlkit.dumps(doc))
-            print(f"同步完成 -> {toml_rel_path} ({len(content)} classes)")
+        # 生成原始 TOML 字符串
+        raw_output = tomlkit.dumps(doc)
 
+        lines = raw_output.splitlines()
+        final_lines = []
+
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            # 如果当前行是子表 Header (形如 [Class.Sub])
+            if stripped.startswith('[') and '.' in stripped and stripped.endswith(']'):
+                # 检查上一行是否为空，如果是，则移除它
+                if final_lines and final_lines[-1] == "":
+                    final_lines.pop()
+
+            final_lines.append(line)
+
+        # 重新组合并确保类与类之间有空行
+        # tomlkit 默认在 doc 的顶级键之间会加空行，这里我们只需要移除子表前的空行即可
+        processed_output = "\n".join(final_lines)
+
+        with open(target_path, 'w', encoding='utf-8') as f:
+            f.write(processed_output)
+            print(f"同步完成 -> {toml_rel_path} ({len(content)} classes)")
 
 if __name__ == "__main__":
     sync()

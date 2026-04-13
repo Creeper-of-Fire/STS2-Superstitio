@@ -12,13 +12,17 @@ using Superstitio.Main.Maso.Base;
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
 /**
- * Title = "肘击"
+ * Title = "性交-侍奉：腋交"
  *
  * Description = "{CardHangingDescription}"
  *
  * HangingEffect = "造成{Damage:diff()}点伤害。打出一张本牌的复制品"
  *
- * Flavor = "曼巴永不退场。"
+ * Flavor = "很想试试看被打火机一点点烧掉腋毛的感觉，可惜本小姐没有这种东西。"
+ *
+ * Sfw.Title = "肘击"
+ *
+ * Sfw.Flavor = "曼巴永不退场。"
  */
 public class KokiArmpit() : MasoBaseCard(new CardInitMessage
 {
