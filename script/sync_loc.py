@@ -16,6 +16,7 @@ FOLDER_MAPPING = {
     "Lupa/Cards/Blood": "cards/lupa.toml",
     "Lupa/Cards/Rage": "cards/lupa.toml",
     "Maso/Cards/Base": "cards/maso.toml",
+    "Maso/Cards/Self": "cards/maso.toml",
     "Maso/Cards/CotiKoki": "cards/cotikoki.toml",
 }
 

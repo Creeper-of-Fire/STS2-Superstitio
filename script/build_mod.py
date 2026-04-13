@@ -118,33 +118,6 @@ class ModBuilder:
 
         return killed
 
-    def run_game(self):
-        """启动游戏"""
-        if not self.game_exe:
-            print("⚠️  未配置游戏目录，请在 .env 中设置 STS2_GAME_DIR")
-            return False
-
-        if not self.game_exe.exists():
-            print(f"❌ 找不到游戏可执行文件: {self.game_exe}")
-            return False
-
-        print(f"🎮 正在启动游戏: {self.game_exe}")
-
-        try:
-            # 使用 subprocess.Popen 启动游戏，不等待退出
-            subprocess.Popen(
-                [str(self.game_exe)],
-                cwd=str(self.game_exe.parent),
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
-            )
-            print("✅ 游戏已启动")
-            return True
-        except Exception as e:
-            print(f"❌ 启动游戏失败: {e}")
-            return False
-
     def build(self):
         """调用 dotnet build"""
         print("🔨 正在构建解决方案...")
@@ -157,6 +130,48 @@ class ModBuilder:
             print("❌ 构建失败")
             sys.exit(1)
         print("✅ 构建完成")
+
+    def run_game(self, wait=False):
+        """启动游戏
+        
+        Args:
+            wait: 是否等待游戏退出。如果后续还要运行其他任务（如提取器），应设为 False
+        """
+        if not self.game_exe:
+            print("⚠️  未配置游戏目录，请在 .env 中设置 STS2_GAME_DIR")
+            return False
+
+        if not self.game_exe.exists():
+            print(f"❌ 找不到游戏可执行文件: {self.game_exe}")
+            return False
+
+        print(f"🎮 正在启动游戏: {self.game_exe}")
+
+        # 使用 subprocess.Popen 启动游戏
+        process = subprocess.Popen(
+            [str(self.game_exe)],
+            cwd=str(self.game_exe.parent),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
+        )
+        print("✅ 游戏已启动")
+
+        if not wait:
+            return True
+        
+        print("   等待游戏退出...")
+        try:
+            process.wait()
+            print("✅ 游戏已退出")
+        except KeyboardInterrupt:
+            print("\n⚠️  收到中断信号，正在终止游戏...")
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+            print("✅ 游戏已终止")
 
     def run_extractor(self):
         """运行本地化文本提取器（在当前控制台）"""
@@ -349,7 +364,8 @@ def main():
 
     # --- 后置副作用 ---
     if args.run:
-        builder.run_game()
+        wait_for_game = not args.loc_extract
+        builder.run_game(wait=wait_for_game)
     if args.loc_extract:
         builder.run_extractor()
 

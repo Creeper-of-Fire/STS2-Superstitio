@@ -90,15 +90,36 @@ class CardPowerExtractor(BaseProcessor):
         powers_category = data.setdefault("powers", {})
 
         for card_id, card_data in cards_category.items():
-            if isinstance(card_data, dict) and "power" in card_data:
-                # 提取 power 数据并从原来的卡牌中移除
-                power_data = card_data.pop("power")
+            if isinstance(card_data, dict):
+                # 找出所有以 'power' 结尾的字段（不区分大小写）
+                power_fields = [
+                    key for key in card_data.keys()
+                    if key.lower().endswith('power')
+                ]
 
-                power_id = f"{card_id}Power"
-                # 如果该 power_id 已经存在，则合并；否则新建
-                if power_id not in powers_category:
-                    powers_category[power_id] = {}
-                powers_category[power_id].update(power_data)
+                for power_field in power_fields:
+                    # 提取 power 数据并从原来的卡牌中移除
+                    power_data = card_data.pop(power_field)
+
+                    # 确定 power_id
+                    # 如果字段名就是 "power"（不区分大小写），使用 "Power" 后缀
+                    # 否则使用原字段名（保持原始大小写）
+                    if power_field.lower() == 'power':
+                        power_id = f"{card_id}Power"
+                    else:
+                        # 对于 "xxxpower" 字段，直接使用原字段名作为后缀
+                        power_id = inflection.camelize(power_field)
+
+                    # 如果该 power_id 已经存在，则合并；否则新建
+                    if power_id not in powers_category:
+                        powers_category[power_id] = {}
+
+                    # 如果 power_data 是字典，直接更新；否则包装为字典
+                    if isinstance(power_data, dict):
+                        powers_category[power_id].update(power_data)
+                    else:
+                        # 如果提取的数据不是字典，将其存储为 NAME 字段
+                        powers_category[power_id]["NAME"] = power_data
 
         return data
 
