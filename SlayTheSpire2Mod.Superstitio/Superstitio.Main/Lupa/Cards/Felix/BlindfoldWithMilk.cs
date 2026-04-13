@@ -9,7 +9,7 @@ using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Milk;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Rage;
+namespace Superstitio.Main.Lupa.Cards.Felix;
 
 /**
  * Title = "以乳蒙眼"

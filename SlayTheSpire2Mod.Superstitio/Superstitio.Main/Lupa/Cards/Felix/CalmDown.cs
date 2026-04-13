@@ -6,7 +6,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Rage;
+namespace Superstitio.Main.Lupa.Cards.Felix;
 
 /**
  * Title = "冷静"

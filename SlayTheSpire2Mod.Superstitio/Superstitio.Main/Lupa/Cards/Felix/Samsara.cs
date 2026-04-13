@@ -11,7 +11,7 @@ using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Rage;
+namespace Superstitio.Main.Lupa.Cards.Felix;
 
 /**
  * Title = "轮转"

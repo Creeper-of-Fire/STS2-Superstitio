@@ -1,4 +1,4 @@
-﻿namespace Superstitio.Main.Lupa.Cards.Rage;
+﻿namespace Superstitio.Main.Lupa.Cards.Felix;
 
 // /// <summary>
 // /// 漆黑噤默之页 - 当你 狂暴 时， 强制满足 !M! 次
