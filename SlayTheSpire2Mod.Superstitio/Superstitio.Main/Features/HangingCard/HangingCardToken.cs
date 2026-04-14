@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Main.Features.HangingCard.UI;
 
 namespace Superstitio.Main.Features.HangingCard;
 
@@ -80,6 +81,11 @@ public abstract record HangingCardToken(
     private CombatState? CombatState => this.OriginalOwner.Creature.CombatState;
 
     /// <summary>
+    /// 挂起卡牌的视觉效果
+    /// </summary>
+    private HangingCardTokenDisplayer? Displayer { get; set; }
+
+    /// <summary>
     /// 挂起卡牌
     /// </summary>
     public async Task HangCard(IHangingCarrier hangingCarrier)
@@ -93,18 +99,29 @@ public abstract record HangingCardToken(
         {
             await CardPileCmd.RemoveFromCombat(this.HangingCard);
         }
+
+        Displayer = new HangingCardTokenDisplayer(this);
     }
+
 
     /// <summary>
     /// 释放卡牌
     /// </summary>
     public async Task UnHangCard()
     {
+        Displayer?.UnHangCard();
+        Displayer = null;
+
         if (this.CombatState is null)
             return;
 
-        // 创建卡牌副本并加入到玩家手牌
+        // 创建卡牌副本并加入到需要回到的牌库
         var returnedCard = this.CombatState.CreateCard(this.HangingCard.CanonicalInstance, this.OriginalOwner);
+        // 设置 oldPile，以让动画/UI正常进行
+        // 我们手动把牌塞进 PlayPile 的 List 里。
+        // 使用 silent: true，以免触发 C# 事件或 UI 更新信号。
+        var playPile = PileType.Play.GetPile(this.OriginalOwner);
+        playPile.AddInternal(returnedCard, silent: true);
         await CardPileCmd.Add(returnedCard, this.ReturnPileType);
 
         // 可选：播放返还特效
@@ -119,6 +136,15 @@ public abstract record HangingCardToken(
         // 双向解除绑定
         this.Carrier.HangingCardToken = null;
         this.Carrier = null;
+    }
+
+    /// <summary>
+    /// 高级规则过滤：在这里决定具体的辉光颜色和触发条件
+    /// </summary>
+    public virtual TriggerContext GetTriggerContext(CardModel hoveredCard)
+    {
+        // 默认实现，子类可以根据卡牌类型返回 Good 或 Bad 辉光
+        return new TriggerContext(true, HangGlowType.Special);
     }
 }
 
