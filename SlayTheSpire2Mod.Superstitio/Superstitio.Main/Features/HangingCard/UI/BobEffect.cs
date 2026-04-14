@@ -18,12 +18,12 @@ public partial class BobEffect : RefCounted
     /// </summary>
     public float Update(double delta)
     {
-        Timer += delta * Speed;
-        return Mathf.Sin((float)Timer) * Amplitude;
+        this.Timer += delta * this.Speed;
+        return Mathf.Sin((float)this.Timer) * this.Amplitude;
     }
     
     /// <summary>
     /// 重置计时器
     /// </summary>
-    public void Reset() => Timer = 0.0;
+    public void Reset() => this.Timer = 0.0;
 }

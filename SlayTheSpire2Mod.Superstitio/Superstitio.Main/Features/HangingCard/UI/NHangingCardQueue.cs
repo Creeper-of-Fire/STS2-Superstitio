@@ -24,7 +24,7 @@ public partial class NHangingCardQueue : Control
         set
         {
             field = value;
-            UpdateLayout();
+            this.UpdateLayout();
         }
     } = 85f;
 
@@ -54,11 +54,11 @@ public partial class NHangingCardQueue : Control
     public HangingCardDisplay AddCard(HangingCardToken token)
     {
         var display = new HangingCardDisplay(token);
-        ActiveCards.Add(display);
-        AddChild(display);
+        this.ActiveCards.Add(display);
+        this.AddChild(display);
 
         // 立即执行一次布局，确保新卡牌知道它该去哪
-        UpdateLayout();
+        this.UpdateLayout();
 
         // 初始化时直接瞬移到队列位置，防止从原点(0,0)飞过来
         display.GlobalPosition = display.QueuePosition;
@@ -71,16 +71,16 @@ public partial class NHangingCardQueue : Control
     /// </summary>
     public void RemoveCard(HangingCardToken token)
     {
-        var display = ActiveCards.FirstOrDefault(d => d.Token == token);
+        var display = this.ActiveCards.FirstOrDefault(d => d.Token == token);
         if (display == null) return;
 
-        ActiveCards.Remove(display);
+        this.ActiveCards.Remove(display);
 
         // 调用 Display 自己的状态机切换（它会自己处理淡出和销毁）
         display.Command_Remove();
 
         // 剩余卡牌平滑重排
-        UpdateLayout();
+        this.UpdateLayout();
     }
 
     /// <summary>
@@ -89,20 +89,20 @@ public partial class NHangingCardQueue : Control
     /// </summary>
     public void UpdateLayout()
     {
-        if (ActiveCards.Count == 0) return;
+        if (this.ActiveCards.Count == 0) return;
 
         // 获取 Queue 节点在屏幕上的真实中心点
-        var baseGlobalPos = GlobalPosition;
+        var baseGlobalPos = this.GlobalPosition;
 
         // 计算总宽度，居中排列
-        float totalWidth = (ActiveCards.Count - 1) * CardSpacing;
+        float totalWidth = (this.ActiveCards.Count - 1) * this.CardSpacing;
         float startX = -totalWidth / 2f;
 
-        for (int i = 0; i < ActiveCards.Count; i++)
+        for (int i = 0; i < this.ActiveCards.Count; i++)
         {
             // 更新锚点位置。注意：我们只给它赋值目标，不直接操作 Position
             // 这样就解耦了布局计算和动画表现
-            ActiveCards[i].QueuePosition = baseGlobalPos + new Vector2(startX + i * CardSpacing, 0);
+            this.ActiveCards[i].QueuePosition = baseGlobalPos + new Vector2(startX + i * this.CardSpacing, 0);
         }
     }
 
@@ -111,7 +111,7 @@ public partial class NHangingCardQueue : Control
     {
         if (what == NotificationResized)
         {
-            UpdateLayout();
+            this.UpdateLayout();
         }
     }
 }

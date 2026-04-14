@@ -53,29 +53,29 @@ public partial class HangingCardTokenDisplayer
 
     public HangingCardTokenDisplayer(HangingCardToken token)
     {
-        Display = NHangingCardQueue.EnsureCreated().AddCard(token);
-        Token = token;
-        SubscribeSignals();
+        this.Display = NHangingCardQueue.EnsureCreated().AddCard(token);
+        this.Token = token;
+        this.SubscribeSignals();
     }
 
     public void UnHangCard()
     {
         this.Unsubscribe();
-        NHangingCardQueue.Instance?.RemoveCard(Token);
+        NHangingCardQueue.Instance?.RemoveCard(this.Token);
     }
 
     private void SubscribeSignals()
     {
-        RunManager.Instance.HoveredModelTracker.HoverChanged += OnGlobalHoverChanged;
-        NTargetManager.Instance.CreatureHovered += OnCreatureHovered;
-        NTargetManager.Instance.TargetingEnded += OnTargetingEnded;
+        RunManager.Instance.HoveredModelTracker.HoverChanged += this.OnGlobalHoverChanged;
+        NTargetManager.Instance.CreatureHovered += this.OnCreatureHovered;
+        NTargetManager.Instance.TargetingEnded += this.OnTargetingEnded;
     }
 
     private void Unsubscribe()
     {
-        RunManager.Instance.HoveredModelTracker.HoverChanged -= OnGlobalHoverChanged;
-        NTargetManager.Instance.CreatureHovered -= OnCreatureHovered;
-        NTargetManager.Instance.TargetingEnded -= OnTargetingEnded;
+        RunManager.Instance.HoveredModelTracker.HoverChanged -= this.OnGlobalHoverChanged;
+        NTargetManager.Instance.CreatureHovered -= this.OnCreatureHovered;
+        NTargetManager.Instance.TargetingEnded -= this.OnTargetingEnded;
     }
 
     private void OnGlobalHoverChanged(ulong playerId)
@@ -86,33 +86,32 @@ public partial class HangingCardTokenDisplayer
         if (model is CardModel card)
         {
             // 调用 Token 里的高级过滤逻辑
-            CurrentContext = Token.GetTriggerContext(card);
+            this.CurrentContext = this.Token.GetTriggerContext(card);
 
-            if (CurrentContext.IsMatch)
+            if (this.CurrentContext.IsMatch)
             {
-                Display.Command_Anticipate(CurrentContext.GlowType);
+                this.Display.Command_Anticipate(this.CurrentContext.GlowType);
                 return;
             }
         }
 
         // 不匹配或失去 Hover
-        CurrentContext = new(false);
-        if (Display.CurrentState == Display.State_InQueue)
-            Display.Command_Idle();
+        this.CurrentContext = new(false);
+        if (this.Display.CurrentState == this.Display.State_InQueue) this.Display.Command_Idle();
     }
 
     private void OnCreatureHovered(NCreature creature)
     {
         // 只有在匹配上下文且玩家正在选目标时
-        if (CurrentContext.IsMatch && NTargetManager.Instance.IsInSelection)
+        if (this.CurrentContext.IsMatch && NTargetManager.Instance.IsInSelection)
         {
             var offset = creature.Entity.IsPlayer ? new Vector2(-120, -60) : new Vector2(120, -60);
-            Display.Command_Follow(creature, offset);
+            this.Display.Command_Follow(creature, offset);
         }
     }
 
     private void OnTargetingEnded()
     {
-        Display.Command_Return();
+        this.Display.Command_Return();
     }
 }

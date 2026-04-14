@@ -40,7 +40,7 @@ public partial class HangingCardDisplay
     {
         if (method == MethodName._Ready && args.Count == 0)
         {
-            _Ready();
+            this._Ready();
             ret = default;
             return true;
         }
@@ -48,14 +48,14 @@ public partial class HangingCardDisplay
         if (method == MethodName._Process && args.Count == 1)
         {
             // 将 Variant 参数转换为 double delta
-            _Process(VariantUtils.ConvertTo<double>(in args[0]));
+            this._Process(VariantUtils.ConvertTo<double>(in args[0]));
             ret = default;
             return true;
         }
 
         if (method == MethodName._ExitTree && args.Count == 0)
         {
-            _ExitTree();
+            this._ExitTree();
             ret = default;
             return true;
         }
@@ -95,14 +95,14 @@ public partial class HangingCardDisplay : Node2D
 
     public HangingCardDisplay(HangingCardToken token)
     {
-        Token = token;
-        CurrentState = State_InQueue;
+        this.Token = token;
+        this.CurrentState = this.State_InQueue;
     }
 
     public override void _Ready()
     {
-        CardNode = NCard.Create(Token.HangingCard)!;
-        AddChild(CardNode);
+        this.CardNode = NCard.Create(this.Token.HangingCard)!;
+        this.AddChild(this.CardNode);
 
         // _counterLabel = new Label {
         //     Text = token.RemainCount.ToString(),
@@ -113,9 +113,9 @@ public partial class HangingCardDisplay : Node2D
         // 简单 Hitbox 用于响应 UI 层面的 Hover
         var hb = new Control { Size = new Vector2(160, 220), Position = new Vector2(-80, -110) };
         hb.MouseFilter = Control.MouseFilterEnum.Pass;
-        hb.Connect(Control.SignalName.MouseEntered, Callable.From(() => IsMouseOver = true));
-        hb.Connect(Control.SignalName.MouseExited, Callable.From(() => IsMouseOver = false));
-        AddChild(hb);
+        hb.Connect(Control.SignalName.MouseEntered, Callable.From(() => this.IsMouseOver = true));
+        hb.Connect(Control.SignalName.MouseExited, Callable.From(() => this.IsMouseOver = false));
+        this.AddChild(hb);
     }
 
     public NCreature? PreviewTarget
@@ -126,43 +126,44 @@ public partial class HangingCardDisplay : Node2D
             if (field != value)
             {
                 field = value;
-                RequestVisualUpdate();
+                this.RequestVisualUpdate();
             }
         }
     }
 
 
     // 视觉更新请求标志，防止一帧内多次重复更新
-    public void RequestVisualUpdate() => NeedsVisualUpdate = true;
+    public void RequestVisualUpdate() => this.NeedsVisualUpdate = true;
     protected bool NeedsVisualUpdate { get; set; } = true;
 
     public override void _Process(double delta)
     {
         // 确保节点 Ready 后才开始后续逻辑
-        if (!CardNode.IsNodeReady())
+        if (!this.CardNode.IsNodeReady())
             return;
 
         // 检查是否需要刷新动态变量 (描述文字、数值、颜色)
-        if (NeedsVisualUpdate)
+        if (this.NeedsVisualUpdate)
         {
             // 调用源码里的核心方法
             // 第一个参数设为 None 以避免触发手牌逻辑
             // 第二个参数 Normal 会触发伤害预览计算
-            CardNode.UpdateVisuals(PileType.None, CardPreviewMode.Normal);
+            this.CardNode.UpdateVisuals(PileType.None, CardPreviewMode.Normal);
 
             // 如果有特定的预览目标（正在追踪的怪物），则告诉 NCard
-            if (PreviewTarget != null)
+            if (this.PreviewTarget != null)
             {
-                CardNode.SetPreviewTarget(PreviewTarget.Entity); // 传入 Entity 模型
+                this.CardNode.SetPreviewTarget(this.PreviewTarget.Entity); // 传入 Entity 模型
+                // 这里内部会再次调用 UpdateVisuals，这是合理的，因为我们这一次对预览目标进行了更新
             }
 
-            NeedsVisualUpdate = false;
+            this.NeedsVisualUpdate = false;
         }
 
 
-        CurrentState = CurrentState(delta);
+        this.CurrentState = this.CurrentState(delta);
 
-        UpdateGlowVisuals(delta);
+        this.UpdateGlowVisuals(delta);
     }
 
     /// <summary>
@@ -180,7 +181,7 @@ public partial class HangingCardDisplay : Node2D
     protected void UpdateGlowVisuals(double delta)
     {
         // 根据意图计算目标颜色
-        Color targetColor = TargetGlow switch
+        Color targetColor = this.TargetGlow switch
         {
             HangGlowType.Good => Colors.Green,
             HangGlowType.Bad => Colors.Red,
@@ -189,17 +190,17 @@ public partial class HangingCardDisplay : Node2D
         };
 
         // 平滑过渡颜色（Lerp 让视觉更有质感，而不是生硬的切换）
-        CardNode.CardHighlight.Modulate = CardNode.CardHighlight.Modulate.Lerp(targetColor, (float)delta * 12f);
+        this.CardNode.CardHighlight.Modulate = this.CardNode.CardHighlight.Modulate.Lerp(targetColor, (float)delta * 12f);
 
         // 逻辑触发：仅在类型切换时调用 STS2 的原生动画信号
-        if (TargetGlow != LastGlow)
+        if (this.TargetGlow != this.LastGlow)
         {
-            if (TargetGlow == HangGlowType.None)
-                CardNode.CardHighlight.AnimHide();
+            if (this.TargetGlow == HangGlowType.None)
+                this.CardNode.CardHighlight.AnimHide();
             else
-                CardNode.CardHighlight.AnimShow();
+                this.CardNode.CardHighlight.AnimShow();
 
-            LastGlow = TargetGlow;
+            this.LastGlow = this.TargetGlow;
         }
     }
 
@@ -215,17 +216,17 @@ public partial class HangingCardDisplay : Node2D
     public HangingCardState State_InQueue(double delta)
     {
         // 处理队列位置 + 弹起偏移 + 浮动
-        float bobOffset = Bob.Update(delta);
-        var targetPos = QueuePosition + VisualOffset + new Vector2(0, bobOffset);
-        GlobalPosition = GlobalPosition.Lerp(targetPos, (float)delta * 10f);
-        VisualOffset = VisualOffset.Lerp(Vector2.Zero, (float)delta * 5f);
+        float bobOffset = this.Bob.Update(delta);
+        var targetPos = this.QueuePosition + this.VisualOffset + new Vector2(0, bobOffset);
+        this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * 10f);
+        this.VisualOffset = this.VisualOffset.Lerp(Vector2.Zero, (float)delta * 5f);
 
         // 处理缩放
-        float targetScale = IsMouseOver ? HoverScale : IdleScale;
-        DisplayScale = Mathf.Lerp(DisplayScale, targetScale, (float)delta * 10f);
-        CardNode.Scale = Vector2.One * DisplayScale;
+        float targetScale = this.IsMouseOver ? HoverScale : IdleScale;
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, targetScale, (float)delta * 10f);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
-        return State_InQueue;
+        return this.State_InQueue;
     }
 
     /// <summary>
@@ -233,16 +234,16 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     protected HangingCardState State_Following(double delta)
     {
-        if (!IsInstanceValid(FollowTarget)) return State_Returning;
+        if (!IsInstanceValid(this.FollowTarget)) return this.State_Returning;
 
         // 飞向目标生物的中心点 + 指定偏移
-        Vector2 globalTarget = FollowTarget.GlobalPosition + FollowOffset;
-        GlobalPosition = GlobalPosition.Lerp(globalTarget, (float)delta * 12f);
+        Vector2 globalTarget = this.FollowTarget.GlobalPosition + this.FollowOffset;
+        this.GlobalPosition = this.GlobalPosition.Lerp(globalTarget, (float)delta * 12f);
 
-        DisplayScale = Mathf.Lerp(DisplayScale, FollowScale, (float)delta * 10f);
-        CardNode.Scale = Vector2.One * DisplayScale;
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, FollowScale, (float)delta * 10f);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
-        return State_Following;
+        return this.State_Following;
     }
 
     /// <summary>
@@ -251,19 +252,19 @@ public partial class HangingCardDisplay : Node2D
     protected HangingCardState State_Hitting(double delta)
     {
         // 快速插值到目标点
-        if (!IsInstanceValid(FollowTarget)) return State_Returning;
+        if (!IsInstanceValid(this.FollowTarget)) return this.State_Returning;
 
-        GlobalPosition = GlobalPosition.Lerp(FollowTarget.GlobalPosition, (float)delta * 25f);
+        this.GlobalPosition = this.GlobalPosition.Lerp(this.FollowTarget.GlobalPosition, (float)delta * 25f);
 
         // 如果足够近，产生冲击感并返回
-        if (GlobalPosition.DistanceTo(FollowTarget.GlobalPosition) < 20f)
+        if (this.GlobalPosition.DistanceTo(this.FollowTarget.GlobalPosition) < 20f)
         {
             // 这里可以触发特定的卡牌闪光特效
-            CardNode.CardHighlight.AnimShow();
-            return State_Returning;
+            this.CardNode.CardHighlight.AnimShow();
+            return this.State_Returning;
         }
 
-        return State_Hitting;
+        return this.State_Hitting;
     }
 
     /// <summary>
@@ -271,17 +272,17 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     protected HangingCardState State_Returning(double delta)
     {
-        GlobalPosition = GlobalPosition.Lerp(QueuePosition, (float)delta * 15f);
-        DisplayScale = Mathf.Lerp(DisplayScale, IdleScale, (float)delta * 10f);
-        CardNode.Scale = Vector2.One * DisplayScale;
+        this.GlobalPosition = this.GlobalPosition.Lerp(this.QueuePosition, (float)delta * 15f);
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, IdleScale, (float)delta * 10f);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
-        if (GlobalPosition.DistanceTo(QueuePosition) < 5f)
+        if (this.GlobalPosition.DistanceTo(this.QueuePosition) < 5f)
         {
-            Bob.Reset(); // 回到队列瞬间重置，避免位置突跳
-            return State_InQueue;
+            this.Bob.Reset(); // 回到队列瞬间重置，避免位置突跳
+            return this.State_InQueue;
         }
 
-        return State_Returning;
+        return this.State_Returning;
     }
 
     /// <summary>
@@ -290,34 +291,34 @@ public partial class HangingCardDisplay : Node2D
     public HangingCardState State_Removing(double delta)
     {
         // 快速缩小
-        DisplayScale = Mathf.Lerp(DisplayScale, 0f, (float)delta * 15f);
-        CardNode.Scale = Vector2.One * DisplayScale;
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, 0f, (float)delta * 15f);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
         // 淡出
-        Modulate = Modulate.Lerp(new Color(1, 1, 1, 0), (float)delta * 15f);
+        this.Modulate = this.Modulate.Lerp(new Color(1, 1, 1, 0), (float)delta * 15f);
 
         // 阈值检查：一旦几乎看不见，就真正销毁
-        if (DisplayScale < 0.01f)
+        if (this.DisplayScale < 0.01f)
         {
-            QueueFree();
+            this.QueueFree();
             // 返回自身以确保最后这一两帧不会报错
             return this.State_Removing;
         }
 
-        return State_Removing;
+        return this.State_Removing;
     }
 
     // --- 指挥接口 (供 Token 调用) ---
 
     public void Command_Anticipate(HangGlowType type)
     {
-        VisualOffset = new Vector2(0, -100);
-        TargetGlow = type;
+        this.VisualOffset = new Vector2(0, -100);
+        this.TargetGlow = type;
     }
 
     public void Command_Idle()
     {
-        TargetGlow = HangGlowType.None;
+        this.TargetGlow = HangGlowType.None;
     }
 
     /// <summary>
@@ -325,10 +326,10 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     public void Command_Follow(NCreature target, Vector2 offset)
     {
-        FollowTarget = target;
-        FollowOffset = offset;
-        PreviewTarget = target;
-        CurrentState = State_Following;
+        this.FollowTarget = target;
+        this.FollowOffset = offset;
+        this.PreviewTarget = target;
+        this.CurrentState = this.State_Following;
     }
 
     /// <summary>
@@ -336,8 +337,8 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     public void Command_Return()
     {
-        PreviewTarget = null;
-        CurrentState = State_Returning;
+        this.PreviewTarget = null;
+        this.CurrentState = this.State_Returning;
     }
 
     /// <summary>
@@ -345,12 +346,12 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     public void Command_Hit(NCreature target)
     {
-        FollowTarget = target;
-        CurrentState = State_Hitting;
+        this.FollowTarget = target;
+        this.CurrentState = this.State_Hitting;
     }
 
     /// <summary>
     /// 外部调用此方法来移除卡牌显示
     /// </summary>
-    public void Command_Remove() => CurrentState = State_Removing;
+    public void Command_Remove() => this.CurrentState = this.State_Removing;
 }

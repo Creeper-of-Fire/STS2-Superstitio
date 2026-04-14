@@ -100,7 +100,7 @@ public abstract record HangingCardToken(
             await CardPileCmd.RemoveFromCombat(this.HangingCard);
         }
 
-        Displayer = new HangingCardTokenDisplayer(this);
+        this.Displayer = new HangingCardTokenDisplayer(this);
     }
 
 
@@ -109,8 +109,8 @@ public abstract record HangingCardToken(
     /// </summary>
     public async Task UnHangCard()
     {
-        Displayer?.UnHangCard();
-        Displayer = null;
+        this.Displayer?.UnHangCard();
+        this.Displayer = null;
 
         if (this.CombatState is null)
             return;
