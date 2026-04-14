@@ -54,7 +54,7 @@ public record CharacterStatsAssets
     /// <summary>
     /// 初始血量。
     /// </summary>
-    public int StartingHp { get; init; }
+    public required int StartingHp { get; init; }
 
     /// <summary>
     /// 初始金钱。

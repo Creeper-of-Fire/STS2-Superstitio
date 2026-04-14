@@ -30,24 +30,24 @@ public static class CharacterSelectPatches
         // 使用 Harmony 的 Traverse 访问私有变量 _infoPanel
         var infoPanel = Traverse.Create(__instance).Field("_infoPanel").GetValue<Control>();
 
-        if (infoPanel is not null)
-        {
-            // 创建我们的 UI 实例
-            // 可能是由于生命周期问题，没办法使用 "_Ready"，于是自己手动构建
-            _masoSelector = new MasoSubPoolSelector().BuildUI();
+        if (infoPanel is null)
+            return;
 
-            // 寻找 infoPanel 里的 VBoxContainer（它是原版文字排列的地方）
-            // 源码中显示路径是 "InfoPanel/VBoxContainer"
-            var vbox = infoPanel.GetNodeOrNull<VBoxContainer>("VBoxContainer");
+        // 创建我们的 UI 实例
+        // 可能是由于生命周期问题，没办法使用 "_Ready"，于是自己手动构建
+        _masoSelector = new MasoSubPoolSelector().BuildUI();
 
-            if (vbox is not null)
-            {
-                vbox.AddChild(_masoSelector);
-                // 将我们的 UI 移动到描述文本之后，血量/金币显示之前
-                vbox.MoveChild(_masoSelector, 2);
-                Log.Info("[MasoMod] 成功注入子池选择 UI 到面板。");
-            }
-        }
+        // 寻找 infoPanel 里的 VBoxContainer（它是原版文字排列的地方）
+        // 源码中显示路径是 "InfoPanel/VBoxContainer"
+        var vbox = infoPanel.GetNodeOrNull<VBoxContainer>("VBoxContainer");
+
+        if (vbox is null)
+            return;
+
+        vbox.AddChild(_masoSelector);
+        // 将我们的 UI 移动到描述文本之后，血量/金币显示之前
+        vbox.MoveChild(_masoSelector, 2);
+        Log.Info("[MasoMod] 成功注入子池选择 UI 到面板。");
     }
 
     /// <summary>

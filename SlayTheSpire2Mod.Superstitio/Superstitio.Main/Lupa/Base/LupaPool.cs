@@ -28,7 +28,7 @@ public class LupaCardPool : CustomCardPoolModel, IWithSubPool<LupaCardPool>
     /// <summary>
     /// 卡池的主题色。
     /// </summary>
-    public override Color DeckEntryCardColor => Color.Color8(255, 105, 180);
+    public override Color DeckEntryCardColor => LupaCharacter.ThemeColor;
 
     /// <summary>
     /// 卡牌颜色

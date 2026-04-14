@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Base;
+using Superstitio.Main.Base.Character;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.Lupa.Cards.Base;
@@ -15,11 +16,13 @@ namespace Superstitio.Main.Lupa;
 /// </summary>
 public class LupaCharacter : SuperstitioCharacter
 {
+    /// <summary>
+    /// 主题色
+    /// </summary>
+    public static Color ThemeColor { get; } = Color.Color8(255, 105, 180);
+
     /// <inheritdoc />
-    protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssets
-    {
-        NameColor = new Color(0.5f, 0.5f, 1f)
-    };
+    protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssetsSimple(ThemeColor);
 
     /// <inheritdoc />
     protected override CharacterStatsAssets StatsConfig => field ??= new CharacterStatsAssets

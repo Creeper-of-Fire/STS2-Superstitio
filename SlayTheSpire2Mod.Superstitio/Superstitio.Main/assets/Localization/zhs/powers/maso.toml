@@ -1,6 +1,9 @@
 ﻿[FelixPower]
 title = "快感"
 description = "每累积[blue]10[/blue]层，达到一次[pink]高潮[/pink]，触发特定效果。\n回合结束时失去。"
+[FelixPower.sfw]
+title = "狂热"
+description = "每累积[blue]10[/blue]层，达到一次[pink]狂暴[/pink]，触发特定效果。\n回合结束时失去。"
 
 [CorruptusPower]
 title = "腐朽"

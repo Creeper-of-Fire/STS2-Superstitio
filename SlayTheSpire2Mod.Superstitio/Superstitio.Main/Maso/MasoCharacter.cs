@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Base;
+using Superstitio.Main.Base.Character;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Maso.Base;
 using Superstitio.Main.Maso.Cards.Base;
@@ -14,11 +15,13 @@ namespace Superstitio.Main.Maso;
 /// </summary>
 public class MasoCharacter : SuperstitioCharacter
 {
+    /// <summary>
+    /// 主题色
+    /// </summary>
+    public static Color ThemeColor { get; } = Color.Color8(215, 35, 85);
+    
     /// <inheritdoc />
-    protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssets
-    {
-        NameColor = new Color(0.5f, 0.5f, 1f)
-    };
+    protected override CharacterColorAssets ColorsConfig => field ??= new CharacterColorAssetsSimple(ThemeColor);
 
     /// <inheritdoc />
     protected override CharacterStatsAssets StatsConfig => field ??= new CharacterStatsAssets

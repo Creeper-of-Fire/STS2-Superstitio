@@ -16,13 +16,13 @@ sfw.flavor = ""
 title = "亲吻"
 description = "造成{Damage:diff()}点伤害。"
 flavor = "（づ￣3￣）づ╭❤～"
-sfw.title = "防御"
+sfw.title = "打击"
 sfw.flavor = ""
 
 [StrikeMaso]
 title = "亲吻"
 description = "造成{Damage:diff()}点伤害。"
 flavor = "（づ￣3￣）づ╭❤～"
-sfw.title = "防御"
+sfw.title = "打击"
 sfw.flavor = ""
 

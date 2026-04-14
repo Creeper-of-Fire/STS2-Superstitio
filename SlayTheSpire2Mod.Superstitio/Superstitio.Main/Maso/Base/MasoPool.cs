@@ -28,7 +28,7 @@ public class MasoCardPool : CustomCardPoolModel, IWithSubPool<MasoCardPool>
     /// <summary>
     /// 卡池的主题色。
     /// </summary>
-    public override Color DeckEntryCardColor => Color.Color8(215, 35, 85);
+    public override Color DeckEntryCardColor => MasoCharacter.ThemeColor;
 
     /// <summary>
     /// 卡牌颜色
