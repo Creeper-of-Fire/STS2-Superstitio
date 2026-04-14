@@ -1,6 +1,7 @@
 ﻿using Godot;
 using Godot.NativeInterop;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 
@@ -104,6 +105,7 @@ public partial class HangingCardDisplay : Node2D
         this.CardNode = NCard.Create(this.Token.HangingCard)!;
         this.AddChild(this.CardNode);
 
+        // TODO 加入一个计数器，这个不急，要做的还有很多
         // _counterLabel = new Label {
         //     Text = token.RemainCount.ToString(),
         //     Position = new Vector2(50, -10)
@@ -120,14 +122,14 @@ public partial class HangingCardDisplay : Node2D
 
     public NCreature? PreviewTarget
     {
-        get => field;
+        get;
         set
         {
-            if (field != value)
-            {
-                field = value;
-                this.RequestVisualUpdate();
-            }
+            if (field == value)
+                return;
+
+            field = value;
+            this.RequestVisualUpdate();
         }
     }
 
@@ -145,16 +147,28 @@ public partial class HangingCardDisplay : Node2D
         // 检查是否需要刷新动态变量 (描述文字、数值、颜色)
         if (this.NeedsVisualUpdate)
         {
-            // 调用源码里的核心方法
-            // 第一个参数设为 None 以避免触发手牌逻辑
-            // 第二个参数 Normal 会触发伤害预览计算
-            this.CardNode.UpdateVisuals(PileType.None, CardPreviewMode.Normal);
-
-            // 如果有特定的预览目标（正在追踪的怪物），则告诉 NCard
-            if (this.PreviewTarget != null)
+            var model = this.CardNode.Model;
+            if (model != null)
             {
-                this.CardNode.SetPreviewTarget(this.PreviewTarget.Entity); // 传入 Entity 模型
+                var originalUpgradePreviewType = model.UpgradePreviewType;
+
+                // 临时设置为 Combat，让 CombatState getter 返回正确的值
+                model.UpgradePreviewType = CardUpgradePreviewType.Combat;
+
+                // 调用源码里的核心方法
+                // 第一个参数设为 None 以避免触发手牌逻辑
+                // 第二个参数 Normal 会触发伤害预览计算
+                this.CardNode.UpdateVisuals(PileType.None, CardPreviewMode.Normal);
+
+                // 如果有特定的预览目标（正在追踪的怪物），则告诉 NCard
+                this.CardNode.SetPreviewTarget(this.PreviewTarget?.Entity); // 传入 Entity 模型
                 // 这里内部会再次调用 UpdateVisuals，这是合理的，因为我们这一次对预览目标进行了更新
+
+                // 手动调用动态变量的 UpdateCardPreview
+                model.DynamicVars.Values.ToList()
+                    .ForEach(it => it.UpdateCardPreview(model, CardPreviewMode.Normal, this.PreviewTarget?.Entity, true));
+
+                model.UpgradePreviewType = originalUpgradePreviewType;
             }
 
             this.NeedsVisualUpdate = false;
@@ -308,18 +322,18 @@ public partial class HangingCardDisplay : Node2D
         return this.State_Removing;
     }
 
-    // --- 指挥接口 (供 Token 调用) ---
-
-    public void Command_Anticipate(HangGlowType type)
+    public void StartGlow(HangGlowType type)
     {
         this.VisualOffset = new Vector2(0, -100);
         this.TargetGlow = type;
     }
 
-    public void Command_Idle()
+    public void EndGlow()
     {
         this.TargetGlow = HangGlowType.None;
     }
+
+    // --- 指挥接口 (供 Token 调用) ---
 
     /// <summary>
     /// 跟随指定对象
