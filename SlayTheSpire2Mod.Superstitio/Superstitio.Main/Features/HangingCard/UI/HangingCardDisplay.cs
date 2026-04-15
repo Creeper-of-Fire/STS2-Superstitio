@@ -2,9 +2,11 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.HoverTips;
 
 // ReSharper disable NullableWarningSuppressionIsUsed
 #pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
@@ -21,15 +23,16 @@ public partial class HangingCardDisplay : Node2D
     // --- 属性区域 ---
     public HangingCardToken Token { get; private set; } = null!;
 
-    public HangingCardState CurrentState
-    {
-        get;
-        private set
-        {
-            field = value;
-            this.UpdateHitboxState();
-        }
-    } = null!;
+    /// <summary>
+    /// 当前正在运行的状态执行器
+    /// </summary>
+    public HangingCardState CurrentState { get; private set; } = null!;
+
+    /// <summary>
+    /// 外部指挥官设定的“目标状态”。
+    /// 状态函数会观察此意图，决定是否由于意图改变而进行退出清理。
+    /// </summary>
+    protected HangingCardState TargetStateIntent { get; set; } = null!;
 
     public Vector2 VisualOffset { get; set; } // 用于弹起动画的额外偏移
 
@@ -58,26 +61,21 @@ public partial class HangingCardDisplay : Node2D
     {
         var display = new HangingCardDisplay();
         display.Token = token;
-        display.CurrentState = display.State_InQueue;
         return display;
     }
 
     public Control Hitbox { get; private set; } = null!;
 
-    private void UpdateHitboxState()
+    private void UpdateHitboxState(bool enabled)
     {
-        if (!this.IsNodeReady())
-            return;
-        this.Hitbox.MouseFilter = this.IsIdleState
-            ? Control.MouseFilterEnum.Pass
-            : Control.MouseFilterEnum.Ignore;
+        this.Hitbox.MouseFilter = enabled ? Control.MouseFilterEnum.Pass : Control.MouseFilterEnum.Ignore;
     }
-
-    private bool IsIdleState =>
-        this.CurrentState == this.State_InQueue;
 
     public override void _Ready()
     {
+        // 初始意图和状态对齐
+        this.CurrentState = this.TargetStateIntent = this.State_InQueue;
+
         this.CardNode = NCard.Create(this.Token.HangingCard)!;
         this.AddChild(this.CardNode);
 
@@ -88,8 +86,17 @@ public partial class HangingCardDisplay : Node2D
         // };
         // AddChild(_counterLabel);
 
-        // 简单 Hitbox 用于响应 UI 层面的 Hover
-        this.Hitbox = new Control { Size = new Vector2(160, 220), Position = new Vector2(-80, -110) };
+        // --- 动态计算 Hitbox ---
+        // 从 CardNode 获取原始未缩放尺寸
+        var originalSize = this.CardNode.GetCurrentSize();
+        // Hitbox 应该恒等于 Idle 状态的大小
+        // 这样放大后，鼠标只要移出“初始小框”就会触发 Unhover
+        var idleSize = originalSize * IdleScale;
+        this.Hitbox = new Control
+        {
+            Size = idleSize,
+            Position = -idleSize / 2f // 中心对齐
+        };
         this.Hitbox.MouseFilter = Control.MouseFilterEnum.Pass;
         this.Hitbox.Connect(Control.SignalName.MouseEntered, Callable.From(() => this.IsMouseOver = true));
         this.Hitbox.Connect(Control.SignalName.MouseExited, Callable.From(() => this.IsMouseOver = false));
@@ -173,7 +180,7 @@ public partial class HangingCardDisplay : Node2D
     protected void UpdateGlowVisuals(double delta)
     {
         // 根据意图计算目标颜色
-        Color targetColor = this.TargetGlow switch
+        var targetColor = this.TargetGlow switch
         {
             HangGlowType.Good => Colors.Green,
             HangGlowType.Bad => Colors.Red,
@@ -208,15 +215,15 @@ public partial class HangingCardDisplay : Node2D
     private Vector2 GetTargetCenter(NCreature target, float lerpFactor)
     {
         // 获取怪物的碰撞箱尺寸
-        Vector2 hitboxSize = target.Hitbox.Size;
+        var hitboxSize = target.Hitbox.Size;
 
         // 获取卡牌尺寸
-        Vector2 cardSize = this.CardNode.GetCurrentSize();
+        var cardSize = this.CardNode.GetCurrentSize();
 
         // 计算从队列位置指向怪物中心的方向
-        Vector2 queuePos = this.QueuePosition;
-        Vector2 monsterCenter = target.Hitbox.GlobalPosition + hitboxSize / 2f;
-        Vector2 directionFromMonster = (queuePos - monsterCenter).Normalized();
+        var queuePos = this.QueuePosition;
+        var monsterCenter = target.Hitbox.GlobalPosition + hitboxSize / 2f;
+        var directionFromMonster = (queuePos - monsterCenter).Normalized();
 
         // 计算怪物碰撞箱在该方向上的投影半径
         // 对于矩形碰撞箱，根据方向计算精确的边界距离
@@ -224,9 +231,9 @@ public partial class HangingCardDisplay : Node2D
         float cardRadius = GetRectangleRadiusInDirection(cardSize, directionFromMonster);
 
         // 停在碰撞箱边缘
-        Vector2 edgePos = monsterCenter + directionFromMonster * (monsterRadius + cardRadius);
+        var edgePos = monsterCenter + directionFromMonster * (monsterRadius + cardRadius);
 
-        Vector2 targetPos = queuePos.Lerp(edgePos, lerpFactor);
+        var targetPos = queuePos.Lerp(edgePos, lerpFactor);
 
         return targetPos;
     }
@@ -254,45 +261,194 @@ public partial class HangingCardDisplay : Node2D
     }
 
     // 位置移动速度
+    private const float MoveSpeedInQueue = 15f;
     private const float MoveSpeedFollow = 8f;
     private const float MoveSpeedHit = 15f;
     private const float MoveSpeedReturn = 10f;
 
     // 缩放速度
-    private const float ScaleLerpSpeed = 3f;
+    private const float ScaleSpeedInQueue = 15f;
+    private const float ScaleSpeedFollow = 5f;
+    private const float ScaleSpeedHit = 15f;
+    private const float ScaleSpeedReturn = 15f;
 
     // --- 状态机原子动作 ---
 
     /// <summary>
-    /// 状态：在 UI 队列中。仅在此状态下处理 Hover 放大逻辑。
+    /// 状态：悬挂队列中。
+    /// 它管理着自己的内部子状态（Idle/Hover），并负责在退出时清理视觉残留。
     /// </summary>
     public HangingCardState State_InQueue(double delta)
     {
-        // 处理队列位置 + 弹起偏移 + 浮动
-        float bobOffset = this.Bob.Update(delta);
-        var targetPos = this.QueuePosition + this.VisualOffset + new Vector2(0, bobOffset);
-        this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * 10f);
-        this.VisualOffset = this.VisualOffset.Lerp(Vector2.Zero, (float)delta * 5f);
+        // 1. 检查退出意图：如果目标不再是自己，执行清理并交出控制权
+        if (this.TargetStateIntent != this.State_InQueue)
+        {
+            this.InQueue_ExitCleanup();
+            return this.TargetStateIntent;
+        }
 
-        // 处理缩放
-        float targetScale = this.IsMouseOver ? HoverScale : IdleScale;
-        this.DisplayScale = Mathf.Lerp(this.DisplayScale, targetScale, (float)delta * ScaleLerpSpeed);
-        this.CardNode.Scale = Vector2.One * this.DisplayScale;
+        // 2. 内部子状态机：处理 Hover 逻辑
+        this.InQueue_UpdateSubStates(delta);
 
         return this.State_InQueue;
     }
+
+    protected bool AreTipsShowing { get; set; } = false;
+
+    protected NHoverTipSet? ActiveTips { get; set; }
+
+    /// <summary>
+    /// 计算当前时刻 InQueue 状态应有的位置和缩放
+    /// </summary>
+    private (Vector2 position, float scale) CalculateInQueueTarget(double delta)
+    {
+        const float offsetRatioWhenHoverRightCard = 0.3f;
+        const float idleScaleWhenHoverRightCard = IdleScale * 1.25f;
+        bool isHoverRightCard = this.TargetGlow != HangGlowType.None;
+
+        var desiredOffset = isHoverRightCard
+            ? new Vector2(0, this.CardNode.GetCurrentSize().Y * offsetRatioWhenHoverRightCard)
+            : Vector2.Zero;
+
+        var targetPosition = this.QueuePosition + desiredOffset;
+
+        // 缩放表现
+        float targetScale;
+        if (this.IsMouseOver)
+            targetScale = HoverScale;
+        else if (isHoverRightCard)
+            targetScale = idleScaleWhenHoverRightCard;
+        else
+            targetScale = IdleScale;
+
+
+        return (targetPosition, targetScale);
+    }
+
+    private const float BobAmplitudeRate = 0.06f;
+
+    /// <summary>
+    /// InQueue 内部逻辑：根据鼠标位置更新子状态视觉
+    /// </summary>
+    private void InQueue_UpdateSubStates(double delta)
+    {
+        (var targetPosition, float targetScale) = this.CalculateInQueueTarget(delta);
+        float bobOffset = this.Bob.Update(delta) * this.CardNode.GetCurrentSize().Y * BobAmplitudeRate;
+        this.GlobalPosition = this.GlobalPosition.Lerp(targetPosition + new Vector2(0, bobOffset), (float)delta * MoveSpeedInQueue);
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, targetScale, (float)delta * ScaleSpeedInQueue);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
+
+        // Hover 子状态表现
+        if (!this.IsMouseOver)
+        {
+            this.ZIndex = 0;
+            if (!this.AreTipsShowing)
+                return;
+            this.AreTipsShowing = false;
+            this.ClearHoverTips();
+            return;
+        }
+
+        this.ZIndex = 1;
+        if (!this.AreTipsShowing)
+        {
+            this.AreTipsShowing = true;
+            if (this.CardNode.Model != null)
+            {
+                this.ActiveTips = NHoverTipSet.CreateAndShow(this.Hitbox, this.CardNode.Model.HoverTips);
+            }
+        }
+
+        // 由于提示框内部的 FollowOffset 是静态的，
+        // 且 SetAlignment 不考虑 Node2D 引起的全局缩放变化，
+        // 我们每帧手动重新校准一次对齐。
+        if (this.ActiveTips == null)
+            return;
+
+        // 计算视觉边界
+        var cardSize = this.CardNode.GetCurrentSize();
+        float visualHalfWidth = cardSize.X / 2f;
+        float visualHalfHeight = cardSize.Y / 2f;
+
+        // 锚点设置：
+        // X: 卡牌中心 + 视觉半宽 + 间隔
+        // Y: 卡牌中心 - 视觉半高 (即对齐卡牌视觉顶部)
+        var anchor = this.GlobalPosition + new Vector2(visualHalfWidth * 1.05f, -visualHalfHeight);
+
+        // 将 ActiveTips 强行对齐到这个动态锚点
+        this.ActiveTips.GlobalPosition = anchor;
+
+        // 仍然调用 SetAlignment 以触发 NHoverTipSet 内部的屏幕边界溢出检查 (CorrectOverflow)
+        // 即使它算的位置不对，它最后执行的溢出检查对我们很有用
+        this.ActiveTips.SetAlignment(this.Hitbox, HoverTipAlignment.None);
+    }
+
+    /// <summary>
+    /// 当 State_InQueue 决定结束时，自行负责清理。
+    /// </summary>
+    private void InQueue_ExitCleanup()
+    {
+        this.ZIndex = 0;
+        this.IsMouseOver = false;
+        if (this.AreTipsShowing)
+        {
+            this.AreTipsShowing = false;
+            this.ClearHoverTips();
+        }
+
+        // 离开队列后，禁用 Hitbox 避免飞行中意外触发悬停逻辑
+        this.Hitbox.MouseFilter = Control.MouseFilterEnum.Ignore;
+    }
+
+    // --- HoverTips辅助方法 ---
+
+    private void CreateHoverTips()
+    {
+        if (this.CardNode.Model != null)
+        {
+            var tips = NHoverTipSet.CreateAndShow(this.Hitbox, this.CardNode.Model.HoverTips);
+            tips.SetAlignment(this.Hitbox, HoverTipAlignment.Right);
+        }
+    }
+
+    private void ClearHoverTips()
+    {
+        NHoverTipSet.Remove(this.Hitbox);
+    }
+
 
     /// <summary>
     /// 状态：追踪目标（怪物/玩家）。
     /// </summary>
     protected HangingCardState State_Following(double delta)
     {
-        if (!IsInstanceValid(this.FollowTarget)) return this.State_Returning;
+        if (this.TargetStateIntent != this.State_Following)
+            return this.TargetStateIntent;
 
-        Vector2 targetPos = this.GetTargetCenter(this.FollowTarget, FollowLerpFactor);
+        if (!IsInstanceValid(this.FollowTarget))
+            return this.State_Returning;
 
-        this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * MoveSpeedFollow);
-        this.DisplayScale = Mathf.Lerp(this.DisplayScale, FollowScale, (float)delta * ScaleLerpSpeed);
+        var targetPos = this.GetTargetCenter(this.FollowTarget, FollowLerpFactor);
+
+        // 计算距离目标的距离
+        float distanceX = Mathf.Abs(this.GlobalPosition.X - targetPos.X);
+        bool hasReachedTarget = distanceX < 2f; // 阈值可调整
+
+        // 移动到目标位置
+        if (!hasReachedTarget)
+        {
+            // 飞行中：直线移动，无浮动
+            this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * MoveSpeedFollow);
+        }
+        else
+        {
+            // 到达目标附近：开始浮动
+            float bobOffset = this.Bob.Update(delta) * this.CardNode.GetCurrentSize().Y * BobAmplitudeRate;
+            var hoverPosition = targetPos + new Vector2(0, bobOffset);
+            this.GlobalPosition = this.GlobalPosition.Lerp(hoverPosition, (float)delta * MoveSpeedFollow);
+        }
+
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, FollowScale, (float)delta * ScaleSpeedFollow);
         this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
         return this.State_Following;
@@ -303,10 +459,13 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     protected HangingCardState State_Hitting(double delta)
     {
+        if (this.TargetStateIntent != this.State_Hitting)
+            return this.TargetStateIntent;
+
         // 快速插值到目标点
         if (!IsInstanceValid(this.FollowTarget)) return this.State_Returning;
 
-        Vector2 targetPos = GetTargetCenter(this.FollowTarget, HitLerpFactor);
+        var targetPos = this.GetTargetCenter(this.FollowTarget, HitLerpFactor);
 
         this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * MoveSpeedHit);
 
@@ -326,13 +485,25 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     protected HangingCardState State_Returning(double delta)
     {
-        this.GlobalPosition = this.GlobalPosition.Lerp(this.QueuePosition, (float)delta * MoveSpeedReturn);
-        this.DisplayScale = Mathf.Lerp(this.DisplayScale, IdleScale, (float)delta * ScaleLerpSpeed);
+        if (this.TargetStateIntent != this.State_Returning)
+            return this.TargetStateIntent;
+
+        (var homePosition, float homeScale) = this.CalculateInQueueTarget(delta);
+
+        this.GlobalPosition = this.GlobalPosition.Lerp(homePosition, (float)delta * MoveSpeedReturn);
+        this.DisplayScale = Mathf.Lerp(this.DisplayScale, homeScale, (float)delta * ScaleSpeedReturn);
         this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
-        if (this.GlobalPosition.DistanceTo(this.QueuePosition) < 5f)
+        // 检查是否足够接近
+        bool positionReached = this.GlobalPosition.DistanceTo(homePosition) < 5f;
+        bool scaleReached = Mathf.Abs(this.DisplayScale - homeScale) < 0.01f;
+
+        if (positionReached && scaleReached)
         {
             this.Bob.Reset(); // 回到队列瞬间重置，避免位置突跳
+            this.UpdateHitboxState(true); // 重新启用交互
+            this.TargetStateIntent = this.State_InQueue; // 回到 InQueue 时，通过对齐意图实现“回家”
+
             return this.State_InQueue;
         }
 
@@ -364,7 +535,6 @@ public partial class HangingCardDisplay : Node2D
 
     public void StartGlow(HangGlowType type)
     {
-        this.VisualOffset = new Vector2(0, -100);
         this.TargetGlow = type;
     }
 
@@ -382,7 +552,7 @@ public partial class HangingCardDisplay : Node2D
     {
         this.FollowTarget = target;
         this.PreviewTarget = target;
-        this.CurrentState = this.State_Following;
+        this.TargetStateIntent = this.State_Following;
     }
 
     /// <summary>
@@ -391,7 +561,7 @@ public partial class HangingCardDisplay : Node2D
     public void Command_Return()
     {
         this.PreviewTarget = null;
-        this.CurrentState = this.State_Returning;
+        this.TargetStateIntent = this.State_Returning;
     }
 
     /// <summary>
@@ -400,11 +570,11 @@ public partial class HangingCardDisplay : Node2D
     public void Command_Hit(NCreature target)
     {
         this.FollowTarget = target;
-        this.CurrentState = this.State_Hitting;
+        this.TargetStateIntent = this.State_Hitting;
     }
 
     /// <summary>
     /// 外部调用此方法来移除卡牌显示
     /// </summary>
-    public void Command_Remove() => this.CurrentState = this.State_Removing;
+    public void Command_Remove() => this.TargetStateIntent = this.State_Removing;
 }

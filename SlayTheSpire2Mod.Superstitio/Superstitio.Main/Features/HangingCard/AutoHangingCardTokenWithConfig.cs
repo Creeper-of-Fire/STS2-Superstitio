@@ -3,41 +3,18 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Combat;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
+using Superstitio.Main.Features.HangingCard.UI;
 
 namespace Superstitio.Main.Features.HangingCard;
 
-/// <summary>
-/// 为实现了 <see cref="IWithHangingConfigCard"/> 接口的卡牌提供创建挂起令牌的扩展方法。
-/// </summary>
-public static class IWithHangingConfigCardExtensions
-{
-    /// <summary>
-    /// 基于卡牌的挂起配置创建一个 <see cref="AutoHangingCardTokenWithConfig"/> 实例。
-    /// </summary>
-    /// <typeparam name="TCard">卡牌类型，必须继承自 <see cref="SuperstitioBaseCard"/> 并实现 <see cref="IWithHangingConfigCard"/> 接口。</typeparam>
-    /// <param name="card">当前卡牌实例。</param>
-    /// <param name="HangingAction">当挂起条件触发时执行的异步动作。</param>
-    /// <returns>一个配置好的 <see cref="AutoHangingCardTokenWithConfig"/> 实例。</returns>
-    public static AutoHangingCardTokenWithConfig CreateHangingToken<TCard>(
-        this TCard card,
-        Func<PlayerChoiceContext, CardPlay, Task> HangingAction
-    )
-        where TCard : SuperstitioBaseCard, IWithHangingConfigCard
-    {
-        return new AutoHangingCardTokenWithConfig(card.HangingCardConfig, card.BaseResultPileType)
-        {
-            // 如果卡牌在打出后挂起自身，则手动禁用“挂起后，由 Token 手动从战斗中移除"功能，转而让游戏自动在打出后送入 ResultPileType
-            ShouldManualRemoveFromBattle = !card.HangingSelfAfterPlay,
-            HangingAction = HangingAction
-        };
-    }
-}
 
 /// <inheritdoc />
 [method: SetsRequiredMembers]
-public record AutoHangingCardTokenWithConfig(
+public abstract record AutoHangingCardTokenWithConfig(
     HangingCardConfig HangingCardConfig,
     PileType ReturnPileType
 ) : AutoHangingCardToken(
@@ -80,10 +57,18 @@ public record AutoHangingCardTokenWithConfig(
     /// <inheritdoc />
     protected override bool ShouldRespond(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        return this.ShouldRespondCard(cardPlay.Card);
+    }
+
+    /// <summary>
+    /// 是否响应指定的卡牌
+    /// </summary>
+    protected bool ShouldRespondCard(CardModel card)
+    {
         if (this.CardTypeFilter == CardType.None)
             return true;
 
-        return cardPlay.Card.Type == this.CardTypeFilter;
+        return card.Type == this.CardTypeFilter;
     }
 
     /// <inheritdoc />
@@ -100,5 +85,21 @@ public record AutoHangingCardTokenWithConfig(
         if (this.HangingCardConfig.HangingType != HangingType.Follow)
             return;
         await this.HangingAction(context, cardPlay);
+    }
+
+    /// <summary>
+    /// 当响应指定的卡牌时，创建一个触发上下文
+    /// </summary>
+    protected abstract TriggerContext CreateTriggerContext(CardModel hoveredCard, NCreature? hoveredCreature);
+
+    /// <inheritdoc />
+    public sealed override TriggerContext GetTriggerContext(CardModel hoveredCard, NCreature? hoveredCreature)
+    {
+        bool shouldRespond = this.ShouldRespondCard(hoveredCard);
+
+        if (!shouldRespond)
+            return new TriggerContext(HangGlowType.None, null);
+
+        return this.CreateTriggerContext(hoveredCard, hoveredCreature);
     }
 }

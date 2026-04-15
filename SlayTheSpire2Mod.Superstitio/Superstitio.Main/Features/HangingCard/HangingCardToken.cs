@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Combat;
 using Superstitio.Main.Features.HangingCard.UI;
 
 namespace Superstitio.Main.Features.HangingCard;
@@ -139,12 +140,13 @@ public abstract record HangingCardToken(
     }
 
     /// <summary>
-    /// 高级规则过滤：在这里决定具体的辉光颜色和触发条件
+    /// 根据“当前悬停的手牌”和“当前指向的目标”，计算悬挂卡的视觉状态。
     /// </summary>
-    public virtual TriggerContext GetTriggerContext(CardModel hoveredCard)
+    public virtual TriggerContext GetTriggerContext(CardModel hoveredCard, NCreature? hoveredCreature)
     {
-        // 默认实现，子类可以根据卡牌类型返回 Good 或 Bad 辉光
-        return new TriggerContext(true, HangGlowType.Special);
+        if (hoveredCreature is null)
+            return new TriggerContext(HangGlowType.None, hoveredCreature);
+        return new TriggerContext(HangGlowType.Special, hoveredCreature);
     }
 }
 
