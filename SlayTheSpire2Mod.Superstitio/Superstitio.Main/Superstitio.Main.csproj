@@ -1,4 +1,12 @@
 ﻿<Project Sdk="Godot.NET.Sdk/4.5.1">
+<!--    <PropertyGroup>-->
+<!--        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+<!--        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>-->
+<!--    </PropertyGroup>-->
+<!--    <Target Name="CleanGodotGeneratedFiles" BeforeTargets="CoreCompile">-->
+<!--        <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)\Godot.SourceGenerators" />-->
+<!--    </Target>-->
+    
     <!-- 通用的游戏DLL引用 -->
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->

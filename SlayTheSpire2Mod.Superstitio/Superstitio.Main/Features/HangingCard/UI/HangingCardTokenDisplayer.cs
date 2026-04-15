@@ -68,6 +68,7 @@ public class HangingCardTokenDisplayer
     {
         RunManager.Instance.HoveredModelTracker.HoverChanged += this.OnGlobalHoverChanged;
         NTargetManager.Instance.CreatureHovered += this.OnCreatureHovered;
+        NTargetManager.Instance.CreatureUnhovered += this.OnCreatureUnhovered;
         NTargetManager.Instance.TargetingEnded += this.OnTargetingEnded;
     }
 
@@ -75,13 +76,15 @@ public class HangingCardTokenDisplayer
     {
         RunManager.Instance.HoveredModelTracker.HoverChanged -= this.OnGlobalHoverChanged;
         NTargetManager.Instance.CreatureHovered -= this.OnCreatureHovered;
+        NTargetManager.Instance.CreatureUnhovered -= this.OnCreatureUnhovered;
         NTargetManager.Instance.TargetingEnded -= this.OnTargetingEnded;
     }
+
 
     private void OnGlobalHoverChanged(ulong playerId)
     {
         if (playerId != this.Token.OriginalOwner.NetId) return;
-        
+
         var tracker = RunManager.Instance.HoveredModelTracker;
         var model = tracker.GetHoveredModel(playerId);
 
@@ -105,11 +108,15 @@ public class HangingCardTokenDisplayer
     private void OnCreatureHovered(NCreature creature)
     {
         // 只有在匹配上下文且玩家正在选目标时
-        if (this.CurrentContext.IsMatch && NTargetManager.Instance.IsInSelection)
-        {
-            var offset = creature.Entity.IsPlayer ? new Vector2(-120, -60) : new Vector2(120, -60);
-            this.Display.Command_Follow(creature, offset); // TODO 是否要Follow应该是Token自己决定的，而不是交给 HangingCardTokenDisplayer
-        }
+        if (!this.CurrentContext.IsMatch || !NTargetManager.Instance.IsInSelection)
+            return;
+
+        this.Display.Command_Follow(creature); // TODO 是否要Follow应该是Token自己决定的，而不是交给 HangingCardTokenDisplayer
+    }
+
+    private void OnCreatureUnhovered(NCreature creature)
+    {
+        this.Display.Command_Return();
     }
 
     private void OnTargetingEnded()
