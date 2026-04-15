@@ -5,7 +5,7 @@ namespace Superstitio.Main.Features.HangingCard.UI;
 /// <summary>
 /// 负责处理简谐运动（上下漂浮）的逻辑类
 /// </summary>
-public partial class BobEffect : RefCounted
+public class BobEffect
 {
     private float Amplitude { get; init; } = 8f;
     private float Speed { get; init; } = 2.0f;

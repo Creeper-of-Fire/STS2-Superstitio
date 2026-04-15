@@ -43,7 +43,7 @@ public record struct TriggerContext(
     string? CustomHint = null
 );
 
-public partial class HangingCardTokenDisplayer
+public class HangingCardTokenDisplayer
 {
     public HangingCardToken Token { get; init; }
     public HangingCardDisplay Display { get; init; }

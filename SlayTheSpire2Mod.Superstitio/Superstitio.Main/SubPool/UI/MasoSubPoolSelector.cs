@@ -10,29 +10,28 @@ namespace Superstitio.Main.SubPool.UI;
 /// 
 /// </summary>
 // 这是一个标准的 Godot 容器，它会自动垂直排列子节点
-public class MasoSubPoolSelector : VBoxContainer
+public partial class MasoSubPoolSelector : VBoxContainer
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public MasoSubPoolSelector BuildUI()
+    /// <inheritdoc />
+    public override void _Ready()
     {
         Log.Info("[MasoMod] Selector _Ready 开始执行...");
         
-        // --- 强制视觉可见测试 ---
-        var testLabel = new Label();
-        testLabel.Text = "MASO UI 注入成功！";
-        testLabel.Modulate = Colors.Red; // 红色醒目
-        this.AddChild(testLabel);
-        // -----------------------
-        
-        // 1. 设置 UI 基本样式
+        // 设置 UI 基本样式
         // 强行设定最小尺寸，防止被原版 VBox 挤压到 0 高度
         this.CustomMinimumSize = new Vector2(300, 50); 
         this.SizeFlagsHorizontal = SizeFlags.ExpandFill; // 填满横向空间
         this.AddThemeConstantOverride("separation", 10); // 按钮之间的间距
+        
+        // 动态生成勾选框
+        this.BuildCheckBoxes();
+        
+        // 初始隐藏，等选到 Maso 角色再显示
+        this.Hide();
+    }
 
-        // 2. 动态生成勾选框
+    private void BuildCheckBoxes()
+    {
         // 遍历所有注册到 MasoCardPool 的子池
         var allPools = SubPoolManager.GetAllSubPools().ToList();
         
@@ -55,13 +54,7 @@ public class MasoSubPoolSelector : VBoxContainer
             
             Log.Info($"[MasoMod] 成功挂载子池开关: {checkBox.Text}");
         }
-
-        // 初始隐藏，等选到 Maso 角色再显示
-        this.Hide();
-
-        return this;
     }
-
 
     /// <summary>
     /// 

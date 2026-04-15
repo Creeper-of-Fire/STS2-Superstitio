@@ -1,5 +1,17 @@
 <!-- YAESandBox\Directory.Build.targets -->
 <Project>
+    <PropertyGroup>
+        <GodotProjectDir>$(SolutionDir)</GodotProjectDir>
+        <GodotProjectDirBase64>$([MSBuild]::ConvertToBase64('$(GodotProjectDir)'))</GodotProjectDirBase64>
+    </PropertyGroup>
+    <PropertyGroup>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+    <Target Name="CleanGodotGeneratedFiles" BeforeTargets="CoreCompile">
+        <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)\Godot.SourceGenerators" />
+    </Target>
+    
     <!-- ================================================================== -->
     <!-- == 模组打包自动化 == -->
     <!-- ================================================================== -->
@@ -67,7 +79,6 @@
 
         <!-- 检查 ILMerge/ILRepack 是否可用 -->
         <Exec Command="dotnet tool list -g | findstr ilmerge"
-              ConsoleToMsBuild="true"
               IgnoreExitCode="true"
               Condition="@(OtherDlls->Count()) &gt; 0">
             <Output TaskParameter="ConsoleOutput" PropertyName="ILMergeInstalled"/>

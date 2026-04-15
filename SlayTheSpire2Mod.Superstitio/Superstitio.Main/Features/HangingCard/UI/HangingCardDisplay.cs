@@ -1,7 +1,5 @@
 ﻿using Godot;
-using Godot.NativeInterop;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 
@@ -15,62 +13,11 @@ namespace Superstitio.Main.Features.HangingCard.UI;
 /// </summary>
 public delegate HangingCardState HangingCardState(double delta);
 
-public partial class HangingCardDisplay
-{
-    // --- 手动绑定：方法名常量 ---
-    public new class MethodName : Node2D.MethodName
-    {
-        public new static readonly StringName _Ready = "_Ready";
-        public new static readonly StringName _Process = "_Process";
-        public new static readonly StringName _ExitTree = "_ExitTree";
-    }
-
-    // --- 手动绑定：HasGodotClassMethod ---
-    // 引擎在决定是否调用 _Process 之前，会先问这个
-    protected override bool HasGodotClassMethod(in godot_string_name method)
-    {
-        if (method == MethodName._Ready) return true;
-        if (method == MethodName._Process) return true;
-        if (method == MethodName._ExitTree) return true;
-        return base.HasGodotClassMethod(in method);
-    }
-
-    // --- 手动绑定：InvokeGodotClassMethod ---
-    // 引擎真正分发调用的入口
-    protected override bool InvokeGodotClassMethod(in godot_string_name method, NativeVariantPtrArgs args, out godot_variant ret)
-    {
-        if (method == MethodName._Ready && args.Count == 0)
-        {
-            this._Ready();
-            ret = default;
-            return true;
-        }
-
-        if (method == MethodName._Process && args.Count == 1)
-        {
-            // 将 Variant 参数转换为 double delta
-            this._Process(VariantUtils.ConvertTo<double>(in args[0]));
-            ret = default;
-            return true;
-        }
-
-        if (method == MethodName._ExitTree && args.Count == 0)
-        {
-            this._ExitTree();
-            ret = default;
-            return true;
-        }
-
-        return base.InvokeGodotClassMethod(in method, args, out ret);
-    }
-}
-
 public partial class HangingCardDisplay : Node2D
 {
     // --- 属性区域 ---
-
-    public HangingCardToken Token { get; private set; }
-    public HangingCardState CurrentState { get; private set; }
+    public HangingCardToken Token { get; private set; } = null!;
+    public HangingCardState CurrentState { get; private set; } = null!;
 
     public Vector2 VisualOffset { get; set; } // 用于弹起动画的额外偏移
 
@@ -94,10 +41,12 @@ public partial class HangingCardDisplay : Node2D
 
     public BobEffect Bob { get; init; } = new();
 
-    public HangingCardDisplay(HangingCardToken token)
+    public static HangingCardDisplay Create(HangingCardToken token)
     {
-        this.Token = token;
-        this.CurrentState = this.State_InQueue;
+        var display = new HangingCardDisplay();
+        display.Token = token;
+        display.CurrentState = display.State_InQueue;
+        return display;
     }
 
     public override void _Ready()

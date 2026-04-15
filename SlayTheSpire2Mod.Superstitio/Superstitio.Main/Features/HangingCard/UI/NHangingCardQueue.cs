@@ -53,7 +53,7 @@ public partial class NHangingCardQueue : Control
     /// </summary>
     public HangingCardDisplay AddCard(HangingCardToken token)
     {
-        var display = new HangingCardDisplay(token);
+        var display = HangingCardDisplay.Create(token);
         this.ActiveCards.Add(display);
         this.AddChild(display);
 

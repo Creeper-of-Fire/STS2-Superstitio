@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Godot.NET.Sdk/4.5.1">
     <!-- 通用的游戏DLL引用 -->
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->
