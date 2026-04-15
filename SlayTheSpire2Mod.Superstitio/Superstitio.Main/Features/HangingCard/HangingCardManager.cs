@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Extensions;
+using Superstitio.Main.Features.HangingCard.UI;
 
 namespace Superstitio.Main.Features.HangingCard;
 
@@ -32,6 +33,28 @@ public static class HangingCardManager
             cardReason
         );
     }
+
+    /// <summary>
+    /// 获取玩家身上所有符合条件的悬挂卡牌令牌。
+    /// </summary>
+    public static IEnumerable<TToken> GetHangingCardTokens<TToken>(Player player, Func<TToken, bool> tokenFilter)
+        where TToken : HangingCardToken
+    {
+        return player.Creature.Powers.OfType<HangingCardPower>().Select(it => it.HangingCardToken)
+            .OfType<TToken>().Where(tokenFilter);
+    }
+
+    /// <summary>
+    /// 获取卡牌的主人身上所有符合条件的悬挂卡牌令牌。
+    /// 这张卡牌需要实现 <see cref="ISimpleHangingCardHighlighter"/> 接口，然后就能自动化处理。
+    /// </summary>
+    public static IEnumerable<HangingCardToken> GetHangingCardTokens<TCard>(TCard card)
+        where TCard : CardModel, ISimpleHangingCardHighlighter
+    {
+        return card.Owner.Creature.Powers.OfType<HangingCardPower>().Select(it => it.HangingCardToken).OfType<HangingCardToken>()
+            .Where(card.TokenIsAble);
+    }
+
 
     /// <summary>
     /// 获取玩家身上所有指定类型的悬挂卡牌令牌。

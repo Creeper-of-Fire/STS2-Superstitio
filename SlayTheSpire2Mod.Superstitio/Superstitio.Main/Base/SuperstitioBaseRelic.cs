@@ -45,7 +45,7 @@ public abstract class SuperstitioBaseRelic : CustomRelicModel
 
         // 获取自定义名称逻辑
         var nameAttr = type.GetCustomAttribute<CustomImgNameAttribute>();
-        string fileName = nameAttr != null ? nameAttr.Name : type.Name;
+        string fileName = nameAttr is not null ? nameAttr.Name : type.Name;
 
         string sizeString = size switch
         {

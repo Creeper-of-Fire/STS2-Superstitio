@@ -8,6 +8,7 @@ using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -76,10 +77,11 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     {
         await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
 
-        var token = this.CreateHangingToken(async (context, _) =>
-        {
-            await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner);
-        });
+        var token = this.CreateHangingToken(
+            async (context, _) => { await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner); },
+            hangGlowType: HangGlowType.Good,
+            effectTargetType: TargetType.Self
+        );
         await HangingCardManager.HangCard(token, this);
     }
 }

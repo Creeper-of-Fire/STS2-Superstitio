@@ -30,7 +30,7 @@ public partial class NHangingCardQueue : Control
 
     public static NHangingCardQueue EnsureCreated()
     {
-        if (Instance != null)
+        if (Instance is not null)
             return Instance;
 
         Instance = new NHangingCardQueue
@@ -72,7 +72,7 @@ public partial class NHangingCardQueue : Control
     public void RemoveCard(HangingCardToken token)
     {
         var display = this.ActiveCards.FirstOrDefault(d => d.Token == token);
-        if (display == null) return;
+        if (display is null) return;
 
         this.ActiveCards.Remove(display);
 

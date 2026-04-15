@@ -129,7 +129,7 @@ public class SuperstitioModConfig : SimpleModConfig
 
     private static void SetRowDisabled(NConfigOptionRow? row, bool disabled)
     {
-        if (row == null || !GodotObject.IsInstanceValid(row)) return;
+        if (row is null || !GodotObject.IsInstanceValid(row)) return;
 
         var control = row.SettingControl;
         if (!GodotObject.IsInstanceValid(control)) return;

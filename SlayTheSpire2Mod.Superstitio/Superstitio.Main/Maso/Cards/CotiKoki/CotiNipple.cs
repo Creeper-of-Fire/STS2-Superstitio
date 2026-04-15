@@ -46,7 +46,7 @@ public class CotiNipple() : MasoBaseCard(new CardInitMessage
         for (int i = 0; i < this.DynamicVars.Repeat.IntValue; i++)
         {
             var target = this.Owner.RunState.Rng.CombatTargets.NextItem(this.CombatState.HittableEnemies);
-            if (target == null)
+            if (target is null)
                 continue;
 
             await DamageCmd.AutoAttack(this, target, forceAttackTarget: true).Execute(choiceContext);

@@ -32,7 +32,7 @@ public abstract record AutoHangingCardToken(
     /// <param name="context">玩家选择上下文</param>
     /// <param name="cardPlay">打出的卡牌信息</param>
     /// <returns>Task</returns>
-    protected virtual Task OnTrigger(PlayerChoiceContext context, CardPlay cardPlay)
+    public virtual Task OnTrigger(PlayerChoiceContext context, CardPlay cardPlay)
         => Task.CompletedTask;
 
     /// <summary>
@@ -41,7 +41,7 @@ public abstract record AutoHangingCardToken(
     /// <param name="context">玩家选择上下文</param>
     /// <param name="cardPlay">最后一次触发的卡牌信息</param>
     /// <returns>Task</returns>
-    protected virtual Task OnEnd(PlayerChoiceContext context, CardPlay cardPlay)
+    public virtual Task OnEnd(PlayerChoiceContext context, CardPlay cardPlay)
         => Task.CompletedTask;
 
     /// <summary>

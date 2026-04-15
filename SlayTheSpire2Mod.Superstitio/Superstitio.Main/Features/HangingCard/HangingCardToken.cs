@@ -84,7 +84,7 @@ public abstract record HangingCardToken(
     /// <summary>
     /// 挂起卡牌的视觉效果
     /// </summary>
-    private HangingCardTokenDisplayer? Displayer { get; set; }
+    public HangingCardTokenDisplayer? Displayer { get; set; }
 
     /// <summary>
     /// 挂起卡牌
@@ -142,12 +142,7 @@ public abstract record HangingCardToken(
     /// <summary>
     /// 根据“当前悬停的手牌”和“当前指向的目标”，计算悬挂卡的视觉状态。
     /// </summary>
-    public virtual TriggerContext GetTriggerContext(CardModel hoveredCard, NCreature? hoveredCreature)
-    {
-        if (hoveredCreature is null)
-            return new TriggerContext(HangGlowType.None, hoveredCreature);
-        return new TriggerContext(HangGlowType.Special, hoveredCreature);
-    }
+    public abstract HangingTriggerResult? GetTriggerResult(HangingTriggerContext context);
 }
 
 /// <summary>

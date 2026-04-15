@@ -40,7 +40,7 @@ public static class LocVariantManager
         }
 
         using var dir = DirAccess.Open(variantDir);
-        if (dir == null)
+        if (dir is null)
         {
             Log.Error($"[LocVariant] Failed to open directory: {variantDir}");
             return;
@@ -83,7 +83,7 @@ public static class LocVariantManager
             return false;
 
         using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-        if (file == null)
+        if (file is null)
             return false;
 
         try

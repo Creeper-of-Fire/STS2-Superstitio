@@ -24,6 +24,11 @@ namespace Superstitio.Main.Lupa.Cards.Base;
  *
  * Sfw.Title = "蓄势待发"
  *
+ * Sfw.Description= """
+ * 获得{Felix:diff()}点[pink]狂热[/pink]。
+ * {CardHangingDescription}
+ * """
+ *
  * Sfw.Flavor = "蓄势待发，只待一击。"
  */
 public class Masturbate() : LupaBaseCard(new CardInitMessage

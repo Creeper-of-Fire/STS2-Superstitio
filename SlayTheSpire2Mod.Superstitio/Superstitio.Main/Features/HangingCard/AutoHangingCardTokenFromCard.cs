@@ -21,14 +21,18 @@ public static class IWithHangingConfigCardExtensions
     /// <param name="card">当前卡牌实例。</param>
     /// <param name="hangingAction">当挂起条件触发时执行的异步动作。</param>
     /// <param name="resultPileType">当挂起结束时，返回什么地方，可为空，此时默认为 <see cref="SuperstitioBaseCard.BaseResultPileType"/></param>
+    /// <param name="hangGlowType"></param>
+    /// <param name="effectTargetType"></param>
     /// <returns>一个配置好的 <see cref="AutoHangingCardTokenWithConfig"/> 实例。</returns>
-    public static AutoHangingCardTokenWithConfig CreateHangingToken<TCard>(
+    public static AutoHangingCardTokenFromCard<TCard> CreateHangingToken<TCard>(
         this TCard card,
         Func<PlayerChoiceContext, CardPlay, Task> hangingAction,
-        PileType? resultPileType = null
+        PileType? resultPileType = null,
+        HangGlowType? hangGlowType = null,
+        TargetType? effectTargetType = null
     ) where TCard : SuperstitioBaseCard, IWithHangingConfigCard
     {
-        return card.CreateHangingToken(hangingAction, resultPileType ?? card.BaseResultPileType);
+        return card.CreateHangingToken(hangingAction, resultPileType ?? card.BaseResultPileType, hangGlowType, effectTargetType);
     }
 
     /// <summary>
@@ -38,19 +42,41 @@ public static class IWithHangingConfigCardExtensions
     /// <param name="card">当前卡牌实例。</param>
     /// <param name="hangingAction">当挂起条件触发时执行的异步动作。</param>
     /// <param name="resultPileType">当挂起结束时，返回什么地方</param>
+    /// <param name="hangGlowType"></param>
+    /// <param name="effectTargetType"></param>
     /// <returns>一个配置好的 <see cref="AutoHangingCardTokenWithConfig"/> 实例。</returns>
-    public static AutoHangingCardTokenWithConfig CreateHangingToken<TCard>(
+    public static AutoHangingCardTokenFromCard<TCard> CreateHangingToken<TCard>(
         this TCard card,
         Func<PlayerChoiceContext, CardPlay, Task> hangingAction,
-        PileType resultPileType
+        PileType resultPileType,
+        HangGlowType? hangGlowType = null,
+        TargetType? effectTargetType = null
     ) where TCard : CardModel, IWithHangingConfigCard
     {
-        return new AutoHangingCardTokenFromCard<TCard>(card, resultPileType)
+        var hangingToken = new AutoHangingCardTokenFromCard<TCard>(card, resultPileType)
         {
             // 如果卡牌在打出后挂起自身，则手动禁用“挂起后，由 Token 手动从战斗中移除"功能，转而让游戏自动在打出后送入 ResultPileType
             ShouldManualRemoveFromBattle = !card.HangingSelfAfterPlay,
             HangingAction = hangingAction
         };
+
+        if (effectTargetType is not null)
+        {
+            hangingToken = hangingToken with
+            {
+                TargetType = effectTargetType.Value
+            };
+        }
+
+        if (hangGlowType is not null)
+        {
+            hangingToken = hangingToken with
+            {
+                HangGlowType = hangGlowType.Value
+            };
+        }
+
+        return hangingToken;
     }
 }
 
@@ -116,8 +142,10 @@ public record AutoHangingCardTokenFromCard<TCard>(
     }
 
     /// <inheritdoc />
-    protected override TriggerContext CreateTriggerContext(CardModel hoveredCard, NCreature? hoveredCreature)
+    protected override HangingTriggerResult CreateTriggerResult(HangingTriggerContext context)
     {
-        return new TriggerContext(this.HangGlowType, this.ChooseTarget(hoveredCreature));
+        if (!context.IsTargetingActive)
+            return new HangingTriggerResult(this.HangGlowType, null);
+        return new HangingTriggerResult(this.HangGlowType, this.ChooseTarget(context.HoveredCreature));
     }
 }

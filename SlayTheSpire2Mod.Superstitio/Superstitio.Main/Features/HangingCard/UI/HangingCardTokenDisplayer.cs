@@ -32,16 +32,47 @@ public enum HangGlowType
     /// <summary>
     /// 特殊效果
     /// </summary>
-    Special
+    Special,
+
+    /// <summary>
+    /// 预览效果
+    /// </summary>
+    Preview,
+
+    /// <summary>
+    /// 仅仅是计数推进，不触发实际效果
+    /// </summary>
+    ProgressCount
 }
 
 /// <summary>
 /// 触发上下文：记录当前触发状态的所有细节
 /// </summary>
-public record struct TriggerContext(
+public record struct HangingTriggerResult(
     HangGlowType GlowType, // 该发什么光
-    NCreature? TargetToFollow // 我现在应该飞向哪个生物（如果有）
+    NCreature? TargetCreature // 我现在应该飞向哪个生物（如果有）
 );
+
+/// <summary>
+/// 传递给悬挂卡牌的触发上下文，包含当前游戏状态信息
+/// </summary>
+public class HangingTriggerContext
+{
+    /// <summary>
+    /// 当前悬停的手牌
+    /// </summary>
+    public required CardModel HoveredCard { get; init; }
+
+    /// <summary>
+    /// 当前悬停的生物（怪物/玩家）
+    /// </summary>
+    public required NCreature? HoveredCreature { get; init; }
+
+    /// <summary>
+    /// 是否处于目标选择状态，即：是否把牌拖出来，并且屏幕上有框框框住了一些生物/或者有一个箭头
+    /// </summary>
+    public required bool IsTargetingActive { get; init; }
+}
 
 public class HangingCardTokenDisplayer
 {
@@ -141,21 +172,39 @@ public class HangingCardTokenDisplayer
             return;
         }
 
-        // 询问 Token：基于当前的“手牌+目标”组合，我该处于什么状态？
-        var context = this.Token.GetTriggerContext(this.CurrentHoveredCard, this.CurrentHoveredCreature);
-
-        // 设置辉光意图
-        this.Display.StartGlow(context.GlowType);
-
         // 统一的选择激活状态判定：
         // 1. NTargetManager 认为在选目标 (单体牌)
         // 2. 我们的钩子认为在选目标 (全体/对己/AOE)
         bool selectionActive = NTargetManager.Instance.IsInSelection || HangingSelectionBridge.IsAnyTargetingActive;
 
-        // 设置位置意图（仅在玩家处于目标选择状态时允许跟随）
-        if (context.TargetToFollow is not null && selectionActive)
+        var context = new HangingTriggerContext
         {
-            this.Display.Command_Follow(context.TargetToFollow);
+            HoveredCard = this.CurrentHoveredCard,
+            HoveredCreature = this.CurrentHoveredCreature,
+            IsTargetingActive = selectionActive
+        };
+
+        var triggerResult = this.Token.GetTriggerResult(context);
+
+        if (context.HoveredCard is IHangingCardHighlighter highlighter)
+        {
+            triggerResult = highlighter.ChangeTriggerResult(this.Token, context, triggerResult);
+        }
+
+        if (triggerResult is null)
+        {
+            this.Display.EndGlow();
+            this.Display.Command_Return();
+            return;
+        }
+
+        // 设置辉光意图
+        this.Display.StartGlow(triggerResult.Value.GlowType);
+
+        // 设置位置意图（仅在玩家处于目标选择状态时允许跟随）
+        if (triggerResult.Value.TargetCreature is not null)
+        {
+            this.Display.Command_Follow(triggerResult.Value.TargetCreature);
         }
         else
         {

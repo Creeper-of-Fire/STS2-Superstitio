@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using Superstitio.Main.Base;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Felix;
@@ -31,7 +32,7 @@ public class CalmDown() : LupaBaseCard(new CardInitMessage
     Type = CardType.Skill,
     Rarity = CardRarity.Common,
     Target = TargetType.Self
-})
+}), ISimpleHangingCardHighlighter, ICanDoStuffWithHangingQueue
 {
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade => [];
@@ -44,9 +45,16 @@ public class CalmDown() : LupaBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc />
+    public Func<HangingCardToken, bool> TokenIsAble => it => it is AutoHangingCardTokenWithConfig;
+
+    /// <inheritdoc />
+    public Func<HangingCardToken, HangingTriggerContext, HangingTriggerResult?, HangingTriggerResult?> 
+        SimpleChangeTriggerResult => (_, _, _) => new HangingTriggerResult(HangGlowType.Preview, null);
+
+    /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var cardTokens = HangingCardManager.GetHangingCardTokens<AutoHangingCardTokenWithConfig>(this.Owner).ToList();
+        var cardTokens = HangingCardManager.GetHangingCardTokens(this).ToList();
         int drawCount = cardTokens.Count;
         foreach (var cardToken in cardTokens)
         {

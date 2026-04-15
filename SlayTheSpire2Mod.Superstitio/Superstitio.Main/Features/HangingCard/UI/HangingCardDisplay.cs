@@ -133,7 +133,7 @@ public partial class HangingCardDisplay : Node2D
         if (this.NeedsVisualUpdate)
         {
             var model = this.CardNode.Model;
-            if (model != null)
+            if (model is not null)
             {
                 var originalUpgradePreviewType = model.UpgradePreviewType;
 
@@ -185,6 +185,8 @@ public partial class HangingCardDisplay : Node2D
             HangGlowType.Good => Colors.Green,
             HangGlowType.Bad => Colors.Red,
             HangGlowType.Special => Colors.Gold,
+            HangGlowType.Preview => Colors.PowderBlue,
+            HangGlowType.ProgressCount => Colors.DeepSkyBlue,
             _ => new Color(1, 1, 1, 0) // 透明
         };
 
@@ -353,7 +355,7 @@ public partial class HangingCardDisplay : Node2D
         if (!this.AreTipsShowing)
         {
             this.AreTipsShowing = true;
-            if (this.CardNode.Model != null)
+            if (this.CardNode.Model is not null)
             {
                 this.ActiveTips = NHoverTipSet.CreateAndShow(this.Hitbox, this.CardNode.Model.HoverTips);
             }
@@ -362,7 +364,7 @@ public partial class HangingCardDisplay : Node2D
         // 由于提示框内部的 FollowOffset 是静态的，
         // 且 SetAlignment 不考虑 Node2D 引起的全局缩放变化，
         // 我们每帧手动重新校准一次对齐。
-        if (this.ActiveTips == null)
+        if (this.ActiveTips is null)
             return;
 
         // 计算视觉边界
@@ -404,7 +406,7 @@ public partial class HangingCardDisplay : Node2D
 
     private void CreateHoverTips()
     {
-        if (this.CardNode.Model != null)
+        if (this.CardNode.Model is not null)
         {
             var tips = NHoverTipSet.CreateAndShow(this.Hitbox, this.CardNode.Model.HoverTips);
             tips.SetAlignment(this.Hitbox, HoverTipAlignment.Right);
@@ -414,6 +416,34 @@ public partial class HangingCardDisplay : Node2D
     private void ClearHoverTips()
     {
         NHoverTipSet.Remove(this.Hitbox);
+    }
+
+    private float ProgressTimer { get; set; } = 0;
+
+    /// <summary>
+    /// 状态：计数推进反馈（原地缩放脉冲）
+    /// </summary>
+    public HangingCardState State_Progressing(double delta)
+    {
+        // 简单的缩放脉冲逻辑
+        this.ProgressTimer += (float)delta;
+        float duration = 0.25f;
+        float t = Mathf.Clamp(this.ProgressTimer / duration, 0, 1);
+
+        // 缩放曲线：0 -> 1.3 -> 1
+        float curve = Mathf.Sin(t * Mathf.Pi);
+        float currentIdleScale = IdleScale; // 或者是当前 InQueue 的目标缩放
+        this.DisplayScale = currentIdleScale + (curve * 0.15f);
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
+
+        if (t >= 1.0f)
+        {
+            this.ProgressTimer = 0;
+            this.TargetStateIntent = this.State_InQueue;
+            return this.State_InQueue;
+        }
+
+        return this.State_Progressing;
     }
 
 
@@ -459,21 +489,30 @@ public partial class HangingCardDisplay : Node2D
     /// </summary>
     protected HangingCardState State_Hitting(double delta)
     {
-        if (this.TargetStateIntent != this.State_Hitting)
-            return this.TargetStateIntent;
-
+        // 无论 TargetStateIntent 如何，这个动作不会被打断。
         // 快速插值到目标点
-        if (!IsInstanceValid(this.FollowTarget)) return this.State_Returning;
+        if (!IsInstanceValid(this.FollowTarget))
+        {
+            this.HitCompletionSource?.TrySetResult();
+            this.HitCompletionSource = null;
+            this.TargetStateIntent = this.State_Returning;
+            return this.State_Returning;
+        }
 
         var targetPos = this.GetTargetCenter(this.FollowTarget, HitLerpFactor);
 
         this.GlobalPosition = this.GlobalPosition.Lerp(targetPos, (float)delta * MoveSpeedHit);
 
         // 如果足够近，产生冲击感并返回
-        if (this.GlobalPosition.DistanceTo(this.FollowTarget.GlobalPosition) < 20f)
+        if (this.GlobalPosition.DistanceTo(targetPos) < 20f)
         {
             // 这里可以触发特定的卡牌闪光特效
             this.CardNode.CardHighlight.AnimShow();
+
+            this.HitCompletionSource?.TrySetResult();
+            this.HitCompletionSource = null;
+
+            this.TargetStateIntent = this.State_Returning;
             return this.State_Returning;
         }
 
@@ -564,13 +603,65 @@ public partial class HangingCardDisplay : Node2D
         this.TargetStateIntent = this.State_Returning;
     }
 
+    private TaskCompletionSource? HitCompletionSource { get; set; }
+
     /// <summary>
     /// 攻击指定对象
     /// </summary>
-    public void Command_Hit(NCreature target)
+    public async Task Command_HitAndWait(
+        HangingTriggerResult hangingTriggerResult,
+        float timeoutSeconds = 2f,
+        CancellationToken cancellationToken = default
+    )
     {
-        this.FollowTarget = target;
-        this.TargetStateIntent = this.State_Hitting;
+        // 如果当前正在撞击，先取消并等待一帧
+        if (this.CurrentState == this.State_Hitting)
+        {
+            this.HitCompletionSource?.TrySetCanceled(cancellationToken);
+            await Task.Yield(); // 让状态机有机会处理取消
+        }
+
+        this.HitCompletionSource = new TaskCompletionSource();
+
+        // 快速回到队列，以便发起攻击
+        this.GlobalPosition = this.QueuePosition;
+        this.DisplayScale = IdleScale;
+        this.CardNode.Scale = Vector2.One * this.DisplayScale;
+
+        this.FollowTarget = hangingTriggerResult.TargetCreature;
+        this.PreviewTarget = hangingTriggerResult.TargetCreature;
+        this.TargetGlow = hangingTriggerResult.GlowType;
+        this.TargetStateIntent = this.State_Following;
+        this.CurrentState = this.State_Hitting; // 立刻改变状态
+        try
+        {
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeoutSeconds), cancellationToken);
+            var completedTask = await Task.WhenAny(this.HitCompletionSource.Task, timeoutTask);
+            if (completedTask == timeoutTask)
+            {
+                // 超时：强制完成并返回队列
+                this.HitCompletionSource.TrySetResult();
+                this.Command_Return();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            this.HitCompletionSource.TrySetCanceled(cancellationToken);
+            this.Command_Return();
+            throw;
+        }
+        finally
+        {
+            this.HitCompletionSource = null;
+        }
+    }
+
+    public async Task Command_Progress()
+    {
+        this.ProgressTimer = 0;
+        this.CurrentState = this.State_Progressing;
+        // 等待动画时间
+        await Task.Delay(250);
     }
 
     /// <summary>

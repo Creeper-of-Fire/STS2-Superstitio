@@ -34,6 +34,6 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="assets\" />
+        <Folder Include="assets\**" />
     </ItemGroup>
 </Project>
