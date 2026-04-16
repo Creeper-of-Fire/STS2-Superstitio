@@ -1,4 +1,17 @@
 ﻿#!/usr/bin/env python3
+# pack_pck.py - 资源/构建结果打包器
+#
+# 功能：将暂存区的文件打包成 Godot 的 PCK 包，并生成 mod.json 清单文件
+# 依赖：需要 GodotPCKExplorer 工具
+#
+# 使用示例（命令行）：
+#   python pack_pck.py --mod-toml mod.toml --output-pck output/mod.pck --pck-src .pck_staging
+#
+# 环境变量 (.env 文件)：
+#   GODOT_PCK_EXPLORER   - GodotPCKExplorer.exe 的路径
+#   STS2_GAME_DIR        - 游戏目录（用于 --copy-to-game）
+#   COPY_TO_GAME         - 是否自动复制到游戏目录 (true/false)
+#
 # Contributed by: Creeper-of-Fire
 # GitHub: https://github.com/Creeper-of-Fire
 import os

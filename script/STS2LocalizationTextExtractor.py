@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
-# -----------------------------------------------------------------------------
-# STS2 Localization Text Extractor
-# 🚀 监控 Godot 日志，自动提取并分类由 BaseLib 监测并报告的缺失本地化项
+# STS2 Localization Text Extractor - 本地化文本提取器
+#
+# 功能：监控游戏日志，自动提取 BaseLib 报告的缺失本地化项，生成待翻译文件
+#
+# 使用场景：
+#   1. 启动游戏并加载模组
+#   2. 触发游戏内各种文本（卡牌描述、UI文字等）
+#   3. 本工具自动捕获缺失的本地化 Key
+#   4. 生成 xxx_missing.json 或 xxx_missing.toml 文件供翻译
+#
+# 使用示例：
+#   python STS2LocalizationTextExtractor.py           # JSON 模式（默认）
+#   python STS2LocalizationTextExtractor.py --toml    # TOML 模式（推荐，支持模组分包）
+#
+# 环境变量 (.env 文件)：
+#   STS2_LOG_FILE              - Godot 日志文件路径 (通常为 AppData/Roaming/Godot/logs/*.log)
+#   STS2_LOC_EXPORT_OUTPUT_DIR - 导出文件的输出目录
+#
+# 输出格式：
+#   JSON 模式：输出 {table}_missing.json
+#   TOML 模式：输出 {mod_name}/{table}_missing.toml，支持按模组分类
 #
 # Contributed by: Creeper-of-Fire
 # GitHub: https://github.com/Creeper-of-Fire
-#
-# 功能说明:
-# 1. 自动从日志提取由 BaseLib 的 MissingLocPatch 捕获并生成的缺失 Key 警告。
-# 2. 支持 JSON/TOML 导出（--toml 模式）。
-# 3. TOML 模式支持模组分包（Mod-Section.Key 结构）。
-# -----------------------------------------------------------------------------
 
 import os
 import sys
@@ -63,7 +75,7 @@ class LocalizationExtractor:
         # JSON 模式下: Dict[table, Dict[key, str]]
         # TOML 模式下: Dict[(mod_name, table), Dict[section, Dict[key, str]]]
         self.missing_texts: Dict[Any, Any] = {}
-        
+
         self.last_position = 0
         self.running = True
 
@@ -95,7 +107,7 @@ class LocalizationExtractor:
                     with open(toml_file, 'r', encoding='utf-8') as f:
                         # --- 使用 .unwrap() 获取纯 Python 字典 ---
                         raw_data = tomlkit.load(f)
-                        data = raw_data.unwrap() # 丢弃所有 tomlkit 的空行/格式对象
+                        data = raw_data.unwrap()  # 丢弃所有 tomlkit 的空行/格式对象
 
                         dict_key = (mod_name, table_name)
                         if dict_key not in self.missing_texts:
@@ -154,7 +166,7 @@ class LocalizationExtractor:
                 section = inflection.camelize(section.lower(), uppercase_first_letter=True)
             else:
                 rest_key = rest
-        
+
             # 3. 将 actual_key 也转换为 camelCase
             actual_key = inflection.camelize(rest_key.lower(), uppercase_first_letter=True)
 
@@ -202,7 +214,7 @@ class LocalizationExtractor:
                 self.recent_findings.append(item)
 
         return is_new_discovery
-    
+
     def open_output_dir(self):
         """跨平台打开文件夹"""
         try:

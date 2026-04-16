@@ -1,4 +1,29 @@
-﻿from concurrent.futures import ThreadPoolExecutor, as_completed
+﻿#!/usr/bin/env python3
+# assets_processor.py - 资源处理管线
+# 
+# 功能说明：
+#   将 mod 项目中的各类资源（图片、本地化文本、音频等）处理并暂存到 .pck_staging 目录，
+#   准备后续打包成 PCK 文件。
+#
+# 使用方式：
+#   通常由 build_mod.py 自动调用，不需要单独运行。
+#
+# 支持处理的资源类型：
+#   - localization/  : 本地化文本（TOML -> JSON）
+#   - images/        : 图片文件（PNG -> .ctex + .import）
+#   - audio/         : 音频文件（直接复制）
+#   - vfx/           : 特效文件（直接复制）
+#   - 其他文件夹     : 通用文件（直接复制）
+#
+# 特性：
+#   - 增量更新：只处理修改过的文件
+#   - 孤儿清理：自动删除不再使用的陈旧文件
+#   - 并行处理：图片转换使用线程池加速
+#
+# Contributed by: Creeper-of-Fire
+# GitHub: https://github.com/Creeper-of-Fire
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from rich.progress import (
     Progress,
     SpinnerColumn,

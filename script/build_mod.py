@@ -1,5 +1,21 @@
 ﻿#!/usr/bin/env python3
 # build_mod.py - 统一的模组构建脚本
+#
+# 功能：模组构建的主入口，统筹编译、资源处理、打包、安装、运行等完整流程
+#
+# 使用示例：
+#   python build_mod.py                             # 默认完整流程：构建 -> 资源处理 -> 安装
+#   python build_mod.py --build-only                # 仅构建 DLL 和处理资源
+#   python build_mod.py --pack-only                 # 仅处理资源并打包 PCK
+#   python build_mod.py --install-only              # 仅安装（打包并复制到游戏目录）
+#   python build_mod.py --clean xxx                 # 构建前清理构建产物
+#   python build_mod.py --kill xxx                  # 构建前杀死游戏进程
+#   python build_mod.py --run xxx                   # 构建后启动游戏
+#   python build_mod.py --loc-extract --toml xxx    # 构建后额外运行本地化文本提取器，并且以toml格式收集内容
+#
+# 环境变量 (.env 文件)：
+#   STS2_GAME_DIR        - 杀戮尖塔2游戏安装目录
+#
 # Contributed by: Creeper-of-Fire
 # GitHub: https://github.com/Creeper-of-Fire
 
@@ -46,14 +62,14 @@ class ModBuilder:
 
         return base_output
 
-    def _get_mod_name(self):
+    def _get_mod_name(self) -> str:
         """从 mod.toml 获取模组名称"""
         mod_toml = self.solution_dir / "mod.toml"
         if mod_toml.exists():
             with open(mod_toml, 'rb') as f:
                 data = tomllib.load(f)
-                return data.get('id', 'Superstitio')
-        return 'Superstitio'
+                return data['id']
+        raise FileNotFoundError(f"未找到解决方案目录“{self.solution_dir}”下的 mod.toml文件")
 
     def _get_game_dir(self):
         """从环境变量获取游戏目录"""
@@ -159,7 +175,7 @@ class ModBuilder:
 
         if not wait:
             return True
-        
+
         print("   等待游戏退出...")
         try:
             process.wait()

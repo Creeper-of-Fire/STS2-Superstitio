@@ -1,3 +1,29 @@
+#!/usr/bin/env python3
+# process_localization.py - 本地化处理器
+#
+# 功能：将 TOML 格式的本地化文件处理并合并为游戏可用的 JSON 格式
+#
+# 目录结构示例：
+#   assets/localization/
+#     zh-CN/
+#       cards.toml      # 卡牌本地化
+#       powers.toml     # 能力本地化
+#     en-US/
+#       cards.toml
+#       powers.toml
+#
+# 处理流程：
+#   1. 聚合同语言下的所有 TOML 文件
+#   2. 分离变体内容 (sfw/nsfw/guro 到独立子目录)
+#   3. 提取卡牌中的 power 字段到独立的 powers 分类
+#   4. 添加 ModID 前缀到所有键名
+#   5. 处理继承链 (sfw -> nsfw -> guro 逐级覆盖)
+#   6. 输出 JSON 文件
+#
+# 调用方式：
+#   from process_localization import process_localization
+#   process_localization(assets_dir="assets", mod_id="MyMod", output_dir=".pck_staging")
+#
 # Contributed by: Creeper-of-Fire
 # GitHub: https://github.com/Creeper-of-Fire
 

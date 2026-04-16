@@ -1,7 +1,25 @@
-﻿"""
-png2ctex.py - PNG转Godot 4.5 .ctex格式
-基于BSchneppe (benedikt.schneppe+resume@gmail.com) 逆向工程得到的格式而实现
-"""
+﻿#!/usr/bin/env python3
+# png2ctex.py - PNG转Godot 4.5 .ctex格式
+#
+# 功能：将 PNG 图片转换为 Godot 4.5 的 .ctex 纹理格式，并生成 .import 元数据文件
+#
+# 使用示例：
+#   from png2ctex import CtexConverter
+#   
+#   # 方式1：直接转换
+#   ctex_data, ctex_name = CtexConverter.convert(Path("card.png"), "res://MyMod/images/card.png")
+#   
+#   # 方式2：一站式获取需要打包的文件条目
+#   entries = CtexConverter.convert_and_get_entries(Path("card.png"), "MyMod", "images/card.png")
+#   # entries = [(虚拟路径, 数据), ...] 包含 .ctex 和 .import 两个文件
+#
+# 命令行测试：
+#   python png2ctex.py card.png
+#
+#
+# 基于BSchneppe (benedikt.schneppe+resume@gmail.com) 逆向工程得到的格式而实现
+# Contributed by: Creeper-of-Fire
+# GitHub: https://github.com/Creeper-of-Fire
 
 from PIL import Image
 import hashlib
