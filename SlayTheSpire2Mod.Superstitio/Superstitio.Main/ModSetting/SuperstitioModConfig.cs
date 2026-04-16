@@ -122,7 +122,7 @@ public class SuperstitioModConfig : SimpleModConfig
         // 只有开启了 NSFW 总开关，下面的才可用
         SetRowDisabled(NsfwImgRow, !nsfwAllowed);
         SetRowDisabled(GuroContentRow, !nsfwAllowed);
-        
+
         // 只有开启了总开关且开启了猎奇内容，图片开关才可用
         SetRowDisabled(GuroImgRow, !guroUnlocked);
     }
@@ -148,6 +148,8 @@ public class SuperstitioModConfig : SimpleModConfig
     /// </summary>
     public static void ApplyLocVariant()
     {
+        if (!LocVariantManager.IsInitLocVariantAfterModelDbInit)
+            return;
         var variant = GetCurrentVariant();
         LocVariantManager.ApplyVariant(variant, Plugin.ModName);
     }

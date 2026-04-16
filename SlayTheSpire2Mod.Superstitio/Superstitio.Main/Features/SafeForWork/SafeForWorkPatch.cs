@@ -14,6 +14,8 @@ namespace Superstitio.Main.Features.SafeForWork;
 
 public static class LocVariantManager
 {
+    public static bool IsInitLocVariantAfterModelDbInit { get; set; }
+    
     public enum LocVariant
     {
         Sfw,
@@ -115,6 +117,7 @@ static class ModelDbInit_LocVariantPatch
     [HarmonyPostfix]
     static void Postfix()
     {
+        LocVariantManager.IsInitLocVariantAfterModelDbInit = true;
         SuperstitioModConfig.ApplyLocVariant();
     }
 }

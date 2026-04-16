@@ -35,7 +35,7 @@ public partial class NHangingCardQueue : Control
 
         Instance = new NHangingCardQueue
         {
-            Name = "HangingCardQueue",
+            Name = nameof(NHangingCardQueue),
             // 默认放在屏幕底部中央或你喜欢的位置
             AnchorLeft = 0.5f,
             AnchorRight = 0.5f,

@@ -1131,10 +1131,12 @@ public class GangBang() : LupaBaseCard(new CardInitMessage
  * Title = ""
  *
  * Description = """
- * 获得 **5 (8)** 临时生命。移除场上所有**妊娠状态**，每移除一个，再获得一次格挡。消耗。
+ * 获得 **5 (8)** 临时生命。移除场上所有**妊娠状态**，每移除一个，再获得一次临时生命。消耗。
  * """
  *
- * Flavor = ""
+ * Flavor = "重获新生吧。"
+ *
+ * Sfw.Title = "仪式启动"
  */
 public class GiveBirth() : LupaBaseCard(new CardInitMessage
 {
@@ -1157,13 +1159,110 @@ public class GiveBirth() : LupaBaseCard(new CardInitMessage
 }
 
 /**
- * Title = ""
+ * Title = "鱼人变形"
+ *
+ * Description = """
+ * 回合开始时，获得 1 层 superstitiomod:窒息 。
+ * """
+ *
+ * Flavor = "陆，陆地，要喘不过气来了~❤"
+ *
+ * Sfw.Title = "火元素变形"
+ */
+public class FishGirlMode() : LupaBaseCard(new CardInitMessage
+{
+    BaseCost = -2,
+    Type = CardType.Power,
+    Rarity = CardRarity.Token,
+    Target = TargetType.Self
+})
+{
+    /// <inheritdoc />
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+        [];
+
+    /// <inheritdoc />
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        // TODO: 实现卡牌效果
+        await Task.CompletedTask;
+    }
+}
+
+/**
+ * Title = "咔咔变形"
+ *
+ * Description = """
+ * 回合开始时，获得 3 力量 。
+ * """
+ *
+ * Flavor = "Kakaa~~"
+ */
+public class KakaaGirlMode() : LupaBaseCard(new CardInitMessage
+{
+    BaseCost = -2,
+    Type = CardType.Power,
+    Rarity = CardRarity.Token,
+    Target = TargetType.Self
+})
+{
+    /// <inheritdoc />
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+        [];
+
+    /// <inheritdoc />
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        // TODO: 实现卡牌效果
+        await Task.CompletedTask;
+    }
+}
+
+/**
+ * Title = "史莱姆变形"
+ *
+ * Description = """
+ * 回合开始时，获得 2 superstitiomod:史莱姆韧性 。(下次受到的伤害减半）
+ * """
+ *
+ * Flavor = "史莱姆分裂~★"
+ */
+public class SlimeGirlMode() : LupaBaseCard(new CardInitMessage
+{
+    BaseCost = -2,
+    Type = CardType.Power,
+    Rarity = CardRarity.Token,
+    Target = TargetType.Self
+})
+{
+    /// <inheritdoc />
+    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+        [];
+
+    /// <inheritdoc />
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        // TODO: 实现卡牌效果
+        await Task.CompletedTask;
+    }
+}
+
+/**
+ * Title = "自我指慰"
  *
  * Description = """
  * **时空递归**。移除 **5 (8)** 点**腐朽**。自动打出，被消耗时，将一张复制加入手牌。
  * """
  *
- * Flavor = ""
+ * Flavor = "罢了，事已至此，先指慰一下吧。"
+ *
+ * Sfw.Title = "自我指涉"
+ *
+ * Sfw.Flavor = """
+ * YOU DESTROYED THE FABRIC OF SPACETIME
+ * [sine]你摧毁了时空结构。[/sine]
+ * 是的，你达成了本模组的可选结局之一。
+ * """
  */
 public class SelfReference() : LupaBaseCard(new CardInitMessage
 {
@@ -1193,13 +1292,19 @@ public class SelfReference() : LupaBaseCard(new CardInitMessage
 }
 
 /**
- * Title = ""
+ * Title = "情趣玩具"
  *
  * Description = """
  * 给目标装备 **2 (3)** 个随机**情趣玩具**。
  * """
  *
- * Flavor = ""
+ * Flavor = "越多越好！"
+ *
+ * Power.Description = "回合开始时，每有 1 个 #y情趣玩具 会提供 #b1 点 #y快感"
+ *
+ * Sfw.Title = "神圣旗帜"
+ *
+ * Sfw.Description = "出来漂的人都想打个好字旗。"
  */
 public class SexToy() : LupaBaseCard(new CardInitMessage
 {
@@ -1222,7 +1327,7 @@ public class SexToy() : LupaBaseCard(new CardInitMessage
 }
 
 /**
- * Title = ""
+ * Title = "共沉沦"
  *
  * Description = """
  * 给予**敌我双方** **1 (2)** 层易伤。消耗，保留。
