@@ -35,15 +35,9 @@ public class CorruptusPower() : SuperstitioBasePower(new PowerInitMessage
         if (power is not { Amount: > 0 })
             return;
 
-        var allCorruptusBufferComponents = this.CombatState.IterateHookListeners()
-            .OfType<ICorruptusBuffer>()
-            .Select(buffer => buffer.CorruptusBufferComponent)
-            .ToHashSet();
-
         try
         {
-            foreach (var it in allCorruptusBufferComponents)
-                it.IsProcessingCorruptusDamage = true;
+            this.Owner.IsProcessingCorruptusDamage = true;
 
             // 对自身造成等同于腐朽层数的伤害
             await CreatureCmd.Damage(
@@ -59,8 +53,7 @@ public class CorruptusPower() : SuperstitioBasePower(new PowerInitMessage
         }
         finally
         {
-            foreach (var it in allCorruptusBufferComponents)
-                it.IsProcessingCorruptusDamage = false;
+            this.Owner.IsProcessingCorruptusDamage = false;
         }
     }
 }

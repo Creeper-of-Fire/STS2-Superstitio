@@ -1,7 +1,9 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using Superstitio.Main.Extensions;
 
 namespace Superstitio.Main.Features.Corruptus;
 
@@ -22,6 +24,29 @@ public interface ICorruptusBuffer
 }
 
 /// <summary>
+/// 用于在 <see cref="Creature"/> 上附加临时标记的扩展字段。
+/// </summary>
+internal static class CreatureCorruptusMarkers
+{
+    /// <summary>
+    /// 用于标记特定生物是否正在处理腐朽伤害过程中的字段。
+    /// </summary>
+    private static readonly WeekField<Creature, bool> IsProcessingCorruptusDamageField = new(() => false);
+
+    extension(Creature creature)
+    {
+        /// <summary>
+        /// 获取/设置该生物当前是否正在处理腐朽伤害（用于防止其他 CorruptusBuffer 阻拦）。
+        /// </summary>
+        public bool IsProcessingCorruptusDamage
+        {
+            get => IsProcessingCorruptusDamageField.Get(creature);
+            set => IsProcessingCorruptusDamageField.Set(creature, value);
+        }
+    }
+}
+
+/// <summary>
 /// 腐朽缓冲组件。
 /// 负责将生物受到的伤害转换为腐朽能力层数，并处理腐朽伤害的触发逻辑。
 /// </summary>
@@ -29,10 +54,6 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
 {
     private ICorruptusBuffer CorruptusBuffer { get; } = corruptusBuffer;
 
-    /// <summary>
-    /// 标记是否正在处理腐朽伤害，防止递归触发。
-    /// </summary>
-    public bool IsProcessingCorruptusDamage { get; set; } = false;
 
     /// <summary>
     /// 获取拥有该组件的生物实体。
@@ -40,7 +61,7 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
     private Creature OwnerCreature => this.CorruptusBuffer.OwnerCreature;
 
     private List<Func<Task>> PendingCorruptusTasks { get; set; } = [];
-    
+
     /// <summary>
     /// 在伤害结算后期修改损失的生命值。
     /// 如果目标是拥有者且未在处理中，则将伤害量转换为腐朽层数，并抵消原伤害。
@@ -55,27 +76,24 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
         Creature? dealer,
         CardModel? cardSource)
     {
-        if (this.IsProcessingCorruptusDamage)
+        if (target != this.OwnerCreature || target.IsProcessingCorruptusDamage)
             return amount;
 
-        if (target != this.OwnerCreature)
-            return amount;
-
-        this.PendingCorruptusTasks.Add(async () => 
+        this.PendingCorruptusTasks.Add(async () =>
         {
             await CreatureCmd.TriggerAnim(target, "Hit", 0);
-            
+
             await CorruptusManager.IncreaseCorruptus(
-                target, 
-                amount, 
-                dealer, 
+                target,
+                amount,
+                dealer,
                 cardSource
             );
         });
 
         return 0M;
     }
-    
+
     /// <summary>
     /// 在伤害结算后期处理完成时，处理所有等待的腐朽应用任务。
     /// </summary>
@@ -86,7 +104,7 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
         {
             await taskFunc();
         }
-    
+
         this.PendingCorruptusTasks.Clear();
     }
 }
