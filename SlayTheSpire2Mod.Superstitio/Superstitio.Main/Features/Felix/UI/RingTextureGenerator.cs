@@ -54,7 +54,7 @@ public static class RingTextureGenerator
                 bool inAngle;
                 float endAngle = normalizedStart + fillDegrees;
                 if (endAngle > 360f)
-                    inAngle = angle >= normalizedStart || angle <= (endAngle - 360f);
+                    inAngle = angle >= normalizedStart || angle <= endAngle - 360f;
                 else
                     inAngle = angle >= normalizedStart && angle <= endAngle;
                 

@@ -2,6 +2,7 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
@@ -77,14 +78,14 @@ public partial class HangingCardDisplay : Node2D
         this.CurrentState = this.TargetStateIntent = this.State_InQueue;
 
         this.CardNode = NCard.Create(this.Token.HangingCard)!;
-        this.AddChild(this.CardNode);
+        this.AddChildSafely(this.CardNode);
 
         // TODO 加入一个计数器，这个不急，要做的还有很多
         // _counterLabel = new Label {
         //     Text = token.RemainCount.ToString(),
         //     Position = new Vector2(50, -10)
         // };
-        // AddChild(_counterLabel);
+        // AddChildSafely(_counterLabel);
 
         // --- 动态计算 Hitbox ---
         // 从 CardNode 获取原始未缩放尺寸
@@ -100,7 +101,7 @@ public partial class HangingCardDisplay : Node2D
         this.Hitbox.MouseFilter = Control.MouseFilterEnum.Pass;
         this.Hitbox.Connect(Control.SignalName.MouseEntered, Callable.From(() => this.IsMouseOver = true));
         this.Hitbox.Connect(Control.SignalName.MouseExited, Callable.From(() => this.IsMouseOver = false));
-        this.AddChild(this.Hitbox);
+        this.AddChildSafely(this.Hitbox);
     }
 
     public NCreature? PreviewTarget
@@ -253,7 +254,7 @@ public partial class HangingCardDisplay : Node2D
         // 如果方向接近水平或垂直，直接返回对应半宽/半高
         if (dx > 0.001f || dy > 0.001f)
         {
-            return (halfWidth * halfHeight) / Mathf.Sqrt(
+            return halfWidth * halfHeight / Mathf.Sqrt(
                 halfWidth * halfWidth * dy * dy +
                 halfHeight * halfHeight * dx * dx
             ) * Mathf.Sqrt(dx * dx + dy * dy);
@@ -433,7 +434,7 @@ public partial class HangingCardDisplay : Node2D
         // 缩放曲线：0 -> 1.3 -> 1
         float curve = Mathf.Sin(t * Mathf.Pi);
         float currentIdleScale = IdleScale; // 或者是当前 InQueue 的目标缩放
-        this.DisplayScale = currentIdleScale + (curve * 0.15f);
+        this.DisplayScale = currentIdleScale + curve * 0.15f;
         this.CardNode.Scale = Vector2.One * this.DisplayScale;
 
         if (t >= 1.0f)

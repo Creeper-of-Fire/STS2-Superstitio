@@ -57,7 +57,7 @@ public static class BaseLibColorCompensation
         float colorSpread = Mathf.Max(Mathf.Max(targetRgb.R, targetRgb.G), targetRgb.B)
                             - Mathf.Min(Mathf.Min(targetRgb.R, targetRgb.G), targetRgb.B);
         
-        bool shouldSkipHue = skipHueCompensation ?? (colorSpread < 0.3f);
+        bool shouldSkipHue = skipHueCompensation ?? colorSpread < 0.3f;
 
         Basis totalInvMatrix;
 

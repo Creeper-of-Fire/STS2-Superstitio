@@ -36,6 +36,7 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
     public override async Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
         await base.AfterApplied(applier, cardSource);
+        await this.CheckAndTriggerMilestones(applier, cardSource);
         if (this.Owner is { IsPlayer: true, Player: not null })
         {
             var nCombatRoom = NCombatRoom.Instance;
@@ -54,8 +55,12 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
         if (power is not FelixPower felixPower || felixPower != this)
             return;
 
+        await this.CheckAndTriggerMilestones(applier, cardSource);
         this.Display?.RefreshAmount();
+    }
 
+    private async Task CheckAndTriggerMilestones(Creature? applier, CardModel? cardSource)
+    {
         // 1. 计算当前层数代表的理论触发次数 (例如 25层 = 2次)
         int currentTotalMilestones = Math.Max(0, this.Amount) / this.ClimaxThreshold;
 
@@ -103,13 +108,13 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
         if (this.Owner.IsPlayer)
         {
             // 触发特效
-            this.Display?.FlashMilestone();
+            // this.Display?.FlashMilestone(); // 这个特效太烂太丑了，而且应该是在视觉效果填充进度条完毕的时候触发才对。
         }
     }
 
     /// <summary>
     /// 回合结束时触发
-    /// 注意：具体重写的方法名(OnTurnEnd / OnEndOfTurn)需根据 Sts2.Core 的实际 API 调整
+    /// 注意：具体重写的方法名(OnTurnEnd / OnEndOfTurn)需根据 Sts2.Renderer 的实际 API 调整
     /// </summary>
     /// <inheritdoc />
     public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)

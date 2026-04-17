@@ -70,7 +70,7 @@ public class BellyStrike() : MasoBaseCard(new CardInitMessage
 
         if (cardPlay.Target.IsPlayer)
         {
-            int num = (cardPlay.Target.IsAlive ? cardPlay.Target.GetPowerAmount<StrengthPower>() : 0);
+            int num = cardPlay.Target.IsAlive ? cardPlay.Target.GetPowerAmount<StrengthPower>() : 0;
             if (num > 0)
             {
                 await PowerCmd.Apply<StrengthPower>(cardPlay.Target, num, this.Owner.Creature, this);

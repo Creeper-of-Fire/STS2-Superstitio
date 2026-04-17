@@ -1,4 +1,5 @@
 ﻿using Godot;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Maso;
@@ -50,7 +51,7 @@ public partial class MasoSubPoolSelector : VBoxContainer
                 Log.Info($"[MasoMod] 状态更新: MasoCardPool 的 {checkBox.Text} = {on}");
             };
 
-            this.AddChild(checkBox);
+            this.AddChildSafely(checkBox);
             
             Log.Info($"[MasoMod] 成功挂载子池开关: {checkBox.Text}");
         }

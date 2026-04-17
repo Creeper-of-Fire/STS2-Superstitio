@@ -1,5 +1,6 @@
 ﻿using Godot;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Screens.CharacterSelect;
@@ -40,7 +41,7 @@ public static class CharacterSelectPatches
         // 创建我们的 UI 实例，Godot 会自动调用 _Ready
         _masoSelector = new MasoSubPoolSelector();
 
-        vbox.AddChild(_masoSelector);
+        vbox.AddChildSafely(_masoSelector);
         // 将我们的 UI 移动到描述文本之后，血量/金币显示之前
         vbox.MoveChild(_masoSelector, 2);
         Log.Info("[MasoMod] 成功注入子池选择 UI 到面板。");

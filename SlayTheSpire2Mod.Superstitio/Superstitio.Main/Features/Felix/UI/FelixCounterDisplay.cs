@@ -1,4 +1,5 @@
 ﻿using Godot;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 
 // ReSharper disable NullableWarningSuppressionIsUsed
@@ -32,40 +33,40 @@ public partial class FelixCounterDisplay : Control
     private int ClimaxThreshold => this.Power.ClimaxThreshold;
 
     // ========== 常量配置 ==========
-    private const float ProgressLerpSpeed = 8f;
+    private const float ProgressLerpSpeed = 6f;
 
-    private const float SizeRate = 1.1f;
+    private const float SizeRate = 1.2f;
     private const float OffsetRatio = -0.263f;
     private const float ThicknessRate = 0.18f; // 环厚度占半径的比例
 
-    private const float TargetStartAngle = -120f;
-    private const float TargetFillDegrees = 240f;
+    private const float TargetStartAngle = -100f;
+    private const float TargetFillDegrees = 200f;
 
-    /// <summary>
-    /// 计算圆环端点刚好触碰球体时所需的垂直偏移比例
-    /// </summary>
-    /// <param name="sizeRate">圆环相对于球的缩放比 (k)</param>
-    /// <param name="gapDegrees">缺口的总角度 (theta)</param>
-    /// <returns>OffsetRatio</returns>
-    public static float CalculateOffsetRatio(float sizeRate, float gapDegrees)
-    {
-        float alpha = Mathf.DegToRad(gapDegrees / 2f);
-        float k = sizeRate;
-
-        // 检查端点是否过宽
-        float horizontalDistance = k * Mathf.Sin(alpha);
-        if (horizontalDistance > 1.0f)
-        {
-            GD.PrintErr($"[FelixUI] 无法对齐：SizeRate {k} 配合缺口 {gapDegrees} 导致端点超出了球体边缘！");
-            return -0.2f; // 返回一个默认容错值
-        }
-
-        // 公式计算 h/r
-        float h_over_r = k * Mathf.Cos(alpha) - Mathf.Sqrt(1f - horizontalDistance * horizontalDistance);
-
-        // 转为相对于直径的比例 (h / 2r)，向上为负
-        return -h_over_r / 2f;
-    }
+    // /// <summary>
+    // /// 计算圆环端点刚好触碰球体时所需的垂直偏移比例
+    // /// </summary>
+    // /// <param name="sizeRate">圆环相对于球的缩放比 (k)</param>
+    // /// <param name="gapDegrees">缺口的总角度 (theta)</param>
+    // /// <returns>OffsetRatio</returns>
+    // public static float CalculateOffsetRatio(float sizeRate, float gapDegrees)
+    // {
+    //     float alpha = Mathf.DegToRad(gapDegrees / 2f);
+    //     float k = sizeRate;
+    //
+    //     // 检查端点是否过宽
+    //     float horizontalDistance = k * Mathf.Sin(alpha);
+    //     if (horizontalDistance > 1.0f)
+    //     {
+    //         GD.PrintErr($"[FelixUI] 无法对齐：SizeRate {k} 配合缺口 {gapDegrees} 导致端点超出了球体边缘！");
+    //         return -0.2f; // 返回一个默认容错值
+    //     }
+    //
+    //     // 公式计算 h/r
+    //     float h_over_r = k * Mathf.Cos(alpha) - Mathf.Sqrt(1f - horizontalDistance * horizontalDistance);
+    //
+    //     // 转为相对于直径的比例 (h / 2r)，向上为负
+    //     return -h_over_r / 2f;
+    // }
 
     /// <summary>
     /// 确保实例存在
@@ -79,7 +80,7 @@ public partial class FelixCounterDisplay : Control
 
         var parent = energyCounter.GetParent<Control>();
 
-        float offsetRatio = CalculateOffsetRatio(SizeRate, 360f - TargetFillDegrees);
+        float offsetRatio = -0.25f;
         var offset = new Vector2(0, energyCounter.Size.Y * offsetRatio);
 
         Instance = new FelixCounterDisplay
@@ -95,7 +96,7 @@ public partial class FelixCounterDisplay : Control
         Instance.InitializeRingProgressBar();
 
         // 添加为同级节点
-        parent.AddChild(Instance);
+        parent.AddChildSafely(Instance);
         // 确保显示在能量球的前面
         parent.MoveChild(Instance, energyCounter.GetIndex() + 1);
 
@@ -110,16 +111,14 @@ public partial class FelixCounterDisplay : Control
         // RingBar 比父容器大一点
         var ringSize = this.Size * SizeRate;
         var offset = (this.Size - ringSize) / 2;
-        var ringRadius = Mathf.Max(ringSize.X, ringSize.Y) / 2f;
-        var ringThickness = ringRadius * ThicknessRate;
+        float ringRadius = Mathf.Max(ringSize.X, ringSize.Y) / 2f;
+        float ringThickness = ringRadius * ThicknessRate;
 
         this.RingBar = new RingProgressBar
         {
             Name = nameof(RingProgressBar),
             Size = ringSize,
             Position = offset,
-            MaxValue = this.ClimaxThreshold,
-            TargetValue = this.CurrentAmount % this.ClimaxThreshold,
             RingGeometry = new RingGeometry
             {
                 OuterRadius = ringRadius,
@@ -134,12 +133,14 @@ public partial class FelixCounterDisplay : Control
             ShowTooltipOnHover = true // 可以后续根据需要开启
         };
 
-        this.AddChild(this.RingBar);
+        this.AddChildSafely(this.RingBar);
     }
 
     /// <inheritdoc />
     public override void _Ready()
     {
+        this.RingBar.SetMaxValue(this.ClimaxThreshold);
+        this.RingBar.SetTargetValue(this.CurrentAmount);
         // 延迟一帧打印，确保布局完成
         this.CallDeferred(nameof(this.PrintDeepLayoutInfo));
     }
@@ -163,10 +164,10 @@ public partial class FelixCounterDisplay : Control
         GD.Print(
             $"[FelixLog] Child (RingBar): Size={this.RingBar.Size}, Pos={this.RingBar.Position}, GlobalPos={this.RingBar.GlobalPosition}");
 
-        // 4. 检查底层 (PureRingProgressBar)
-        var core = this.RingBar.Core;
-        GD.Print($"[FelixLog] Core (Pure): Size={core.Size}, Pos={core.Position}, GlobalPos={core.GlobalPosition}");
-        GD.Print($"[FelixLog] Core Radius Prop: {core.RingGeometry.OuterRadius}, Thickness Prop: {core.RingGeometry.Thickness}");
+        // 4. 检查底层 (RingRenderer)
+        var core = this.RingBar.ActiveRenderer;
+        GD.Print($"[FelixLog] Renderer (Pure): Size={core.Size}, Pos={core.Position}, GlobalPos={core.GlobalPosition}");
+        GD.Print($"[FelixLog] Renderer Radius Prop: {core.RingGeometry.OuterRadius}, Thickness Prop: {core.RingGeometry.Thickness}");
 
         // 5. 检查核心 TextureProgressBar
         if (core.ProgressBar != null)
@@ -182,15 +183,15 @@ public partial class FelixCounterDisplay : Control
 
     // ========== 运行目标 ==========
 
+    private int LastRawAmount { get; set; } = 0;
+
     /// <summary>
     /// 刷新目标值
     /// </summary>
     private void RefreshTarget()
     {
-        int progress = this.CurrentAmount % this.ClimaxThreshold;
-
-        // 更新进度条的目标值
-        this.RingBar.SetValue(progress);
+        this.RingBar.SetTargetValue(this.Power.Amount);
+        this.RingBar.SetMaxValue(this.Power.ClimaxThreshold);
     }
 
     // ========== 外部可进行的指令 ==========

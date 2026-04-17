@@ -55,7 +55,7 @@ public class Whipping() : LupaBaseCard(new CardInitMessage
 
         int totalDamageDealt = damageResult.Results.Select(result => result.TotalDamage + result.OverkillDamage).Sum();
 
-        int felixGainTimes = (totalDamageDealt / this.DynamicVars.GetVarOrThrow(nameof(DamageToFelixRate)).IntValue);
+        int felixGainTimes = totalDamageDealt / this.DynamicVars.GetVarOrThrow(nameof(DamageToFelixRate)).IntValue;
 
         int felixTotalGain = felixGainTimes * this.DynamicVars.Felix.BaseFelix;
 

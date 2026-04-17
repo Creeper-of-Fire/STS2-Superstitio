@@ -1,18 +1,24 @@
 using Godot;
+using MegaCrit.Sts2.Core.Helpers;
 
 #pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 namespace Superstitio.Main.Features.Felix.UI;
 
-public partial class PureRingProgressBar : Control
+public partial class RingRenderer : Control
 {
     // ========== 导出属性 ==========
     public float InitProgress { get; set; } = 0;
-    public float TargetProgress { get; set; }
-    public float DisplayProgress { get; set; }
+
+    /// <summary>
+    /// 显示进度 (自动 Clamp 到 0-1)
+    /// </summary>
+    public float DisplayProgress
+    {
+        get;
+        private set => field = Mathf.Clamp(value, 0f, 1f);
+    }
+
     public Color ProgressColor { get; set; } = new(1f, 0.5f, 0.1f);
-    public bool ShowText { get; set; } = true;
-    public float LerpSpeed { get; set; } = 8f;
-    public bool ShowTooltipOnHover { get; set; } = true;
 
     // ========== 私有属性 ==========
     public TextureProgressBar? ProgressBar { get; private set; }
@@ -20,10 +26,11 @@ public partial class PureRingProgressBar : Control
     private Texture2D? GeneratedProgressTexture { get; set; }
     private bool IsHovered { get; set; }
 
+    public required bool RenderTextureUnder { get; init; }
+
     // ========== 生命周期 ==========
     public override void _Ready()
     {
-        this.MouseFilter = MouseFilterEnum.Pass;
         // 生成纹理
         this.GenerateTextures();
 
@@ -38,32 +45,29 @@ public partial class PureRingProgressBar : Control
             MinValue = 0.0,
             MaxValue = 1.0,
             Step = 0, // 无步长限制，完全平滑
-            Value = this.InitProgress, // 初始化时使用目标值，通常目标值应该传递为 0
+            Value = 0, // 由于只负责显示，所以初始显示为0完全合理。
             FillMode = (int)this.RingGeometry.FillMode,
             MouseFilter = MouseFilterEnum.Ignore,
             RadialInitialAngle = actualStartAngle,
             RadialFillDegrees = this.RingGeometry.FillDegrees,
-            TextureUnder = this.GeneratedUnderTexture,
             TextureProgress = this.GeneratedProgressTexture,
             TintProgress = this.ProgressColor,
             Size = this.Size,
             Position = Vector2.Zero,
             NinePatchStretch = false, // 明确不拉伸
         };
-        this.AddChild(this.ProgressBar);
-
+        if (this.RenderTextureUnder)
+            this.ProgressBar.TextureUnder = this.GeneratedUnderTexture;
+        this.AddChildSafely(this.ProgressBar);
         // 调用布局更新
         this.UpdateProgressBarLayout();
-
-        // 初始化
-        this.DisplayProgress = this.InitProgress;
     }
 
     private void UpdateProgressBarLayout()
     {
-        if (this.ProgressBar == null || this.GeneratedUnderTexture == null) return;
+        if (this.ProgressBar == null || this.GeneratedProgressTexture == null) return;
 
-        Vector2 texSize = this.GeneratedUnderTexture.GetSize();
+        Vector2 texSize = this.GeneratedProgressTexture.GetSize();
 
         // 1. 让 ProgressBar 的大小等于纹理的实际像素大小
         this.ProgressBar.Size = texSize;
@@ -94,39 +98,15 @@ public partial class PureRingProgressBar : Control
         );
     }
 
-    public override void _Process(double delta)
-    {
-        // 平滑过渡数值
-        if (!Mathf.IsEqualApprox(this.DisplayProgress, this.TargetProgress))
-        {
-            this.DisplayProgress = Mathf.Lerp(this.DisplayProgress, this.TargetProgress, (float)delta * this.LerpSpeed);
-            this.UpdateProgressBarValue();
-        }
-    }
+    // ========== 对外暴露方法 ==========
 
-    private void UpdateProgressBarValue()
+    /// <summary>
+    /// 设置显示进度
+    /// </summary>
+    public void SetDisplay(float progress)
     {
+        this.DisplayProgress = progress;
         this.ProgressBar?.Value = this.DisplayProgress;
-    }
-
-    // ========== 公共 API ==========
-
-    /// <summary>
-    /// 设置目标值
-    /// </summary>
-    public void SetTarget(float value)
-    {
-        this.TargetProgress = value;
-    }
-
-    /// <summary>
-    /// 手动接管显示数值
-    /// </summary>
-    public void SetDisplayProgress(float value)
-    {
-        this.DisplayProgress = value;
-        this.TargetProgress = value; // 同步目标，防止 Process 里的 Lerp 又拉回去
-        this.UpdateProgressBarValue();
     }
 
     // ========== 环形热区参数 ==========
@@ -146,7 +126,8 @@ public partial class PureRingProgressBar : Control
         if (this.ProgressBar == null)
             return;
         this.GenerateTextures();
-        this.ProgressBar.TextureUnder = this.GeneratedUnderTexture;
+        if (this.RenderTextureUnder)
+            this.ProgressBar.TextureUnder = this.GeneratedUnderTexture;
         this.ProgressBar.TextureProgress = this.GeneratedProgressTexture;
 
         // 重新计算偏移
@@ -253,9 +234,9 @@ public partial class PureRingProgressBar : Control
         else // ClockwiseAndCounterClockwise
         {
             // 从几何中心往两边扩
-            float centerAngle = startAngle + (totalDegrees / 2f);
-            min = centerAngle - (currentFill / 2f);
-            max = centerAngle + (currentFill / 2f);
+            float centerAngle = startAngle + totalDegrees / 2f;
+            min = centerAngle - currentFill / 2f;
+            max = centerAngle + currentFill / 2f;
         }
 
         return this.IsAngleBetween(mouseAngle, min, max);

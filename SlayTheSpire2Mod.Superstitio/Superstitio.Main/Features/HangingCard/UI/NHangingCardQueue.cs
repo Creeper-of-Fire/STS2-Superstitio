@@ -1,4 +1,5 @@
 ﻿using Godot;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 
 namespace Superstitio.Main.Features.HangingCard.UI;
@@ -43,7 +44,7 @@ public partial class NHangingCardQueue : Control
             AnchorBottom = 0.3f,
         };
 
-        NCombatRoom.Instance?.AddChild(Instance);
+        NCombatRoom.Instance?.AddChildSafely(Instance);
 
         return Instance;
     }
@@ -55,7 +56,7 @@ public partial class NHangingCardQueue : Control
     {
         var display = HangingCardDisplay.Create(token);
         this.ActiveCards.Add(display);
-        this.AddChild(display);
+        this.AddChildSafely(display);
 
         // 立即执行一次布局，确保新卡牌知道它该去哪
         this.UpdateLayout();

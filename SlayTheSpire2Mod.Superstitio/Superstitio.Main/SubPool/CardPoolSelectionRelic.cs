@@ -45,7 +45,7 @@ public abstract class CardPoolSelectionRelic : SuperstitioBaseRelic, IHoldCardPo
             : this.SelectedSubPoolIdsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
         set =>
             // 当修改列表时，自动将其拍扁成字符串存入 Raw 属性
-            this.SelectedSubPoolIdsRaw = (value.Count == 0) ? string.Empty : string.Join(",", value);
+            this.SelectedSubPoolIdsRaw = value.Count == 0 ? string.Empty : string.Join(",", value);
     }
 
     /// <inheritdoc />
