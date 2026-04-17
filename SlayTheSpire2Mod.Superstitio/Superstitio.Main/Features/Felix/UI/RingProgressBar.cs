@@ -132,8 +132,8 @@ public partial class RingProgressBar : Control
             LayoutMode = 1
         };
 
-        this.AddChildSafely(this.Label);
-
+        this.Label.RefreshFont();
+        
         // 应用主题覆盖 (Sts2 艺术风格)
         // 字体颜色: Color(1, 0.964706, 0.886275, 1) - 柔和奶油色
         this.Label.AddThemeColorOverride("font_color", new Color(1, 0.964706f, 0.886275f, 1));
@@ -147,62 +147,74 @@ public partial class RingProgressBar : Control
         this.Label.AddThemeConstantOverride("outline_size", outlineSize);
         this.Label.AddThemeConstantOverride("shadow_outline_size", outlineSize);
 
-        // 刷新字体 (MegaLabel 逻辑)
-        this.Label.RefreshFont();
+
+        this.AddChildSafely(this.Label);
     }
 
 
     private bool IsActiveRingHovered { get; set; }
     private bool IsBaseRingHovered { get; set; }
     private bool IsLabelHovered { get; set; }
+
+    /// <summary>
+    /// 整体是否处于悬停状态
+    /// </summary>
+    private bool IsAnyPartHovered => this.IsActiveRingHovered || this.IsBaseRingHovered || this.IsLabelHovered;
+
     private Tween? LabelFadeTween { get; set; }
 
     private void SetupHoverEffects()
     {
         if (this.Label == null) return;
 
+
+        this.OnHoverEnter += () => this.FadeLabel(0.2f);
+        this.OnHoverExit += () => this.FadeLabel(1.0f);
+
         // 活动层（顶层进度）悬停
         this.ActiveRenderer.OnHoverEnter += () =>
         {
+            bool alreadyHovered = this.IsAnyPartHovered;
             this.IsActiveRingHovered = true;
-            this.UpdateFadeState();
+            if (!alreadyHovered)
+                this.OnHoverEnter?.Invoke();
         };
         this.ActiveRenderer.OnHoverExit += () =>
         {
             this.IsActiveRingHovered = false;
-            this.UpdateFadeState();
+            if (!this.IsAnyPartHovered)
+                this.OnHoverExit?.Invoke();
         };
 
         // 底色层（全满底层）悬停
         this.BaseRenderer.OnHoverEnter += () =>
         {
+            bool alreadyHovered = this.IsAnyPartHovered;
             this.IsBaseRingHovered = true;
-            this.UpdateFadeState();
+            if (!alreadyHovered)
+                this.OnHoverEnter?.Invoke();
         };
         this.BaseRenderer.OnHoverExit += () =>
         {
             this.IsBaseRingHovered = false;
-            this.UpdateFadeState();
+            if (!this.IsAnyPartHovered)
+                this.OnHoverExit?.Invoke();
         };
 
         // 文字区域悬停
         this.Label.MouseEntered += () =>
         {
+            bool alreadyHovered = this.IsAnyPartHovered;
             this.IsLabelHovered = true;
-            this.UpdateFadeState();
+            if (!alreadyHovered)
+                this.OnHoverEnter?.Invoke();
         };
         this.Label.MouseExited += () =>
         {
             this.IsLabelHovered = false;
-            this.UpdateFadeState();
+            if (!this.IsAnyPartHovered)
+                this.OnHoverExit?.Invoke();
         };
-    }
-
-    private void UpdateFadeState()
-    {
-        // 三者中任意一个被悬停，文字即变透明
-        float targetAlpha = (this.IsActiveRingHovered || this.IsBaseRingHovered || this.IsLabelHovered) ? 0.2f : 1.0f;
-        this.FadeLabel(targetAlpha);
     }
 
     /// <summary>
@@ -238,10 +250,10 @@ public partial class RingProgressBar : Control
         int layerIndex = Mathf.FloorToInt(this.VisualAmount / threshold);
         // 当前层正在填充的进度 (0.0 ~ 1.0)
         float progress = (this.VisualAmount % threshold) / threshold;
-        
+
         // 如果 VisualAmount 恰好是 threshold 的倍数，Mathf.Floor 会跳到下一层
         // 但此时 Progress 是 0，视觉上底部就是上一层的满颜色。
-        
+
         // 动态开启底色层碰撞箱
         // 如果层数大于 0，说明底色层有颜色（非透明），那么整个圆环都应该有碰撞箱
         var targetMouseFilter = layerIndex > 0 ? MouseFilterEnum.Pass : MouseFilterEnum.Ignore;
@@ -252,7 +264,10 @@ public partial class RingProgressBar : Control
             if (targetMouseFilter == MouseFilterEnum.Ignore)
             {
                 this.IsBaseRingHovered = false;
-                this.UpdateFadeState();
+                if (!this.IsAnyPartHovered)
+                {
+                    this.OnHoverExit?.Invoke();
+                }
             }
         }
 
@@ -311,7 +326,7 @@ public partial class RingProgressBar : Control
     /// <summary>
     /// 设置最大值
     /// </summary>
-    public void SetMaxValue(decimal value, ProgressAnimator.AnimationStyle? style = null)
+    public void SetMaxValue(decimal value)
     {
         this.MaxValue = value;
     }
@@ -319,7 +334,7 @@ public partial class RingProgressBar : Control
     /// <summary>
     /// 设置目标值
     /// </summary>
-    public void SetTargetValue(decimal value, ProgressAnimator.AnimationStyle? style = null)
+    public void SetTargetValue(decimal value)
     {
         this.TargetValue = value;
     }

@@ -1,6 +1,7 @@
 ﻿using Godot;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.HoverTips;
 
 // ReSharper disable NullableWarningSuppressionIsUsed
 
@@ -133,6 +134,9 @@ public partial class FelixCounterDisplay : Control
             ShowTooltipOnHover = true // 可以后续根据需要开启
         };
 
+        this.RingBar.OnHoverEnter += this.ShowTips;
+        this.RingBar.OnHoverExit += this.HideTips;
+
         this.AddChildSafely(this.RingBar);
     }
 
@@ -179,6 +183,36 @@ public partial class FelixCounterDisplay : Control
         }
 
         GD.Print("[FelixLog] === Deep Layout Debug End ===");
+    }
+
+    private void ShowTips()
+    {
+        // 防御性编程：显示前先尝试移除，防止字典键冲突
+        NHoverTipSet.Remove(this);
+        // 获取 Power 定义的提示
+        var tips = this.Power.HoverTips;
+
+        // 使用 Sts2 标准的 NHoverTipSet
+        // 第一个参数是 Source (用于定位和唯一性识别)，第二个参数是提示内容
+        var tipSet = NHoverTipSet.CreateAndShow(this, tips);
+
+        // 调整提示框位置，通常显示在能量球的侧上方
+        // 这里的偏移量可以根据实际视觉效果微调
+        tipSet.GlobalPosition = this.GlobalPosition + new Vector2(-70f, -200f);
+    }
+
+    private void HideTips()
+    {
+        // 移除该节点关联的提示
+        NHoverTipSet.Remove(this);
+    }
+
+    /// <inheritdoc />
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        // 无论是因为鼠标移走还是节点被销毁，只要离开树，就清理掉提示
+        NHoverTipSet.Remove(this);
     }
 
     // ========== 运行目标 ==========
