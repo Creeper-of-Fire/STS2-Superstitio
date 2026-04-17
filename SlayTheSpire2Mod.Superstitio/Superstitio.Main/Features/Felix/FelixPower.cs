@@ -6,8 +6,11 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Runs;
 using Superstitio.Main.Base;
+using Superstitio.Main.Features.Felix.UI;
 
 namespace Superstitio.Main.Features.Felix;
 
@@ -20,9 +23,30 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
     InitStackType = PowerInitMessage.StackStyle.Normal
 })
 {
-    private const int AngerThreshold = 10;
+    /// <summary>
+    /// 快感的上限阈值
+    /// </summary>
+    public int ClimaxThreshold => 10;
 
     private int MaxThresholdReachedThisTurn { get; set; } = 0;
+
+    private FelixCounterDisplay? Display { get; set; }
+
+    /// <inheritdoc />
+    public override async Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        await base.AfterApplied(applier, cardSource);
+        if (this.Owner is { IsPlayer: true, Player: not null })
+        {
+            var nCombatRoom = NCombatRoom.Instance;
+            var energyCounter = nCombatRoom?.Ui.EnergyCounterContainer.GetChildren()
+                .OfType<NEnergyCounter>().FirstOrDefault();
+            if (energyCounter is null)
+                return;
+            this.Display = FelixCounterDisplay.Ensure(energyCounter, this);
+            this.Display.RefreshAmount();
+        }
+    }
 
     /// <inheritdoc />
     public override async Task AfterPowerAmountChanged(PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
@@ -30,8 +54,10 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
         if (power is not FelixPower felixPower || felixPower != this)
             return;
 
+        this.Display?.RefreshAmount();
+
         // 1. 计算当前层数代表的理论触发次数 (例如 25层 = 2次)
-        int currentTotalMilestones = Math.Max(0, this.Amount) / AngerThreshold;
+        int currentTotalMilestones = Math.Max(0, this.Amount) / this.ClimaxThreshold;
 
         // 2. 计算需要新触发的次数
         // 如果当前里程碑 大于 本回合记录的最高里程碑，说明跨过了新的10层
@@ -46,7 +72,7 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
             // for 循环的次数在进入时已经确定，不存在死循环风险
             for (int i = 0; i < triggersNeeded; i++)
             {
-                await this.TriggerAngry(this, applier, cardSource);
+                await this.TriggerClimax(this, applier, cardSource);
             }
         }
 
@@ -56,9 +82,9 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
     }
 
     /// <summary>
-    /// 触发快感状态的方法
+    /// 触发高潮状态的方法
     /// </summary>
-    private async Task TriggerAngry(FelixPower felixPower, Creature? applier, CardModel? cardSource)
+    private async Task TriggerClimax(FelixPower felixPower, Creature? applier, CardModel? cardSource)
     {
         var runState = this.Owner.Player?.RunState;
         var combatState = this.Owner.CombatState;
@@ -77,6 +103,7 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
         if (this.Owner.IsPlayer)
         {
             // 触发特效
+            this.Display?.FlashMilestone();
         }
     }
 
@@ -91,6 +118,9 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
             return;
 
         this.MaxThresholdReachedThisTurn = 0;
+
+        this.Display?.QueueFree(); // TODO 这里改成一个淡出效果
+        this.Display = null;
 
         // 回合结束失去所有快感
         await PowerCmd.Remove(this);
