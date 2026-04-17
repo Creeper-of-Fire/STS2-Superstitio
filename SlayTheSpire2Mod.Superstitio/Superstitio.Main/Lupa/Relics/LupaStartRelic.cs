@@ -8,8 +8,8 @@ using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
+using Superstitio.Main.Resource;
 using Superstitio.Main.SubPool;
-using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Lupa.Relics;
 

@@ -1,6 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Models;
-
-namespace Superstitio.Main.Features.HangingCard.UI;
+﻿namespace Superstitio.Main.Features.HangingCard.UI;
 
 /// <summary>
 /// 实现此接口的卡牌在被 Hover 时可以高亮悬挂卡

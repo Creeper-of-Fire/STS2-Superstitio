@@ -8,7 +8,7 @@ namespace Superstitio.Main.ModSetting;
 /// <summary>
 /// 模组的配置
 /// </summary>
-[HoverTipsByDefault]
+[ConfigHoverTipsByDefault]
 public class SuperstitioModConfig : SimpleModConfig
 {
     // 存储 UI 引用以便联动

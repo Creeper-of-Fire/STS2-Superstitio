@@ -31,9 +31,4 @@ public record CardInitMessage
     /// 指示该卡牌是否显示在卡牌库中。
     /// </summary>
     public bool ShowInCardLibrary { get; init; } = true;
-
-    /// <summary>
-    /// <see cref="BaseLib"/> 模组：指示该卡牌是否自动添加/注册。
-    /// </summary>
-    public bool AutoAdd { get; init; } = true;
 }

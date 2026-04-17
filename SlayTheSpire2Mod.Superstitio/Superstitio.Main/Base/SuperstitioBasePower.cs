@@ -1,11 +1,8 @@
-﻿using System.Reflection;
-using BaseLib.Abstracts;
-using Godot;
+﻿using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Powers;
-using Superstitio.Main.Utils;
+using Superstitio.Main.Resource;
 
 namespace Superstitio.Main.Base;
-
 
 /// <summary>
 /// 用于初始化能力基本属性的记录类型
@@ -46,7 +43,6 @@ public record PowerInitMessage
         MultiSingular
     }
 
-    
     /// <summary></summary>
     public required PowerType Type { get; init; }
 
@@ -82,28 +78,9 @@ public abstract class SuperstitioBasePower(PowerInitMessage powerInitMessage) : 
         _ => false
     };
 
-    private string GetPowerPortraitPath()
-    {
-        var type = this.GetType();
-        string imgPrefix = ResourceUtils.GetImgPrefix(type);
-
-        // 获取自定义名称逻辑
-        var nameAttr = type.GetCustomAttribute<CustomImgNameAttribute>();
-        string fileName = nameAttr is not null ? nameAttr.Name : type.Name;
-
-        string path = $"{imgPrefix}/powers/{fileName}.png";
-
-        if (ResourceLoader.Exists(path))
-            return path;
-
-        string defaultImg = $"{imgPrefix}/powers/default.png";
-
-        return defaultImg;
-    }
+    /// <inheritdoc />
+    public override string CustomBigIconPath => ResourceUtils.GetPowerPortraitPath(this);
 
     /// <inheritdoc />
-    public override string CustomBigIconPath => this.GetPowerPortraitPath();
-
-    /// <inheritdoc />
-    public override string CustomPackedIconPath => this.GetPowerPortraitPath();
+    public override string CustomPackedIconPath => ResourceUtils.GetPowerPortraitPath(this);
 }

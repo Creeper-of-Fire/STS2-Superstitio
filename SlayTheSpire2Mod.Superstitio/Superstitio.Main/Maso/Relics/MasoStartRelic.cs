@@ -8,8 +8,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Maso.Base;
+using Superstitio.Main.Resource;
 using Superstitio.Main.SubPool;
-using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.Maso.Relics;
 

@@ -4,7 +4,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.Maso.Base;
 
-namespace superstitio.main.lupa.cards;
+namespace Superstitio.Main.Lupa.Cards;
 
 /**
  * Title = "选择体位"

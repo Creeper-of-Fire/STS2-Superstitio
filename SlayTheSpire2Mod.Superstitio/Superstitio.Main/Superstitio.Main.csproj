@@ -27,11 +27,17 @@
             <Private>false</Private>
         </Reference>
 
-        <!-- BaseLib基础库 -->
+        <!-- BaseLib -->
         <Reference Include="BaseLib">
             <HintPath>$(ModsPath)/BaseLib/BaseLib.dll</HintPath>
             <Private>false</Private>
         </Reference>
+
+        <!-- RitsuLib -->
+<!--        <Reference Include="STS2-RitsuLib">-->
+<!--            <HintPath>$(ModsPath)/STS2-RitsuLib/STS2-RitsuLib.dll</HintPath>-->
+<!--            <Private>false</Private>-->
+<!--        </Reference>-->
     </ItemGroup>
     <ItemGroup>
         <Folder Include="assets\**" />

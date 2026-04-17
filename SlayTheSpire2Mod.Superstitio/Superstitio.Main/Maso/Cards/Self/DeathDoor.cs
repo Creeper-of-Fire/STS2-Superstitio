@@ -11,7 +11,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Maso.Base;
-using Superstitio.Main.Utils;
+using Superstitio.Main.Resource;
 
 namespace Superstitio.Main.Maso.Cards.Self;
 
