@@ -9,6 +9,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Base;
@@ -58,7 +59,12 @@ public class FistIn() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Delay,
-        CardTypeFilter: CardType.None
+        CardTypeFilter: CardType.None,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self
+        }
     );
 
     /// <inheritdoc />

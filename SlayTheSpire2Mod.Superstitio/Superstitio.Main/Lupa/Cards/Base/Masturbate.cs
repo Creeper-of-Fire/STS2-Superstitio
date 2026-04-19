@@ -6,6 +6,7 @@ using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Base;
@@ -71,7 +72,12 @@ public class Masturbate() : LupaBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Delay,
-        CardTypeFilter: CardType.None
+        CardTypeFilter: CardType.None,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self,
+        }
     );
 
     /// <inheritdoc />

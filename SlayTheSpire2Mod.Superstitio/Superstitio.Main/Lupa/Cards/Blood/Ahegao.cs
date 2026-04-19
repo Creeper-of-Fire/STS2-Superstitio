@@ -9,50 +9,47 @@ using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Features.HangingCard.UI;
-using Superstitio.Main.Maso.Base;
+using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Maso.Cards.CotiKoki;
+namespace Superstitio.Main.Lupa.Cards.Blood;
 
 /**
- * Title = "性交-侍奉：素股"
+ * Title = "阿嘿颜"
  *
  * Description = """
- * 造成{Damage:diff()}点伤害。
- * {CardHangingDescription}
+ * **缠绵**打出攻击牌：对敌方全体造成 2 次 **2(3)** 点伤害。
  * """
  *
- * HangingEffect = "造成{Damage:diff()}点伤害"
+ * Flavor = "想要保持专业的微笑，但是控制不住。"
  *
- * Flavor = "看上去就像是被十个人侵犯到溢出来了，实际上只是射在外面啦。"
+ * Sfw.Title = "连砍带顺劈"
  *
- * Sfw.Title = "震波震震"
- *
- * Sfw.Flavor = "弹弹弹弹。"
+ * Sfw.Flavor = "把普通攻击变成全体二连击。"
  */
-public sealed class KokiGroin() : MasoBaseCard(new CardInitMessage
+public class Ahegao() : LupaBaseCard(new CardInitMessage
 {
     BaseCost = 2,
     Type = CardType.Attack,
-    Rarity = CardRarity.Common,
-    Target = TargetType.AnyEnemy,
+    Rarity = CardRarity.Uncommon,
+    Target = TargetType.AllEnemies
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
-        new DamageVar(6, ValueProp.Move).WithUpgrade(3),
-        new TriggerCountVar(3)
+        new DamageVar(2, ValueProp.Move).WithUpgrade(3),
+        new TriggerCountVar(2),
     ];
 
     /// <inheritdoc />
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Follow,
-        CardTypeFilter: CardType.None,
+        CardTypeFilter: CardType.Attack,
         CardVisualEffect: new CardVisualEffect
         {
             HangGlowType = HangGlowType.Bad,
-            TargetType = TargetType.AnyEnemy
+            TargetType = TargetType.AllEnemies
         }
     );
 
@@ -62,14 +59,9 @@ public sealed class KokiGroin() : MasoBaseCard(new CardInitMessage
     /// <inheritdoc />
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 执行本次攻击
-        await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
-
-        // 创建挂起令牌
         var token = this.CreateHangingToken(async (context, play) =>
         {
-            // 触发一次攻击到原目标
-            await DamageCmd.AutoAttack(this, play, tryRandomWhenTargetDie: true).Execute(context);
+            await DamageCmd.AutoAttack(this, play).Execute(context);
         });
 
         await HangingCardManager.HangCard(token, this);

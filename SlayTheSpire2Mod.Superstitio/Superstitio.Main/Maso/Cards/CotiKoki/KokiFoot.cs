@@ -66,7 +66,12 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Follow,
-        CardTypeFilter: CardType.Attack
+        CardTypeFilter: CardType.Attack,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self,
+        }
     );
 
     /// <inheritdoc />
@@ -78,9 +83,10 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
         await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
 
         var token = this.CreateHangingToken(
-            async (context, _) => { await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner); },
-            hangGlowType: HangGlowType.Good,
-            effectTargetType: TargetType.Self
+            async (context, _) =>
+            {
+                await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner);
+            }
         );
         await HangingCardManager.HangCard(token, this);
     }

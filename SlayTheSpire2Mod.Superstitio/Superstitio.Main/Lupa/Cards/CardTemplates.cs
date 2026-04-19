@@ -1000,39 +1000,6 @@ public class HideInPussy() : LupaBaseCard(new CardInitMessage
 }
 
 /**
- * Title = "阿嘿颜"
- *
- * Description = """
- * **缠绵**打出攻击牌：对敌方全体造成 2 次 **2(3)** 点伤害。
- * """
- *
- * Flavor = "想要保持专业的微笑，但是控制不住。"
- *
- * Sfw.Title = "连砍带顺劈"
- *
- * Sfw.Flavor = "把普通攻击变成全体二连击。"
- */
-public class Ahegao() : LupaBaseCard(new CardInitMessage
-{
-    BaseCost = 2,
-    Type = CardType.Attack,
-    Rarity = CardRarity.Uncommon,
-    Target = TargetType.AllEnemies
-})
-{
-    /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
-        [];
-
-    /// <inheritdoc />
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        // TODO: 实现卡牌效果
-        await Task.CompletedTask;
-    }
-}
-
-/**
  * Title = "腐蚀"
  *
  * Description = """

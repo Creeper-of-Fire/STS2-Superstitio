@@ -7,6 +7,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -46,7 +47,16 @@ public class KokiHair() : MasoBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc />
-    public HangingCardConfig HangingCardConfig => new(this, HangingType.Delay, CardType.None);
+    public HangingCardConfig HangingCardConfig => new(
+        Card: this,
+        HangingType: HangingType.Delay,
+        CardTypeFilter: CardType.None,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self
+        }
+    );
 
     /// <inheritdoc />
     public bool HangingSelfAfterPlay => true;

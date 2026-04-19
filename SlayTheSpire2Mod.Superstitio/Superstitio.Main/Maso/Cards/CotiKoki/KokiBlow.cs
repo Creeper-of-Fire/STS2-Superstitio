@@ -9,6 +9,7 @@ using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -49,7 +50,12 @@ public sealed class KokiBlow() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Follow,
-        CardTypeFilter: CardType.None
+        CardTypeFilter: CardType.None,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self,
+        }
     );
 
     /// <inheritdoc />

@@ -21,18 +21,14 @@ public static class IWithHangingConfigCardExtensions
     /// <param name="card">当前卡牌实例。</param>
     /// <param name="hangingAction">当挂起条件触发时执行的异步动作。</param>
     /// <param name="resultPileType">当挂起结束时，返回什么地方，可为空，此时默认为 <see cref="SuperstitioBaseCard.BaseResultPileType"/></param>
-    /// <param name="hangGlowType"></param>
-    /// <param name="effectTargetType"></param>
     /// <returns>一个配置好的 <see cref="AutoHangingCardTokenWithConfig"/> 实例。</returns>
     public static AutoHangingCardTokenFromCard<TCard> CreateHangingToken<TCard>(
         this TCard card,
         Func<PlayerChoiceContext, CardPlay, Task> hangingAction,
-        PileType? resultPileType = null,
-        HangGlowType? hangGlowType = null,
-        TargetType? effectTargetType = null
+        PileType? resultPileType = null
     ) where TCard : SuperstitioBaseCard, IWithHangingConfigCard
     {
-        return card.CreateHangingToken(hangingAction, resultPileType ?? card.BaseResultPileType, hangGlowType, effectTargetType);
+        return card.CreateHangingToken(hangingAction, resultPileType ?? card.BaseResultPileType);
     }
 
     /// <summary>
@@ -42,15 +38,11 @@ public static class IWithHangingConfigCardExtensions
     /// <param name="card">当前卡牌实例。</param>
     /// <param name="hangingAction">当挂起条件触发时执行的异步动作。</param>
     /// <param name="resultPileType">当挂起结束时，返回什么地方</param>
-    /// <param name="hangGlowType"></param>
-    /// <param name="effectTargetType"></param>
     /// <returns>一个配置好的 <see cref="AutoHangingCardTokenWithConfig"/> 实例。</returns>
     public static AutoHangingCardTokenFromCard<TCard> CreateHangingToken<TCard>(
         this TCard card,
         Func<PlayerChoiceContext, CardPlay, Task> hangingAction,
-        PileType resultPileType,
-        HangGlowType? hangGlowType = null,
-        TargetType? effectTargetType = null
+        PileType resultPileType
     ) where TCard : CardModel, IWithHangingConfigCard
     {
         var hangingToken = new AutoHangingCardTokenFromCard<TCard>(card, resultPileType)
@@ -60,19 +52,21 @@ public static class IWithHangingConfigCardExtensions
             HangingAction = hangingAction
         };
 
-        if (effectTargetType is not null)
+        var cardVisualEffect = card.HangingCardConfig.CardVisualEffect;
+
+        if (cardVisualEffect?.TargetType is not null)
         {
             hangingToken = hangingToken with
             {
-                TargetType = effectTargetType.Value
+                TargetType = cardVisualEffect.TargetType.Value
             };
         }
 
-        if (hangGlowType is not null)
+        if (cardVisualEffect?.HangGlowType is not null)
         {
             hangingToken = hangingToken with
             {
-                HangGlowType = hangGlowType.Value
+                HangGlowType = cardVisualEffect.HangGlowType.Value
             };
         }
 

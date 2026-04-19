@@ -7,6 +7,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -43,7 +44,12 @@ public class KokiArmpit() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Delay,
-        CardTypeFilter: CardType.Attack
+        CardTypeFilter: CardType.Attack,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Bad,
+            TargetType = TargetType.AnyEnemy,
+        }
     );
 
     /// <inheritdoc />

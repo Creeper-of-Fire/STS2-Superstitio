@@ -8,6 +8,7 @@ using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
+using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -49,7 +50,12 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
     public HangingCardConfig HangingCardConfig => new(
         Card: this,
         HangingType: HangingType.Follow,
-        CardTypeFilter: CardType.Attack
+        CardTypeFilter: CardType.Attack,
+        CardVisualEffect: new CardVisualEffect
+        {
+            HangGlowType = HangGlowType.Good,
+            TargetType = TargetType.Self
+        }
     );
 
     /// <inheritdoc />
@@ -60,7 +66,10 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
     {
         await DamageCmd.AutoAttack(this, cardPlay, hitCount: this.DynamicVars.Repeat.IntValue).Execute(choiceContext);
 
-        var token = this.CreateHangingToken(async (_, _) => { await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature); });
+        var token = this.CreateHangingToken(async (_, _) =>
+        {
+            await PowerCmd.ApplyByCard<StrengthPower>(this, this.Owner.Creature);
+        });
 
         await HangingCardManager.HangCard(token, this);
     }

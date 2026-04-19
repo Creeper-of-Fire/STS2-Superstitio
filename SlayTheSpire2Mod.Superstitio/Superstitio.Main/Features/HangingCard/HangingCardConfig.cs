@@ -6,17 +6,18 @@ using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.Features.HangingCard;
 
-#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 /// <summary>
 /// 挂起卡牌配置
 /// </summary>
 [method: SetsRequiredMembers]
-public record HangingCardConfig(CardModel Card, HangingType HangingType, TriggerCountVar TriggerCount, CardType CardTypeFilter)
+public record HangingCardConfig(
+    CardModel Card,
+    HangingType HangingType,
+    CardType CardTypeFilter,
+    CardVisualEffect? CardVisualEffect,
+    TriggerCountVar? TriggerCount = null
+)
 {
-    [SetsRequiredMembers]
-    public HangingCardConfig(CardModel Card, HangingType HangingType, CardType CardTypeFilter) :
-        this(Card, HangingType, new TriggerCountVar(Card.DynamicVars.TriggerCount.IntValue), CardTypeFilter) { }
-
     /// <summary>
     /// 挂起的卡牌
     /// </summary>
@@ -30,10 +31,17 @@ public record HangingCardConfig(CardModel Card, HangingType HangingType, Trigger
     /// <summary>
     /// 触发次数（动态变量值）
     /// </summary>
-    public required TriggerCountVar TriggerCount { get; init; } = TriggerCount;
+    public required TriggerCountVar TriggerCount { get; init; } =
+        TriggerCount ?? new TriggerCountVar(Card.DynamicVars.TriggerCount.IntValue);
 
     /// <summary>
     /// 触发的卡牌类型过滤（ <see cref="CardType.None"/> 为任意牌）
     /// </summary>
     public required CardType CardTypeFilter { get; init; } = CardTypeFilter;
+
+    /// <summary>
+    /// 卡牌的视觉效果类型
+    /// </summary>
+    /// <returns></returns>
+    public required CardVisualEffect? CardVisualEffect { get; init; } = CardVisualEffect;
 }
