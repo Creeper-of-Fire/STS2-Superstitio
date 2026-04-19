@@ -15,13 +15,15 @@ namespace Superstitio.Main.Base;
 /// </summary>
 /// <param name="cardInitMessage"></param>
 public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : CustomCardModel(
-    cardInitMessage.BaseCost,
+    cardInitMessage.BaseCost.InitialCost,
     cardInitMessage.Type,
     cardInitMessage.Rarity,
     cardInitMessage.Target,
     cardInitMessage.ShowInCardLibrary
 )
 {
+    private CardInitMessage CardInitMessage { get; } = cardInitMessage;
+    
     /// <inheritdoc />
     public override string PortraitPath => ResourceUtils.GetCardPortraitPath(this);
 
@@ -33,7 +35,7 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     /// <summary>
     /// 定义卡牌的动态变量集合。
     /// </summary>
-    protected override IEnumerable<DynamicVar> CanonicalVars => this.InitVarsWithUpgrade.Select(it => it.DynamicVar);
+    protected sealed override IEnumerable<DynamicVar> CanonicalVars => this.InitVarsWithUpgrade.Select(it => it.DynamicVar);
 
     /// <summary>
     /// 为卡牌定义动态变量集合（带升级描述）。
@@ -45,10 +47,17 @@ public abstract class SuperstitioBaseCard(CardInitMessage cardInitMessage) : Cus
     /// </summary>
     protected override void OnUpgrade()
     {
+        int upgradedCost = this.CardInitMessage.BaseCost.UpgradedCost;
+        if (upgradedCost != 0)
+            this.EnergyCost.UpgradeBy(upgradedCost);
+
         // 这里因为是重复获取，所以性能会低一点，但是，这只是在升级时重新获取一次，就不做缓存了，不缺这三瓜两枣。
         foreach (var dynamicVarWithUpgrade in this.InitVarsWithUpgrade)
         {
-            if (this.DynamicVars.TryGetValue(dynamicVarWithUpgrade.DynamicVar.Name, out var dynamicVar))
+            if (!this.DynamicVars.TryGetValue(dynamicVarWithUpgrade.DynamicVar.Name, out var dynamicVar))
+                continue;
+
+            if (dynamicVarWithUpgrade.UpgradeValue != 0)
                 dynamicVar.UpgradeValueBy(dynamicVarWithUpgrade.UpgradeValue);
         }
     }

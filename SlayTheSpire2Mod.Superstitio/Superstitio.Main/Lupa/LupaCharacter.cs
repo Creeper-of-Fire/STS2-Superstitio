@@ -42,7 +42,7 @@ public class LupaCharacter : SuperstitioCharacter
             ..StrikeLupa.Card().Repeat(4),
             ..DefendLupa.Card().Repeat(4),
             Masturbate.Card(),
-            KokiFoot.Card(),
+            SwallowIt.Card(),
         ],
         StartingRelics =
         [

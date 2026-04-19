@@ -53,8 +53,8 @@ public class WeekField<TKey, TVal> where TKey : class
     /// </remarks>
     public TVal? this[TKey obj]
     {
-        get => Get(obj);
-        set => Set(obj, value);
+        get => this.Get(obj);
+        set => this.Set(obj, value);
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -34,26 +35,36 @@ public class CorruptusPower() : SuperstitioBasePower(new PowerInitMessage
         var power = this.Owner.GetPower<CorruptusPower>();
         if (power is not { Amount: > 0 })
             return;
+        await ProcessingCorruptusDamage(choiceContext, this.Owner, power.Amount);
+    }
 
+    /// <summary>
+    /// 处理腐朽造成的伤害
+    /// </summary>
+    /// <param name="choiceContext"></param>
+    /// <param name="target"></param>
+    /// <param name="corruptusmount"></param>
+    public static async Task ProcessingCorruptusDamage(PlayerChoiceContext choiceContext, Creature target, int corruptusmount)
+    {
         try
         {
-            this.Owner.IsProcessingCorruptusDamage = true;
+            target.IsProcessingCorruptusDamage = true;
 
             // 对自身造成等同于腐朽层数的伤害
             await CreatureCmd.Damage(
                 choiceContext,
-                this.Owner,
-                power.Amount,
+                target,
+                corruptusmount,
                 ValueProp.Unblockable,
-                this.Owner
+                target
             );
 
             // 伤害结算后移除腐朽效果
-            await PowerCmd.Remove<CorruptusPower>(this.Owner);
+            await PowerCmd.Remove<CorruptusPower>(target);
         }
         finally
         {
-            this.Owner.IsProcessingCorruptusDamage = false;
+            target.IsProcessingCorruptusDamage = false;
         }
     }
 }

@@ -62,23 +62,61 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
     private List<Func<Task>> PendingCorruptusTasks { get; set; } = [];
 
     /// <summary>
+    /// 携带延迟任务队列的 decimal 包装类型。
+    /// 用于在返回数值的同时，向任务队列中添加延迟执行的操作。
+    /// </summary>
+    /// <param name="Value">返回的数值。</param>
+    /// <param name="PendingTasks">待处理任务队列的引用。</param>
+    public record DecimalWithTask(decimal Value, List<Func<Task>>? PendingTasks)
+    {
+        /// <summary>
+        /// 从 DecimalWithTask 隐式转换为 decimal。
+        /// </summary>
+        public static implicit operator decimal(DecimalWithTask self) => self.Value;
+
+        /// <summary>
+        /// 向关联的任务队列中添加异步延迟任务。
+        /// 如果没有关联的任务队列，则什么都不做。
+        /// </summary>
+        /// <param name="task">要添加的异步任务。</param>
+        /// <returns>返回自身，方便链式调用。</returns>
+        public DecimalWithTask AfterModify(Func<Task> task)
+        {
+            this.PendingTasks?.Add(task);
+            return this;
+        }
+
+        /// <summary>
+        /// 向关联的任务队列中添加同步延迟任务。
+        /// </summary>
+        /// <param name="action">要执行的同步操作。</param>
+        /// <returns>返回自身，方便链式调用。</returns>
+        public DecimalWithTask AfterModify(Action action) => this.AfterModify(() =>
+        {
+            action();
+            return Task.CompletedTask;
+        });
+    }
+
+    /// <summary>
     /// 在伤害结算后期修改损失的生命值。
     /// 如果目标是拥有者且未在处理中，则将伤害量转换为腐朽层数，并抵消原伤害。
     /// </summary>
     /// <remarks>
     /// 推荐挂载点：和缓冲 <see cref="Buffer"/> 使用相同的钩子，即 <see cref="AbstractModel.ModifyHpLostAfterOstyLate"/>。
     /// </remarks>
-    public decimal ModifyHpLostAfterOstyLate(
+    public DecimalWithTask ModifyHpLostAfterOstyLate(
         Creature target,
         decimal amount,
         ValueProp props,
         Creature? dealer,
-        CardModel? cardSource)
+        CardModel? cardSource
+    )
     {
         if (target != this.OwnerCreature || target.IsProcessingCorruptusDamage)
-            return amount;
+            return new DecimalWithTask(amount, null);
 
-        this.PendingCorruptusTasks.Add(async () =>
+        return new DecimalWithTask(0M, this.PendingCorruptusTasks).AfterModify(async () =>
         {
             await CreatureCmd.TriggerAnim(target, "Hit", 0);
 
@@ -89,8 +127,6 @@ public class CorruptusBufferComponent(ICorruptusBuffer corruptusBuffer)
                 cardSource
             );
         });
-
-        return 0M;
     }
 
     /// <summary>

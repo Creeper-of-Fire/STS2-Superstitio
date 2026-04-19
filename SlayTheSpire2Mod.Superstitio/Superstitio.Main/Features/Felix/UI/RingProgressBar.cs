@@ -16,14 +16,14 @@ public partial class RingProgressBar : Control
 
     // 颜色定义 (快感常用的：浅粉 -> 深粉 -> 紫色 -> 金色 ...)
     private static readonly Color[] LayerColors =
-    {
+    [
         new Color(1f, 1f, 1f, 0.0f), // Index 0: 完全透明 (初始化或0层以下)
         new Color(1.0f, 0.6f, 0.8f), // Index 1: 浅粉 (0-10层时的进度颜色)
         new Color(0.9f, 0.3f, 0.6f), // Index 2: 深粉 (10-20层时的进度颜色)
         new Color(0.6f, 0.2f, 0.9f), // Index 3: 紫色
         new Color(1.0f, 0.8f, 0.2f), // Index 4: 金色
         new Color(0.9f, 0.2f, 0.2f), // Index 5: 红色
-    };
+    ];
 
     /// <summary>
     /// 获取指定层级的颜色（支持循环或封顶）

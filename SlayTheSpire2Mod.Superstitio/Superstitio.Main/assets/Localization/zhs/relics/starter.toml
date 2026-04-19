@@ -1,6 +1,7 @@
 ﻿[MasoStartRelic]
 title = "苦行印记"
 description = """
+你失去生命时，将其转换为[sine][red]腐朽[/red][/sine]。
 单次每获得[blue]3[/blue]点[sine][red]腐朽[/red][/sine]，获得[blue]2[/blue]点[pink]快感[/pink]。
 达到[pink]高潮[/pink]时，移除[blue]5[/blue]点[sine][red]腐朽[/red][/sine]。
 """
