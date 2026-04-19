@@ -6,7 +6,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Blood;
+namespace Superstitio.Main.Lupa.Cards.General;
 
 /**
  * Title = "叫床"

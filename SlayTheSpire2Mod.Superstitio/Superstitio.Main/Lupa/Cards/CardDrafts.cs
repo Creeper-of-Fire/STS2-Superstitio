@@ -822,35 +822,6 @@ public class EscapeConjuring() : LupaBaseCard(new CardInitMessage
 }
 
 /**
- * Title = "透支"
- *
- * Description = """
- * 抽 **3 (4)** 张牌。下回合开始时，消耗 **1** 张牌。
- * """
- *
- * Flavor = ""
- */
-public class Overdraft() : LupaBaseCard(new CardInitMessage
-{
-    BaseCost = 1,
-    Type = CardType.Skill,
-    Rarity = CardRarity.Common,
-    Target = TargetType.Self
-})
-{
-    /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
-        [];
-
-    /// <inheritdoc />
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        // TODO: 实现卡牌效果
-        await Task.CompletedTask;
-    }
-}
-
-/**
  * Title = "废弃"
  *
  * Description = """

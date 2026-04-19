@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using Superstitio.Main.Base;
+using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
@@ -48,7 +49,7 @@ public class CalmDown() : LupaBaseCard(new CardInitMessage
     public Func<HangingCardToken, bool> TokenIsAble => it => it is AutoHangingCardTokenWithConfig;
 
     /// <inheritdoc />
-    public Func<HangingCardToken, HangingTriggerContext, HangingTriggerResult?, HangingTriggerResult?> 
+    public Func<HangingCardToken, HangingTriggerContext, HangingTriggerResult?, HangingTriggerResult?>
         SimpleChangeTriggerResult => (_, _, _) => new HangingTriggerResult(HangGlowType.Preview, null);
 
     /// <inheritdoc />

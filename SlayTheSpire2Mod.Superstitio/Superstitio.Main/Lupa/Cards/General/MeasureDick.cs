@@ -6,7 +6,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using Superstitio.Main.Base;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Blood;
+namespace Superstitio.Main.Lupa.Cards.General;
 
 /**
  * Title = "肚量"

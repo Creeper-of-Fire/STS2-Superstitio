@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Features.HangingCard.UI;
@@ -82,10 +81,9 @@ public sealed class KokiFoot() : MasoBaseCard(new CardInitMessage
     {
         await DamageCmd.AutoAttack(this, cardPlay).Execute(choiceContext);
 
-        var token = this.CreateHangingToken(
-            async (context, _) =>
+        var token = this.CreateHangingToken(async (context, _) =>
             {
-                await CardPileCmd.Draw(context, this.DynamicVars.DrawCards.BaseValue, this.Owner);
+                await CardPileCmd.AutoDraw(context, this);
             }
         );
         await HangingCardManager.HangCard(token, this);

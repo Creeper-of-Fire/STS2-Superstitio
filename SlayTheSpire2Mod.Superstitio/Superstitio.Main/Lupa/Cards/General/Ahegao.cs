@@ -11,15 +11,17 @@ using Superstitio.Main.Features.HangingCard;
 using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Blood;
+namespace Superstitio.Main.Lupa.Cards.General;
 
 /**
  * Title = "阿嘿颜"
  *
  * Description = """
- * **缠绵**打出攻击牌：对敌方全体造成 2 次 **2(3)** 点伤害。
+ * {CardHangingDescription}
  * """
  *
+ * HangingEffect = "对敌方全体造成{Repeat:diff()}次{Damage:diff()}点伤害。"
+ * 
  * Flavor = "想要保持专业的微笑，但是控制不住。"
  *
  * Sfw.Title = "连砍带顺劈"
@@ -38,7 +40,8 @@ public class Ahegao() : LupaBaseCard(new CardInitMessage
     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(2, ValueProp.Move).WithUpgrade(3),
-        new TriggerCountVar(2),
+        new RepeatVar(2),
+        new TriggerCountVar(99),
     ];
 
     /// <inheritdoc />

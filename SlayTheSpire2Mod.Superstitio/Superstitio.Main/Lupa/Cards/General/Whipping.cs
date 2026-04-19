@@ -10,7 +10,7 @@ using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
 
-namespace Superstitio.Main.Lupa.Cards.Blood;
+namespace Superstitio.Main.Lupa.Cards.General;
 
 /**
  * Title = "鞭打"
