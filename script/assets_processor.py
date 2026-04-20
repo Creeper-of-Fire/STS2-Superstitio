@@ -81,13 +81,8 @@ class BaseProcessor:
 
 class LocalizationProcessor(BaseProcessor):
     def process(self, folder_path: Path):
-        # 本地化由于逻辑复杂（扫描代码），保持原有清空逻辑，但记录产出的文件
+        # 本地化记录全部产出的文件
         target_loc_dir = self.staging_dir / self.mod_id / "localization"
-
-        # 删除旧的本地化目录
-        if target_loc_dir.exists():
-            console.print(f"  [Loc] 清理旧目录: {target_loc_dir}")
-            shutil.rmtree(target_loc_dir)
 
         console.print(f"  [Loc] 处理本地化: {folder_path.name}")
         process_localization(
@@ -260,6 +255,13 @@ class AssetOrchestrator:
 
         return asset_roots
 
+    def _cleanup_localization(self):
+        """在所有处理开始前，统一清理一次本地化输出目录"""
+        target_loc_dir = self.staging_dir / self.mod_id / "localization"
+        if target_loc_dir.exists():
+            console.print(f"  [Loc] 清理旧本地化目录: {target_loc_dir}")
+            shutil.rmtree(target_loc_dir)
+
     def cleanup_orphans(self):
         """清理不再属于任何 asset 源的陈旧文件"""
         # 需要检查的两个主要输出目录
@@ -297,6 +299,8 @@ class AssetOrchestrator:
             return
 
         console.print(f"🏗️  [bold]开始编排资源...[/bold]")
+        
+        self._cleanup_localization()
 
         for assets_path in asset_roots:
             console.print(f"  📂 来自: [blue]{assets_path.parent.name}[/blue]")
