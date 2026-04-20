@@ -7,7 +7,8 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Self;
@@ -40,7 +41,7 @@ public class BellyStrike() : MasoBaseCard(new CardInitMessage
     private const int TemporaryStrength = 4;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<StrengthPower>(TemporaryStrength)
             .AddToolTips(),

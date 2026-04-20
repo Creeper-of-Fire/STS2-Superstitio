@@ -15,7 +15,7 @@
 //     private const int StatisfyTimesUpgrade = 1;
 //
 //     /// <inheritdoc />
-//     protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+//     public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
 //     [
 //         new PowerVar<FastWindUpPower>(StatisfyTimes).WithUpgrade(StatisfyTimesUpgrade)
 //     ];

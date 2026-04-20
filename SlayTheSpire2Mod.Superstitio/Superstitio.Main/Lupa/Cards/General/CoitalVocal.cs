@@ -3,7 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.General;
@@ -31,7 +31,7 @@ public class CoitalVocal() : LupaBaseCard(new CardInitMessage
     private const int BlockUpgrade = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new BlockVar(Block, ValueProp.Move).WithUpgrade(BlockUpgrade)
     ];

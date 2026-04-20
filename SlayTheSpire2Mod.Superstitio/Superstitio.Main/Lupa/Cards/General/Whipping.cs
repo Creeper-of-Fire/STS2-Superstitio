@@ -3,10 +3,11 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
+using Superstitio.Api.DynamicVars.Extensions;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
 
@@ -41,7 +42,7 @@ public class Whipping() : LupaBaseCard(new CardInitMessage
     private const int FelixGain = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(BaseDamage, ValueProp.Move).WithUpgrade(DamageUpgradeAmount),
         new DynamicVar(nameof(DamageToFelixRate), DamageToFelixRate).WithUpgrade(DamageToFelixRateUpgrade),

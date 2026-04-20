@@ -5,7 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Lupa.Base;
 
@@ -41,7 +41,7 @@ public class ZenState() : LupaBaseCard(new CardInitMessage
     private const int SelectCount = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new BlockVar(CorruptusRemove, ValueProp.Move).WithUpgrade(CorruptusRemoveUpgrade)
             .AddToolTips<CorruptusPower>(),

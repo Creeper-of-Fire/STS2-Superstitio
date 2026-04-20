@@ -1,5 +1,6 @@
 ﻿using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Api.Power;
 using Superstitio.Main.Base;
 
 namespace Superstitio.Main.Features.PowerCardPower;

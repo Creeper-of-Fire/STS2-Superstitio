@@ -3,7 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.General;
@@ -32,7 +32,7 @@ public class MeasureDick() : LupaBaseCard(new CardInitMessage
     private const int Energy = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new CardsVar(SelectCount).WithUpgrade(SelectCountUpgrade),
         new EnergyVar(Energy).AddToolTips(this.EnergyHoverTip),

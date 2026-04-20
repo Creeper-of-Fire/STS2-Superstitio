@@ -4,11 +4,12 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.BaseLib.HangingCard;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.HangingCard;
+using Superstitio.Api.HangingCard.UI;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.Extensions;
-using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.General;
@@ -37,7 +38,7 @@ public class Ahegao() : LupaBaseCard(new CardInitMessage
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(2, ValueProp.Move).WithUpgrade(3),
         new RepeatVar(2),

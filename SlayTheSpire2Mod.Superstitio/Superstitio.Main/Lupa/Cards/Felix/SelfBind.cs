@@ -3,8 +3,8 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Felix;
@@ -36,7 +36,7 @@ public class SelfBind() : LupaBaseCard(new CardInitMessage
     private const int DexterityLoss = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<StrengthPower>(Strength).WithUpgrade(StrengthUpgrade),
         new PowerVar<DexterityPower>(DexterityLoss),

@@ -3,10 +3,11 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
+using Superstitio.Api.DynamicVars.Extensions;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.DynamicVars;
 using Superstitio.Main.DynamicVars.Extensions;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Maso.Base;
 
@@ -52,7 +53,7 @@ public class Spark() : MasoBaseCard(new CardInitMessage()
     private const int DamageUpgrade = 2;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageSelfVar(DamageSelf, ValueProp.Move),
         new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade),

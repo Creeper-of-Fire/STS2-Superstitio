@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Godot.NET.Sdk/4.5.1">
-<!--    <PropertyGroup>-->
-<!--        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
-<!--        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>-->
-<!--    </PropertyGroup>-->
-<!--    <Target Name="CleanGodotGeneratedFiles" BeforeTargets="CoreCompile">-->
-<!--        <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)\Godot.SourceGenerators" />-->
-<!--    </Target>-->
-    
+    <!--    <PropertyGroup>-->
+    <!--        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+    <!--        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>-->
+    <!--    </PropertyGroup>-->
+    <!--    <Target Name="CleanGodotGeneratedFiles" BeforeTargets="CoreCompile">-->
+    <!--        <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)\Godot.SourceGenerators" />-->
+    <!--    </Target>-->
+
     <!-- 通用的游戏DLL引用 -->
     <ItemGroup>
         <!-- Harmony (Mod核心库) -->
@@ -34,12 +34,19 @@
         </Reference>
 
         <!-- RitsuLib -->
-<!--        <Reference Include="STS2-RitsuLib">-->
-<!--            <HintPath>$(ModsPath)/STS2-RitsuLib/STS2-RitsuLib.dll</HintPath>-->
-<!--            <Private>false</Private>-->
-<!--        </Reference>-->
+        <!--        <Reference Include="STS2-RitsuLib">-->
+        <!--            <HintPath>$(ModsPath)/STS2-RitsuLib/STS2-RitsuLib.dll</HintPath>-->
+        <!--            <Private>false</Private>-->
+        <!--        </Reference>-->
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="assets\**" />
+        <Folder Include="assets\**"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Superstitio.Api.BaseLib\Superstitio.Api.BaseLib.csproj" />
+        <ProjectReference Include="..\Superstitio.Api\Superstitio.Api.csproj"/>
+        <ProjectReference Include="..\Superstitio.Analyzer\Superstitio.Analyzer.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
     </ItemGroup>
 </Project>

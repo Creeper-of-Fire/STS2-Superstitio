@@ -2,10 +2,10 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
-using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.HangingCard.UI;
+using Superstitio.Api.BaseLib.HangingCard;
+using Superstitio.Api.Card;
+using Superstitio.Api.HangingCard;
+using Superstitio.Api.HangingCard.UI;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.Felix;
@@ -36,7 +36,7 @@ public class CalmDown() : LupaBaseCard(new CardInitMessage
 }), ISimpleHangingCardHighlighter, ICanDoStuffWithHangingQueue
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade => [];
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade => [];
 
     /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>

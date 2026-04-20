@@ -4,11 +4,12 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.BaseLib.HangingCard;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.HangingCard;
+using Superstitio.Api.HangingCard.UI;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.Extensions;
-using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -38,7 +39,7 @@ public class KokiHand() : MasoBaseCard(new CardInitMessage
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(3, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(2).WithUpgrade(1),

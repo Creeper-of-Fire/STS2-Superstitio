@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using Superstitio.Api.Card;
 using Superstitio.Main.Resource;
 
 namespace Superstitio.Main.Base;
@@ -26,7 +27,7 @@ public abstract class BaseDefend() : SuperstitioBaseCard(new CardInitMessage
     ];
 
     /// <inheritdoc/>
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new BlockVar(5, ValueProp.Move).WithUpgrade(3)
     ];

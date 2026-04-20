@@ -8,7 +8,9 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.Power;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Maso.Base;
 using Superstitio.Main.Resource;
@@ -48,7 +50,7 @@ public class DeathDoor() : MasoBaseCard(new CardInitMessage
     private const int DeathDoorCountUpgrade = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<DeathDoorPower>(DeathDoorCount).WithUpgrade(DeathDoorCountUpgrade)
     ];

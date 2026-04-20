@@ -1,0 +1,39 @@
+﻿<Project Sdk="Godot.NET.Sdk/4.5.1">
+    <!-- 通用的游戏DLL引用 -->
+    <ItemGroup>
+        <!-- Harmony (Mod核心库) -->
+        <Reference Include="0Harmony">
+            <HintPath>$(Sts2LibPath)0Harmony.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <!-- 游戏主程序集 -->
+        <Reference Include="sts2">
+            <HintPath>$(Sts2LibPath)sts2.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <!-- GodotSharp -->
+        <Reference Include="GodotSharp">
+            <HintPath>$(Sts2LibPath)/GodotSharp.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <!-- BaseLib -->
+<!--        <Reference Include="BaseLib">-->
+<!--            <HintPath>$(ModsPath)/BaseLib/BaseLib.dll</HintPath>-->
+<!--            <Private>false</Private>-->
+<!--        </Reference>-->
+
+        <!-- RitsuLib -->
+        <!--        <Reference Include="STS2-RitsuLib">-->
+        <!--            <HintPath>$(ModsPath)/STS2-RitsuLib/STS2-RitsuLib.dll</HintPath>-->
+        <!--            <Private>false</Private>-->
+        <!--        </Reference>-->
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Superstitio.Analyzer\Superstitio.Analyzer.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+</Project>

@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using Superstitio.Api.DynamicVars.Extensions;
 using Superstitio.Main.DynamicVars.Extensions;
 using Superstitio.Main.Features.Felix;
 

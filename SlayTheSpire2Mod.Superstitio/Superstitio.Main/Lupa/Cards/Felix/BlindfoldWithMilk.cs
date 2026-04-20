@@ -4,8 +4,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Features.Milk;
 using Superstitio.Main.Lupa.Base;
 
@@ -40,7 +40,7 @@ public class BlindfoldWithMilk() : LupaBaseCard(new CardInitMessage
     private const int MilkUpgrade = 2;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(Damage, ValueProp.Move).WithUpgrade(DamageUpgrade)
             .AddToolTips(StunIntent.GetStaticHoverTip()),

@@ -1,15 +1,16 @@
-﻿using BaseLib.Cards.Variables;
-using MegaCrit.Sts2.Core.CardSelection;
+﻿using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Base;
+using Superstitio.Api.Card;
+using Superstitio.Api.DynamicVars;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.Power;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Lupa.Base;
 
@@ -59,7 +60,7 @@ public class Overdraft() : LupaBaseCard(new CardInitMessage
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DrawCardsVar(3).WithUpgrade(1),
         new PowerVar<OverdraftPower>(1)

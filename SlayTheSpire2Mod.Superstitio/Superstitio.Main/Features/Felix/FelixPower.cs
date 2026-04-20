@@ -9,6 +9,8 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Runs;
+using Superstitio.Analyzer;
+using Superstitio.Api.Power;
 using Superstitio.Main.Base;
 using Superstitio.Main.Features.Felix.UI;
 
@@ -136,6 +138,7 @@ public class FelixPower() : SuperstitioBasePower(new PowerInitMessage
 /// 达到高潮后事件接口
 /// 允许监听者在角色达到高潮时执行自定义逻辑
 /// </summary>
+[AttachedTo(typeof(AbstractModel))]
 public interface IAfterClimaxReached
 {
     /// <summary>

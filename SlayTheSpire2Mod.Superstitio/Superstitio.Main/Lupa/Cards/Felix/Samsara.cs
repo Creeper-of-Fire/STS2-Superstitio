@@ -7,7 +7,9 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.Power;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Lupa.Base;
 
@@ -51,7 +53,7 @@ public class Samsara() : LupaBaseCard(new CardInitMessage
     private const int DrawWhenUse = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new CardsVar(Wounds).WithUpgrade(WoundsUpgrade).AddToolTips(HoverTipFactory.FromCard<Wound>()),
         new PowerVar<SamsaraPower>(DrawWhenUse)

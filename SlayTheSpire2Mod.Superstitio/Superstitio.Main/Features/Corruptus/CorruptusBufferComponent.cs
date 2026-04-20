@@ -2,13 +2,15 @@
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Extensions;
+using Superstitio.Analyzer;
+using Superstitio.Api.Extensions;
 
 namespace Superstitio.Main.Features.Corruptus;
 
 /// <summary>
 /// 定义拥有腐朽缓冲组件的实体接口。
 /// </summary>
+[AttachedTo(typeof(AbstractModel))]
 public interface ICorruptusBuffer
 {
     /// <summary>

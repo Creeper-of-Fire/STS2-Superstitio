@@ -1,9 +1,9 @@
 ﻿using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Base;
 using Superstitio.Main.Base.Character;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Maso.Base;
 using Superstitio.Main.Maso.Cards.Base;
 using Superstitio.Main.Maso.Relics;

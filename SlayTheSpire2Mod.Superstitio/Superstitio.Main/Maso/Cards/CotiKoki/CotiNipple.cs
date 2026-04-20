@@ -3,8 +3,8 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Features.Milk;
 using Superstitio.Main.Maso.Base;
 
@@ -32,7 +32,7 @@ public class CotiNipple() : MasoBaseCard(new CardInitMessage
     private const int Milk = 2;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(5, ValueProp.Move).WithUpgrade(2),
         new PowerVar<MilkPower>(Milk),

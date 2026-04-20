@@ -4,8 +4,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -32,13 +32,16 @@ public class CotiNavel() : MasoBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain];
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    [
+        CardKeyword.Retain
+    ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<VulnerablePower>(1).AddToolTips(),
-        new DamageVar(22,ValueProp.Move).WithUpgrade(7),
+        new DamageVar(22, ValueProp.Move).WithUpgrade(7),
     ];
 
     /// <inheritdoc />

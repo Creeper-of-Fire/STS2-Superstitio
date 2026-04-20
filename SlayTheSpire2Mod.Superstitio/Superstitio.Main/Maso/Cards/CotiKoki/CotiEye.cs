@@ -7,13 +7,15 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
+using Superstitio.Api.BaseLib.HangingCard;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.HangingCard;
+using Superstitio.Api.HangingCard.UI;
 using Superstitio.Main.DynamicVars;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Features.Corruptus;
-using Superstitio.Main.Features.HangingCard;
-using Superstitio.Main.Features.HangingCard.UI;
 using Superstitio.Main.Maso.Base;
+using SuperstitioBaseCard = Superstitio.Main.Base.SuperstitioBaseCard;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
 
@@ -43,10 +45,13 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    [
+        CardKeyword.Exhaust
+    ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(2, ValueProp.Move).WithUpgrade(1),
         new BlockVar(4, ValueProp.Move).WithUpgrade(1), // 这里借用BlockVar来表示移除腐朽的数值
@@ -106,10 +111,13 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    [
+        CardKeyword.Exhaust
+    ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DamageVar(4, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(3),
@@ -131,7 +139,7 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
         CardTypeFilter: CardType.None,
         CardVisualEffect: new CardVisualEffect
         {
-            HangGlowType =  HangGlowType.Good,
+            HangGlowType = HangGlowType.Good,
             TargetType = TargetType.Self
         }
     );

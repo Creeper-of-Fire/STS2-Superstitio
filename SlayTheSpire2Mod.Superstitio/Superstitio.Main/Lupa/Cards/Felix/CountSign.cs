@@ -3,8 +3,8 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Lupa.Base;
 
@@ -33,10 +33,13 @@ public class CountSign() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain];
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    [
+        CardKeyword.Retain,
+    ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new ExtraDamageVar(3).WithUpgrade(1),
         new CalculationBaseVar(12).WithUpgrade(4),

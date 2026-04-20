@@ -6,7 +6,9 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using Superstitio.Main.Base;
-using Superstitio.Main.Extensions;
+using Superstitio.Api.Card;
+using Superstitio.Api.Extensions;
+using Superstitio.Api.Power;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Features.Felix;
 using Superstitio.Main.Features.PowerCardPower;
@@ -41,7 +43,7 @@ public class JuicyPussy() : LupaBaseCard(new CardInitMessage
     private const int CorruptusRemoveWhenClimaxUpgrade = 1;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new PowerVar<JuicyPussyPower>(CorruptusRemoveWhenClimax).WithUpgrade(CorruptusRemoveWhenClimaxUpgrade)
             .AddToolTips<JuicyPussyPower>(),

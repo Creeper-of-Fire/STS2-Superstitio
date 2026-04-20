@@ -7,8 +7,9 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
+using Superstitio.Api.Power;
 using Superstitio.Main.Patches.LocPatch;
-using static Superstitio.Main.Utils.SuperstitioLocStringFactory;
+using static Superstitio.Api.BaseLib.Utils.SuperstitioLocStringFactory;
 
 namespace Superstitio.Main.Base;
 

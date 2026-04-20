@@ -6,7 +6,8 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Main.Base;
-using Superstitio.Main.DynamicVars;
+using Superstitio.Api.Card;
+using Superstitio.Api.Power;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Lupa.Base;
@@ -44,13 +45,13 @@ public class SwallowIt() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
     [
         CardKeyword.Retain,
     ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new BlockVar(5, ValueProp.Move).WithUpgrade(3),
         new PowerVar<SwallowItPower>(1),

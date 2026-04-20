@@ -1,6 +1,6 @@
 ﻿using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using Superstitio.Main.Base;
+using Superstitio.Api.Card;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.Maso.Base;
 
@@ -24,7 +24,7 @@ public class ChooseCoitalPosture() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -53,7 +53,7 @@ public class ExposeSelf() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -82,36 +82,7 @@ public class PutEveryCumInBody() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
-        [];
-
-    /// <inheritdoc />
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        // TODO: 实现卡牌效果
-        await Task.CompletedTask;
-    }
-}
-
-/**
- * Title = "全裸上学日"
- *
- * Description = """
- * 从弃牌堆中选择最多 **3 (4)** 张牌，将它们升级并放入抽牌堆。
- * """
- *
- * Flavor = ""
- */
-public class NakedToSchool() : LupaBaseCard(new CardInitMessage
-{
-    BaseCost = 1,
-    Type = CardType.Skill,
-    Rarity = CardRarity.Uncommon,
-    Target = TargetType.Self
-})
-{
-    /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -140,7 +111,7 @@ public class NudeLive() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -169,7 +140,7 @@ public class Philter() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -184,7 +155,7 @@ public class Philter() : LupaBaseCard(new CardInitMessage
  * Title = "私房照"
  *
  * Description = """
- * 获得 **4 (8)** 点**引诱格挡**。本回合获得 **2 (3)** 次**激情**。
+ * 获得 **4 (8)** 点**引诱格挡**。获得 **2 (3)** 次**激情**。
  * """
  *
  * Flavor = ""
@@ -198,7 +169,7 @@ public class PrivatePhoto() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -227,7 +198,7 @@ public class SemenBath() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -256,7 +227,7 @@ public class GangBangPrepare() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -285,7 +256,7 @@ public class Ku_Koro() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -314,7 +285,7 @@ public class DrinkSemenBeer() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -343,7 +314,7 @@ public class SemenTattoo() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -372,7 +343,7 @@ public class DrySemen() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -401,7 +372,7 @@ public class SemenLubricate() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -430,7 +401,7 @@ public class SemenMagic() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -459,7 +430,7 @@ public class UnBirth() : MasoBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -488,7 +459,7 @@ public class HaveBirthWith() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -517,7 +488,7 @@ public class Tease() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -546,7 +517,7 @@ public class OneMoreHour() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -575,7 +546,7 @@ public class PassiveGangBang() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -604,7 +575,7 @@ public class ReadyToSex() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -633,7 +604,7 @@ public class RideDildoBike() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -662,7 +633,7 @@ public class AddSexToy() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -694,7 +665,7 @@ public class ForceOrgasm() : LupaBaseCard(new CardInitMessage
     protected override bool HasEnergyCostX => true;
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -723,7 +694,7 @@ public class ForcePutSexToy() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -752,7 +723,7 @@ public class TimeStop() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -781,7 +752,7 @@ public class Endure() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -810,7 +781,7 @@ public class EscapeConjuring() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -839,7 +810,7 @@ public class BecomeTrash() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -868,7 +839,7 @@ public class GloryHole() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -897,7 +868,7 @@ public class MonsterGirlMode() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -926,7 +897,7 @@ public class ChokeChoker() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -959,7 +930,7 @@ public class HideInPussy() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -988,7 +959,7 @@ public class EroSion() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1021,7 +992,7 @@ public class FeelPhantomBody() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1054,7 +1025,7 @@ public class GangBang() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1085,7 +1056,7 @@ public class GiveBirth() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1116,7 +1087,7 @@ public class FishGirlMode() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1145,7 +1116,7 @@ public class KakaaGirlMode() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1174,7 +1145,7 @@ public class SlimeGirlMode() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1212,13 +1183,13 @@ public class SelfReference() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
     [
         CardKeyword.Unplayable,
     ];
 
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1253,7 +1224,7 @@ public class SexToy() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />
@@ -1282,7 +1253,7 @@ public class VulnerableTogether() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    protected override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
+    public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
         [];
 
     /// <inheritdoc />

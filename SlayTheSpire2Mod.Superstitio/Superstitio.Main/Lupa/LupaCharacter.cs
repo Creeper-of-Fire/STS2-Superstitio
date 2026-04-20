@@ -1,13 +1,12 @@
 ﻿using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
+using Superstitio.Api.Extensions;
 using Superstitio.Main.Base;
 using Superstitio.Main.Base.Character;
-using Superstitio.Main.Extensions;
 using Superstitio.Main.Lupa.Base;
 using Superstitio.Main.Lupa.Cards.Base;
 using Superstitio.Main.Lupa.Relics;
-using Superstitio.Main.Maso.Cards.CotiKoki;
 
 namespace Superstitio.Main.Lupa;
 

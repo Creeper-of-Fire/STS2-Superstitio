@@ -1,6 +1,8 @@
 ﻿using BaseLib.Utils;
 using Superstitio.Main.Base;
+using Superstitio.Api.Card;
 using Superstitio.Main.SubPool;
+using SuperstitioBaseCard = Superstitio.Main.Base.SuperstitioBaseCard;
 
 namespace Superstitio.Main.Lupa.Base;
 
