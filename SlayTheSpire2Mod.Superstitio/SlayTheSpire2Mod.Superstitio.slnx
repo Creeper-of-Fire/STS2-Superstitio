@@ -1,3 +1,4 @@
 ﻿<Solution>
-  <Project Path="Superstitio.Main\Superstitio.Main.csproj" />
+  <Project Path="Superstitio.Analyzer/Superstitio.Analyzer.csproj" />
+  <Project Path="Superstitio.Main/Superstitio.Main.csproj" />
 </Solution>

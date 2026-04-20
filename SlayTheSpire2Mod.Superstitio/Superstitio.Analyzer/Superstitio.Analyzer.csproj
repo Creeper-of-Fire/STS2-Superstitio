@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <NoWarn>$(NoWarn);RS2008;CS1591</NoWarn>
+
+        <!-- 这个包是一个纯分析器包，不需要输出普通的 dll 让别人引用 -->
+        <IncludeBuildOutput>false</IncludeBuildOutput> 
+        <!-- 作为分析器项目被引用 -->
+        <IsRoslynComponent>true</IsRoslynComponent>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Injections\AttachedToAttribute.cs"/>
+    </ItemGroup>
+</Project>
