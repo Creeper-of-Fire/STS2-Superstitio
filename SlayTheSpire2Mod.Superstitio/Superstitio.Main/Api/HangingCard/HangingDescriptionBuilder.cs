@@ -111,7 +111,7 @@ public static class HangingStaticLocs
 
     public static LocString SequenceName => KeywordLocString(HangingKey, "Sequence", "name");
     public static LocString SequenceDescription => KeywordLocString(HangingKey, "Sequence", "description");
-    
+
     public static IHoverTip SequenceHoverTip => new HoverTip(
         SequenceName,
         SequenceDescription
@@ -138,14 +138,14 @@ public static class HangingStaticLocs
 /// </summary>
 public static class HangingDescriptionBuilder
 {
-    public static LocString AddExtraArgsToDescription(LocString baseDescription, HangingCardConfig config)
+    public static LocString AddExtraArgsToDescription(TriggerCountVar TriggerCount, HangingCardConfig config, LocString baseDescription)
     {
         var (hangingKeyword, hangingDescription) = BuildHangingDescription(config);
 
         // 像填表一样填入参数，利用 C# 具名参数，绝不弄混！
         var frame = new LocCardDescriptionFrame().Fill(
             HangingKeyword: hangingKeyword,
-            TriggerCount: config.TriggerCount,
+            TriggerCount: TriggerCount,
             HangingDescription: hangingDescription
         );
 

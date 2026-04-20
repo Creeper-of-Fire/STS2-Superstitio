@@ -25,14 +25,14 @@ public record DynamicVarSpec(DynamicVar DynamicVar)
     /// <summary>
     /// 额外的提示内容。
     /// </summary>
-    public Func<IEnumerable<IHoverTip>> ExtraHoverTips { get; init; } = () => [];
+    public Func<DynamicVarSpec, IEnumerable<IHoverTip>> ExtraHoverTips { get; init; } = _ => [];
 
     /// <summary>
     /// 从 <see cref="DynamicVar"/> 隐式转换为 <see cref="DynamicVarSpec"/>，升级值为 0。
     /// </summary>
     /// <param name="dynamicVar">动态变量。</param>
     public static implicit operator DynamicVarSpec(DynamicVar dynamicVar) =>
-        new(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = () => [] };
+        new(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = _ => [] };
 }
 
 /// <summary>
@@ -47,7 +47,23 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec WithUpgrade(decimal upgradeValue)
         {
-            return new DynamicVarSpec(dynamicVar) { UpgradeValue = upgradeValue, ExtraHoverTips = () => [] };
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = upgradeValue, ExtraHoverTips = _ => [] };
+        }
+
+        /// <summary>
+        /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
+        /// </summary>
+        public DynamicVarSpec AddToolTips(Func<DynamicVarSpec, IEnumerable<IHoverTip>> extraHoverTips)
+        {
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = extraHoverTips };
+        }
+
+        /// <summary>
+        /// 创建一个带有指定提示的 <see cref="DynamicVarSpec"/> 实例。
+        /// </summary>
+        public DynamicVarSpec AddToolTips(Func<DynamicVarSpec, IHoverTip> extraHoverTip)
+        {
+            return dynamicVar.AddToolTips(it => [extraHoverTip(it)]);
         }
 
         /// <summary>
@@ -55,7 +71,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips(Func<IEnumerable<IHoverTip>> extraHoverTips)
         {
-            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = extraHoverTips };
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = _ => extraHoverTips() };
         }
 
         /// <summary>
@@ -71,7 +87,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips(IEnumerable<IHoverTip> extraHoverTips)
         {
-            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = () => extraHoverTips };
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = _ => extraHoverTips };
         }
 
         /// <summary>
@@ -87,7 +103,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips<TPower>() where TPower : PowerModel
         {
-            return new DynamicVarSpec(dynamicVar) { ExtraHoverTips = () => [FromPower<TPower>()] };
+            return new DynamicVarSpec(dynamicVar) { ExtraHoverTips = _ => [FromPower<TPower>()] };
         }
     }
 
@@ -98,7 +114,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips()
         {
-            return new DynamicVarSpec(cardTitleVar) { ExtraHoverTips = () => [cardTitleVar.HoverTip] };
+            return new DynamicVarSpec(cardTitleVar) { ExtraHoverTips = it => [((CardTitleVar)it.DynamicVar).HoverTip] };
         }
     }
 
@@ -109,7 +125,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips(CardModel card)
         {
-            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = () => [ForEnergy(card)] };
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = _ => [ForEnergy(card)] };
         }
     }
 
@@ -120,7 +136,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips()
         {
-            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = () => [FromPower<TPower>()] };
+            return new DynamicVarSpec(dynamicVar) { UpgradeValue = 0, ExtraHoverTips = _ => [FromPower<TPower>()] };
         }
     }
 
@@ -139,7 +155,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips(IEnumerable<IHoverTip> extraHoverTips)
         {
-            return varSpec with { ExtraHoverTips = () => [..varSpec.ExtraHoverTips(), ..extraHoverTips] };
+            return varSpec with { ExtraHoverTips = it => [..varSpec.ExtraHoverTips(it), ..extraHoverTips] };
         }
 
         /// <summary>
@@ -155,7 +171,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips(Func<IEnumerable<IHoverTip>> extraHoverTips)
         {
-            return varSpec with { ExtraHoverTips = () => [..varSpec.ExtraHoverTips(), ..extraHoverTips()] };
+            return varSpec with { ExtraHoverTips = it => [..varSpec.ExtraHoverTips(it), ..extraHoverTips()] };
         }
 
         /// <summary>
@@ -171,7 +187,7 @@ public static class DynamicVarExtensions
         /// </summary>
         public DynamicVarSpec AddToolTips<TPower>() where TPower : PowerModel
         {
-            return varSpec with { ExtraHoverTips = () => [..varSpec.ExtraHoverTips(), FromPower<TPower>()] };
+            return varSpec with { ExtraHoverTips = it => [..varSpec.ExtraHoverTips(it), FromPower<TPower>()] };
         }
     }
 }

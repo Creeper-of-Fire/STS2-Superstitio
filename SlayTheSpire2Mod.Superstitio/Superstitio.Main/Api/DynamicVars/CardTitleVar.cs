@@ -13,12 +13,12 @@ namespace Superstitio.Api.DynamicVars;
 public class CardTitleVar(Type cardType, int initUpgradeTimes = 0) : DynamicVar(cardType.Name, initUpgradeTimes), IHighlightableDynamicVar
 {
     /// <inheritdoc />
-    public override string ToString() => CardUtils.GetUpgradeCardClone(cardType, (int)this.PreviewValue).Title;
+    public override string ToString() => CardUtils.GetUpgradeCardClone(cardType, this.IntValue).Title;
 
     /// <summary>
     /// 悬浮提示
     /// </summary>
-    public IHoverTip HoverTip => HoverTipFactory.FromCard(CardUtils.GetUpgradeCardClone(cardType, (int)this.PreviewValue));
+    public IHoverTip HoverTip => HoverTipFactory.FromCard(CardUtils.GetUpgradeCardClone(cardType, this.IntValue));
 
     /// <inheritdoc />
     public string OverrideToHighlightedString(bool inverse)

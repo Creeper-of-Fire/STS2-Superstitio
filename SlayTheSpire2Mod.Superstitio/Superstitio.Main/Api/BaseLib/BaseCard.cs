@@ -84,13 +84,20 @@ public abstract class BaseCard(CardInitMessage cardInitMessage) : CustomCardMode
         base.AddExtraArgsToDescription(description);
 
         if (this is IWithHangingConfig withHangingConfig)
-            HangingDescriptionBuilder.AddExtraArgsToDescription(description, withHangingConfig.HangingCardConfig);
+            HangingDescriptionBuilder.AddExtraArgsToDescription(
+                this.DynamicVars.TriggerCount, withHangingConfig.HangingCardConfig, description);
     }
 
     /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips => base.ExtraHoverTips
         .TryAddTip(this.Flavor)
-        .TryAddTip(this.InitVarsWithUpgrade.SelectMany(it => it.ExtraHoverTips()))
+        .TryAddTip(this.InitVarsWithUpgrade.SelectMany(it =>
+        {
+            if (!this.DynamicVars.TryGetValue(it.DynamicVar.Name, out var dynamicVar))
+                return [];
+
+            return it.ExtraHoverTips(dynamicVar);
+        }))
         .TryAddTip(this.DescriptionWords.Select(it => it.HoverTip))
         .TryAddTip(this is IWithHangingConfig withHangingConfig
             ? HangingDescriptionBuilder.GetHoverTips(withHangingConfig.HangingCardConfig, showHangingTotalDescription: true)

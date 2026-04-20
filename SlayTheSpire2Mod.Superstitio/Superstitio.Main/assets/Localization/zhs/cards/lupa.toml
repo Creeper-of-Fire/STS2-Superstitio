@@ -5,6 +5,7 @@ hangingEffect = "抽{DrawCards:diff()}张牌"
 flavor = "何以解忧？聊以自慰。"
 [Masturbate.sfw]
 title = "蓄势待发"
+description = "获得{Felix:diff()}点[pink]狂热[/pink]。\n{CardHangingDescription}"
 flavor = "蓄势待发，只待一击。"
 
 [JuicyPussy]
@@ -93,3 +94,13 @@ flavor = "这是荣耀的记号！"
 [CountSign.sfw]
 title = "盛怒"
 flavor = "我真的很生气。"
+[SwallowIt]
+title = "吞精"
+description = "获得{Block:diff()}点[gold]格挡[/gold]。\n获得一次{Keyword:Passion}。"
+flavor = "看，一滴都不剩哦。"
+[SwallowIt.power]
+description = "下次你失去生命时，将其转换为[sine][red]腐朽[/red][/sine]。"
+smartDescription = "下{Amount}次你失去生命时，将其转换为[sine][red]腐朽[/red][/sine]。"
+[SwallowIt.sfw]
+title = "挥袖"
+flavor = "此事平淡无奇。"

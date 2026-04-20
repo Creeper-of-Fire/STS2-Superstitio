@@ -74,8 +74,9 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 
         // 把 CotiEye 加入手牌
         var cotiEye = this.CombatState?.CreateCard<CotiEye>(this.Owner);
-        if (cotiEye is not null)
-            await CardPileCmd.AddGeneratedCardToCombat(cotiEye, PileType.Hand, addedByPlayer: true);
+        if (cotiEye is null) return;
+        CardCmd.Upgrade(cotiEye);
+        await CardPileCmd.AddGeneratedCardToCombat(cotiEye, PileType.Hand, addedByPlayer: true);
     }
 }
 
@@ -151,7 +152,10 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
         var token = this.CreateHangingToken(async (_, _) =>
         {
             var cotiEar = this.CombatState?.CreateCard<CotiEar>(this.Owner);
-            await CardPileCmd.AddGeneratedCardsToCombat(cotiEar is not null ? [cotiEar] : [], PileType.Hand, addedByPlayer: true);
+            if (cotiEar is null)
+                return;
+            CardCmd.Upgrade(cotiEar);
+            await CardPileCmd.AddGeneratedCardsToCombat([cotiEar], PileType.Hand, addedByPlayer: true);
         });
         await HangingCardManager.HangCard(token, this);
     }

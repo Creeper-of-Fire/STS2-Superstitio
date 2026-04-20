@@ -15,8 +15,8 @@ public abstract record AutoHangingCardTokenWithConfig(
     HangingCardConfig HangingCardConfig,
     PileType ReturnPileType
 ) : AutoHangingCardToken(
-    RemainCount: HangingCardConfig.TriggerCount.PreviewTriggers,
-    InitialCount: HangingCardConfig.TriggerCount.BaseTriggers,
+    RemainCount: HangingCardConfig.TriggerCount.IntValue,
+    InitialCount: HangingCardConfig.TriggerCount.IntValue,
     HangingCard: HangingCardConfig.Card,
     OriginalOwner: HangingCardConfig.Card.Owner,
     ReturnPileType: ReturnPileType

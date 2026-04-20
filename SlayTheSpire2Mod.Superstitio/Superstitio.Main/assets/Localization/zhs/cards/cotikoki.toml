@@ -71,7 +71,7 @@ flavor = "寄托了人类未来的魔神……前进！"
 [CotiEye]
 title = "性交-插入：眼交"
 description = "对[gold]自身和敌人[/gold]各造成{Damage:diff()}点伤害{Repeat:diff()}次。\n获得{WeakPower:diff()}层[gold]虚弱[/gold]。\n{CardHangingDescription}"
-hangingEffect = "将[gold]龙形拳[/gold]放入手中"
+hangingEffect = "将[gold]{CotiEar:diff()}[/gold]放入手中"
 flavor = "也许是脑交。总的来说还是取决于肉棒的主人敢不敢用力吧。"
 [CotiEye.sfw]
 title = "蛇形拳"
@@ -79,7 +79,7 @@ flavor = "灵动如蛇，虽伤敌自损，却也让敌方无所适从。"
 
 [CotiEar]
 title = "性交-插入：耳奸"
-description = "对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。\n移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。\n获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n将[gold]蛇形拳[/gold]放入手中。"
+description = "对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。\n移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。\n获得{FrailPower:diff()}层[gold]脆弱[/gold]。\n将[gold]{CotiEye:diff()}[/gold]放入手中。"
 flavor = "是脑交！要是脑子有触觉就好了，哧溜。"
 [CotiEar.sfw]
 title = "龙形拳"
