@@ -15,7 +15,7 @@ namespace Superstitio.Analyzer;
 /// </remarks>
 [Conditional("SUPERSTITIO_ANALYZER_D8D5477E")] 
 [AttributeUsage(AttributeTargets.Interface, AllowMultiple = true)]
-internal class AttachedToAttribute(Type targetType) : Attribute
+internal sealed class AttachedToAttribute(Type targetType) : Attribute
 {
     /// <summary>
     /// 目标类型
