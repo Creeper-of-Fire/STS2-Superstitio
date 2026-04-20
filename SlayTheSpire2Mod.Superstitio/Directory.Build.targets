@@ -29,89 +29,89 @@
         <MergedXmlPath>$(OutputDir)$(ModName).xml</MergedXmlPath>
     </PropertyGroup>
 
-<!--    <Target Name="RenameMainOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">-->
+    <Target Name="RenameMainOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
+        <ItemGroup>
+            <FilesToRename Include="$(OutputDir)$(MainProjectName).dll;
+                               $(OutputDir)$(MainProjectName).pdb;
+                               $(OutputDir)$(MainProjectName).xml" />
+        </ItemGroup>
+
+        <Move SourceFiles="@(FilesToRename)"
+              DestinationFiles="@(FilesToRename->'$(OutputDir)%(Filename)%(Extension)'->Replace('$(MainProjectName)', '$(ModName)'))"
+              OverwriteReadOnlyFiles="true" />
+
+        <Message Text="[Superstitio2] 已将主程序集重命名为 $(ModName).dll/pdb/xml" Importance="high" />
+    </Target>
+
+<!--    &lt;!&ndash; ================================================================== &ndash;&gt;-->
+<!--    &lt;!&ndash; == 合并所有模组 DLL == &ndash;&gt;-->
+<!--    &lt;!&ndash; ================================================================== &ndash;&gt;-->
+<!--    <Target Name="MergeModDlls"-->
+<!--            AfterTargets="Build"-->
+<!--            Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">-->
+
+<!--        <Message Text=" " Importance="high"/>-->
+<!--        <Message Text="[Superstitio2] ========================================" Importance="high"/>-->
+<!--        <Message Text="[Superstitio2] 正在合并 DLL..." Importance="high"/>-->
+
+<!--        &lt;!&ndash; 步骤0：删除旧的合并文件，强制重新生成 &ndash;&gt;-->
+<!--        <Delete Files="$(MergedDllPath)" Condition="Exists('$(MergedDllPath)')"/>-->
+<!--        <Delete Files="$(MergedPdbPath)" Condition="Exists('$(MergedPdbPath)')"/>-->
+<!--        <Delete Files="$(MergedXmlPath)" Condition="Exists('$(MergedXmlPath)')"/>-->
+<!--        <Message Text="[Superstitio2] 已删除旧的合并文件" Importance="high"/>-->
+
+<!--        &lt;!&ndash; 步骤1：收集所有需要合并的 DLL &ndash;&gt;-->
+<!--        <Message Text="[Superstitio2] 步骤1：扫描需要合并的 DLL..." Importance="high"/>-->
+
 <!--        <ItemGroup>-->
-<!--            <FilesToRename Include="$(OutputDir)$(MainProjectName).dll;-->
-<!--                               $(OutputDir)$(MainProjectName).pdb;-->
-<!--                               $(OutputDir)$(MainProjectName).xml" />-->
+<!--            &lt;!&ndash; 排除系统 DLL 和已知的不需要合并的 DLL &ndash;&gt;-->
+<!--            <AllDllsInOutput Include="$(OutputDir)*.dll"-->
+<!--                             Exclude="$(OutputDir)System*.dll;-->
+<!--                                  $(OutputDir)Microsoft*.dll;-->
+<!--                                  $(OutputDir)netstandard.dll;-->
+<!--                                  $(OutputDir)mscorlib.dll;-->
+<!--                                  $(OutputDir)Mono*.dll;-->
+<!--                                  $(OutputDir)$(ModName).dll"/>  &lt;!&ndash; 排除之前合并的版本 &ndash;&gt;-->
+
+<!--            &lt;!&ndash; 提取主 DLL（项目自身） &ndash;&gt;-->
+<!--            <MainDll Include="$(TargetPath)"/>-->
+
+<!--            &lt;!&ndash; 其他 DLL 作为依赖 &ndash;&gt;-->
+<!--            <DependencyDlls Include="@(AllDllsInOutput)"-->
+<!--                            Exclude="@(MainDll)"/>-->
 <!--        </ItemGroup>-->
 
-<!--        <Move SourceFiles="@(FilesToRename)"-->
-<!--              DestinationFiles="@(FilesToRename->'$(OutputDir)%(Filename)%(Extension)'->Replace('$(MainProjectName)', '$(ModName)'))"-->
-<!--              OverwriteReadOnlyFiles="true" />-->
+<!--        &lt;!&ndash; 提取所有引用库所在的文件夹路径 &ndash;&gt;-->
+<!--        <ItemGroup>-->
+<!--            &lt;!&ndash; 收集所有引用的 DLL 所在的目录 &ndash;&gt;-->
+<!--            <ReferenceDirs Include="@(ReferencePath->'%(RecursiveDir)')" />-->
+<!--            &lt;!&ndash; 去重，并转换为 ILRepack 的 /lib 参数格式 &ndash;&gt;-->
+<!--            <LibPaths Include="@(ReferencePath->DirectoryName()->Distinct())" />-->
+<!--        </ItemGroup>-->
 
-<!--        <Message Text="[Superstitio2] 已将主程序集重命名为 $(ModName).dll/pdb/xml" Importance="high" />-->
+<!--        <PropertyGroup>-->
+<!--            &lt;!&ndash; 将路径数组拼接成多个 /lib:"path" 参数 &ndash;&gt;-->
+<!--            <LibArgs>@(LibPaths->'/lib:"%(Identity)"', ' ')</LibArgs>-->
+
+<!--            <DepCount>@(DependencyDlls->Count())</DepCount>-->
+<!--        </PropertyGroup>-->
+
+<!--        <Message Text="[Superstitio2]   主 DLL: @(MainDll)" Importance="high"/>-->
+<!--        <Message Text="[Superstitio2]   依赖 DLL 数量: @(DependencyDlls->Count())" Importance="high"/>-->
+<!--        <Message Text="[Superstitio2]   依赖 DLL 列表:" Importance="high" Condition="@(DependencyDlls->Count()) &gt; 0"/>-->
+<!--        <Message Text="[Superstitio2]     %(DependencyDlls.Filename)%(DependencyDlls.Extension)" Importance="high" Condition="@(DependencyDlls->Count()) &gt; 0"/>-->
+
+<!--        &lt;!&ndash; 如果有依赖，就直接调 ilrepack，简单粗暴 &ndash;&gt;-->
+<!--        <Exec Condition="'@(DependencyDlls->Count())' != '0'"-->
+<!--              Command="ilrepack /parallel /target:library /xmldocs $(LibArgs) /out:&quot;$(MergedDllPath)&quot; &quot;$(TargetPath)&quot; @(DependencyDlls->'&quot;%(Identity)&quot;', ' ')"/>-->
+
+<!--        &lt;!&ndash; 如果没有依赖，直接复制 &ndash;&gt;-->
+<!--        <Copy Condition="'@(DependencyDlls->Count())' == '0'" SourceFiles="$(TargetPath)" DestinationFiles="$(OutputPath)Superstitio2.dll" />-->
+
+<!--        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"-->
+<!--              DestinationFiles="$(MergedPdbPath)"-->
+<!--              Condition="!Exists('$(MergedPdbPath)') and Exists('$(TargetDir)$(TargetName).pdb')"/>-->
+
+<!--        <Message Text="[Superstitio2.Build] ✅ 流程结束。输出: $(MergedDllPath)" Importance="high"/>-->
 <!--    </Target>-->
-
-    <!-- ================================================================== -->
-    <!-- == 合并所有模组 DLL == -->
-    <!-- ================================================================== -->
-    <Target Name="MergeModDlls"
-            AfterTargets="Build"
-            Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">
-
-        <Message Text=" " Importance="high"/>
-        <Message Text="[Superstitio2] ========================================" Importance="high"/>
-        <Message Text="[Superstitio2] 正在合并 DLL..." Importance="high"/>
-
-        <!-- 步骤0：删除旧的合并文件，强制重新生成 -->
-        <Delete Files="$(MergedDllPath)" Condition="Exists('$(MergedDllPath)')"/>
-        <Delete Files="$(MergedPdbPath)" Condition="Exists('$(MergedPdbPath)')"/>
-        <Delete Files="$(MergedXmlPath)" Condition="Exists('$(MergedXmlPath)')"/>
-        <Message Text="[Superstitio2] 已删除旧的合并文件" Importance="high"/>
-
-        <!-- 步骤1：收集所有需要合并的 DLL -->
-        <Message Text="[Superstitio2] 步骤1：扫描需要合并的 DLL..." Importance="high"/>
-
-        <ItemGroup>
-            <!-- 排除系统 DLL 和已知的不需要合并的 DLL -->
-            <AllDllsInOutput Include="$(OutputDir)*.dll"
-                             Exclude="$(OutputDir)System*.dll;
-                                  $(OutputDir)Microsoft*.dll;
-                                  $(OutputDir)netstandard.dll;
-                                  $(OutputDir)mscorlib.dll;
-                                  $(OutputDir)Mono*.dll;
-                                  $(OutputDir)$(ModName).dll"/>  <!-- 排除之前合并的版本 -->
-
-            <!-- 提取主 DLL（项目自身） -->
-            <MainDll Include="$(TargetPath)"/>
-
-            <!-- 其他 DLL 作为依赖 -->
-            <DependencyDlls Include="@(AllDllsInOutput)"
-                            Exclude="@(MainDll)"/>
-        </ItemGroup>
-
-        <!-- 提取所有引用库所在的文件夹路径 -->
-        <ItemGroup>
-            <!-- 收集所有引用的 DLL 所在的目录 -->
-            <ReferenceDirs Include="@(ReferencePath->'%(RecursiveDir)')" />
-            <!-- 去重，并转换为 ILRepack 的 /lib 参数格式 -->
-            <LibPaths Include="@(ReferencePath->DirectoryName()->Distinct())" />
-        </ItemGroup>
-
-        <PropertyGroup>
-            <!-- 将路径数组拼接成多个 /lib:"path" 参数 -->
-            <LibArgs>@(LibPaths->'/lib:"%(Identity)"', ' ')</LibArgs>
-
-            <DepCount>@(DependencyDlls->Count())</DepCount>
-        </PropertyGroup>
-
-        <Message Text="[Superstitio2]   主 DLL: @(MainDll)" Importance="high"/>
-        <Message Text="[Superstitio2]   依赖 DLL 数量: @(DependencyDlls->Count())" Importance="high"/>
-        <Message Text="[Superstitio2]   依赖 DLL 列表:" Importance="high" Condition="@(DependencyDlls->Count()) &gt; 0"/>
-        <Message Text="[Superstitio2]     %(DependencyDlls.Filename)%(DependencyDlls.Extension)" Importance="high" Condition="@(DependencyDlls->Count()) &gt; 0"/>
-
-        <!-- 如果有依赖，就直接调 ilrepack，简单粗暴 -->
-        <Exec Condition="'@(DependencyDlls->Count())' != '0'"
-              Command="ilrepack /parallel /target:library /xmldocs $(LibArgs) /out:&quot;$(MergedDllPath)&quot; &quot;$(TargetPath)&quot; @(DependencyDlls->'&quot;%(Identity)&quot;', ' ')"/>
-
-        <!-- 如果没有依赖，直接复制 -->
-        <Copy Condition="'@(DependencyDlls->Count())' == '0'" SourceFiles="$(TargetPath)" DestinationFiles="$(OutputPath)Superstitio2.dll" />
-
-        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb"
-              DestinationFiles="$(MergedPdbPath)"
-              Condition="!Exists('$(MergedPdbPath)') and Exists('$(TargetDir)$(TargetName).pdb')"/>
-
-        <Message Text="[Superstitio2.Build] ✅ 流程结束。输出: $(MergedDllPath)" Importance="high"/>
-    </Target>
 </Project>

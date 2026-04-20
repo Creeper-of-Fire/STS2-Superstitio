@@ -34,8 +34,6 @@
         <!-- 输出路径统一到根目录的bin文件夹 -->
         <OutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutputPath>
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-
-        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <!-- 游戏DLL的公共引用路径 (通过符号链接) -->

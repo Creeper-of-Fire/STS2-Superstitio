@@ -34,13 +34,15 @@
         <!--        </Reference>-->
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Api\BaseLib\Utils\" />
         <Folder Include="assets\**"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Superstitio.Api.BaseLib\Superstitio.Api.BaseLib.csproj" />
-        <ProjectReference Include="..\Superstitio.Api\Superstitio.Api.csproj"/>
         <ProjectReference Include="..\Superstitio.Analyzer\Superstitio.Analyzer.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Alchyr.Sts2.BaseLib" />
     </ItemGroup>
 </Project>
