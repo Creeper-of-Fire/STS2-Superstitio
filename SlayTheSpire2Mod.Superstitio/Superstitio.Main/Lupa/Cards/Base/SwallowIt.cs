@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
 using Superstitio.Api.Card;
 using Superstitio.Api.Power;
 using Superstitio.Main.Features.Corruptus;
@@ -19,7 +18,7 @@ namespace Superstitio.Main.Lupa.Cards.Base;
  *
  * Description = """
  * 获得{Block:diff()}点[gold]格挡[/gold]。
- * 下次你失去生命时，将其转换为[sine][red]腐朽[/red][/sine]。
+ * 获得一次{Keyword:Passion}。
  * """
  *
  * Flavor = "看，一滴都不剩哦。"
@@ -45,7 +44,7 @@ public class SwallowIt() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Retain,
     ];

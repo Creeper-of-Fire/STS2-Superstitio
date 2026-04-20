@@ -1,5 +1,4 @@
-﻿using Godot;
-using MegaCrit.Sts2.Core.Localization;
+﻿using MegaCrit.Sts2.Core.Localization;
 
 namespace Superstitio.Api.Utils;
 
@@ -39,18 +38,7 @@ public static class SuperstitioLocStringFactory
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public static LocString ExtendLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return Instance.ExtendLocString(locPrefix.ToSnakeCase().ToUpper(), locEntryKeys);
-    }
-    
-    /// <summary>
-    /// 使用默认实例创建一个指向卡牌关键词本地化表的 <see cref="LocString"/>。
-    /// </summary>
-    /// <param name="locPrefix">本地化键的前缀。</param>
-    /// <param name="locEntryKeys">本地化键的后续部分。</param>
-    /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
-    public static LocString CardKeywordString(string locPrefix, params IEnumerable<string> locEntryKeys)
-    {
-        return Instance.CreateLocString("card_keywords",locPrefix.ToSnakeCase().ToUpper(), locEntryKeys);
+        return Instance.ExtendLocString(locPrefix, locEntryKeys);
     }
 
     /// <summary>
@@ -61,6 +49,6 @@ public static class SuperstitioLocStringFactory
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public static LocString KeywordLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return Instance.KeywordLocString(locPrefix.ToSnakeCase().ToUpper(), locEntryKeys);
+        return Instance.KeywordLocString(locPrefix, locEntryKeys);
     }
 }

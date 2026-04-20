@@ -33,7 +33,7 @@ public class CountSign() : LupaBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Retain,
     ];

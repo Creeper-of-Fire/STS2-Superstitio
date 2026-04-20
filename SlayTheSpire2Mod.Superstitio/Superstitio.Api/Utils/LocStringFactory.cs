@@ -1,4 +1,5 @@
-﻿using MegaCrit.Sts2.Core.Localization;
+﻿using Godot;
+using MegaCrit.Sts2.Core.Localization;
 
 namespace Superstitio.Api.Utils;
 
@@ -18,7 +19,7 @@ public class LocStringFactory(string modPrefix)
         int startIndex = id.IndexOf('-') + 1;
         return str[startIndex..];
     }
-    
+
     /// <summary>
     /// 通用扩展本地化表的名称。
     /// </summary>
@@ -28,7 +29,7 @@ public class LocStringFactory(string modPrefix)
     /// 关键词本地化表的名称（通常用于静态悬停提示）。
     /// </summary>
     public const string KeywordLocTable = "static_hover_tips";
-    
+
     /// <summary>
     /// 获取当前工厂使用的模组前缀。
     /// </summary>
@@ -41,9 +42,12 @@ public class LocStringFactory(string modPrefix)
     /// <param name="locPrefix">本地化键的前缀，将自动移除命名空间前缀。</param>
     /// <param name="locEntryKeys">本地化键的后续部分。</param>
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
-    public LocString CreateLocString(string locTable,string locPrefix, params IEnumerable<string> locEntryKeys)
+    public LocString CreateLocString(string locTable, string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return new LocString(locTable, string.Join(".", [this.ModPrefix + RemovePrefix(locPrefix), ..locEntryKeys]));
+        return new LocString(locTable, string.Join(".", [
+            this.ModPrefix + RemovePrefix(locPrefix).ToSnakeCase().ToUpper(),
+            ..locEntryKeys.Select(it => it.ToCamelCase()) // 第一个单词小写，其后每个单词首字母大写
+        ]));
     }
 
     /// <summary>
@@ -55,6 +59,18 @@ public class LocStringFactory(string modPrefix)
     public LocString ExtendLocString(string locPrefix, params IEnumerable<string> locEntryKeys)
     {
         return this.CreateLocString(GeneralExtendLocTable, locPrefix, locEntryKeys);
+    }
+
+
+    /// <summary>
+    /// 使用默认实例创建一个指向卡牌关键词本地化表的 <see cref="LocString"/>。
+    /// </summary>
+    /// <param name="locPrefix">本地化键的前缀。</param>
+    /// <param name="locEntryKeys">本地化键的后续部分。</param>
+    /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
+    public LocString CardKeywordString(string locPrefix, params IEnumerable<string> locEntryKeys)
+    {
+        return this.CreateLocString("card_keywords", locPrefix, locEntryKeys);
     }
 
     /// <summary>

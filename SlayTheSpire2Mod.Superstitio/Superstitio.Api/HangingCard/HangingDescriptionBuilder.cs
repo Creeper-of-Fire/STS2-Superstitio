@@ -37,14 +37,15 @@ public record LocGeneralDescription() : LocTemplate(HangingKey, "generalDescript
 
 /// <summary>
 /// 对应 [Hanging] cardDescriptionFrame
-/// "[gold]{HangingKeyword}[/gold]：{HangingDescription}"
+/// "[gold]{HangingKeyword}[/gold]{TriggerCount:diff()}：{HangingDescription}"
 /// </summary>
 public record LocCardDescriptionFrame() : LocTemplate(HangingKey, "cardDescriptionFrame")
 {
-    public LocString Fill(LocString HangingKeyword, LocString HangingDescription)
+    public LocString Fill(LocString HangingKeyword, TriggerCountVar TriggerCount, LocString HangingDescription)
     {
         var loc = this.CreateBaseLoc();
         loc.Add(nameof(HangingKeyword), HangingKeyword);
+        loc.Add(TriggerCount);
         loc.Add(nameof(HangingDescription), HangingDescription);
         return loc;
     }
@@ -144,6 +145,7 @@ public static class HangingDescriptionBuilder
         // 像填表一样填入参数，利用 C# 具名参数，绝不弄混！
         var frame = new LocCardDescriptionFrame().Fill(
             HangingKeyword: hangingKeyword,
+            TriggerCount: config.TriggerCount,
             HangingDescription: hangingDescription
         );
 

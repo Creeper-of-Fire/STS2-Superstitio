@@ -29,6 +29,20 @@
         <MergedXmlPath>$(OutputDir)$(ModName).xml</MergedXmlPath>
     </PropertyGroup>
 
+<!--    <Target Name="RenameMainOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == '$(MainProjectName)'">-->
+<!--        <ItemGroup>-->
+<!--            <FilesToRename Include="$(OutputDir)$(MainProjectName).dll;-->
+<!--                               $(OutputDir)$(MainProjectName).pdb;-->
+<!--                               $(OutputDir)$(MainProjectName).xml" />-->
+<!--        </ItemGroup>-->
+
+<!--        <Move SourceFiles="@(FilesToRename)"-->
+<!--              DestinationFiles="@(FilesToRename->'$(OutputDir)%(Filename)%(Extension)'->Replace('$(MainProjectName)', '$(ModName)'))"-->
+<!--              OverwriteReadOnlyFiles="true" />-->
+
+<!--        <Message Text="[Superstitio2] 已将主程序集重命名为 $(ModName).dll/pdb/xml" Importance="high" />-->
+<!--    </Target>-->
+
     <!-- ================================================================== -->
     <!-- == 合并所有模组 DLL == -->
     <!-- ================================================================== -->

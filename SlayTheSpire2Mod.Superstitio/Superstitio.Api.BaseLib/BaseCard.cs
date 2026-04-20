@@ -4,8 +4,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using Superstitio.Api.BaseLib.HangingCard;
 using Superstitio.Api.Card;
+using Superstitio.Api.CustomKeywords;
 using Superstitio.Api.Extensions;
 using Superstitio.Api.HangingCard;
 
@@ -21,7 +21,7 @@ public abstract class BaseCard(CardInitMessage cardInitMessage) : CustomCardMode
     cardInitMessage.Rarity,
     cardInitMessage.Target,
     cardInitMessage.ShowInCardLibrary
-), ICardWithSuperstitioCost, ICardWithDynamicVarSpecs, ICardWithKeywordSpecs, IShowBaseResultPileType
+), ICardWithSuperstitioCost, ICardWithDynamicVarSpecs, ICardWithCardKeywordSpecs, IShowBaseResultPileType, IWithDescriptionWords
 {
     /// <inheritdoc />
     public CardInitMessage CardInitMessage { get; } = cardInitMessage;
@@ -35,23 +35,25 @@ public abstract class BaseCard(CardInitMessage cardInitMessage) : CustomCardMode
     /// 定义卡牌的关键字集合。
     /// </summary>
     public sealed override IEnumerable<CardKeyword> CanonicalKeywords =>
-        this.GetCanonicalKeywords();
-
-    /// <summary>
-    /// 定义带升级行为的关键字
-    /// </summary>
-    public virtual IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade => [];
+        (this as ICardWithCardKeywordSpecs).GetCanonicalCardKeywords();
 
     /// <summary>
     /// 定义卡牌的动态变量集合。
     /// </summary>
     protected sealed override IEnumerable<DynamicVar> CanonicalVars =>
-        this.GetCanonicalVars();
+    [
+        ..(this as ICardWithDynamicVarSpecs).GetCanonicalVars(),
+        ..(this as IWithDescriptionWords).GetCanonicalVars()
+    ];
 
-    /// <summary>
-    /// 为卡牌定义动态变量集合（带升级描述）。
-    /// </summary>
+    /// <inheritdoc />
+    public virtual IEnumerable<CardKeywordSpec> InitCardKeywords => [];
+
+    /// <inheritdoc />
     public virtual IEnumerable<DynamicVarSpec> InitVarsWithUpgrade => [];
+
+    /// <inheritdoc />
+    public virtual IEnumerable<IDescriptionWord> DescriptionWords => [];
 
     /// <summary>
     /// 卡牌升级效果。
@@ -88,7 +90,8 @@ public abstract class BaseCard(CardInitMessage cardInitMessage) : CustomCardMode
     /// <inheritdoc />
     protected override IEnumerable<IHoverTip> ExtraHoverTips => base.ExtraHoverTips
         .TryAddTip(this.Flavor)
-        .TryAddTip(this.InitVarsWithUpgrade.SelectMany(it => it.ExtraHoverTips))
+        .TryAddTip(this.InitVarsWithUpgrade.SelectMany(it => it.ExtraHoverTips()))
+        .TryAddTip(this.DescriptionWords.Select(it => it.HoverTip))
         .TryAddTip(this is IWithHangingConfig withHangingConfig
             ? HangingDescriptionBuilder.GetHoverTips(withHangingConfig.HangingCardConfig, showHangingTotalDescription: true)
             : []);

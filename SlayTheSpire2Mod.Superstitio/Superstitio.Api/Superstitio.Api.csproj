@@ -18,6 +18,12 @@
             <HintPath>$(Sts2LibPath)/GodotSharp.dll</HintPath>
             <Private>false</Private>
         </Reference>
+        
+        <!-- SmartFormat -->
+        <Reference Include="SmartFormat">
+            <HintPath>$(Sts2LibPath)/SmartFormat.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
 
         <!-- BaseLib -->
 <!--        <Reference Include="BaseLib">-->

@@ -33,7 +33,7 @@ public record CardKeywordSpec
     /// <summary>
     /// 卡牌关键字。
     /// </summary>
-    public required CardKeyword Keyword { get; init; }
+    public CardKeyword? Keyword { get; init; }
 
     /// <summary>
     /// 获取或设置关键字在升级时的行为类型。
@@ -111,7 +111,8 @@ public static class CardKeywordExtensions
         {
             return specs
                 .Where(spec => spec.ExistsBeforeUpgrade)
-                .Select(spec => spec.Keyword);
+                .Select(spec => spec.Keyword)
+                .OfType<CardKeyword>();
         }
     }
 
@@ -120,13 +121,15 @@ public static class CardKeywordExtensions
         /// <inheritdoc cref="CardModel.RemoveKeyword"/>
         public void RemoveKeyword(CardKeywordSpec spec)
         {
-            cardModel.RemoveKeyword(spec.Keyword);
+            if (spec.Keyword != null)
+                cardModel.RemoveKeyword(spec.Keyword.Value);
         }
 
         /// <inheritdoc cref="CardModel.AddKeyword"/>
         public void AddKeyword(CardKeywordSpec spec)
         {
-            cardModel.AddKeyword(spec.Keyword);
+            if (spec.Keyword != null)
+                cardModel.AddKeyword(spec.Keyword.Value);
         }
     }
 }
@@ -136,10 +139,18 @@ public static class CardKeywordExtensions
 /// 由 <see cref="CardInitUtils.OnUpgrade"/> 自动处理。
 /// </summary>
 [AttachedTo(typeof(CardModel))]
-public interface ICardWithKeywordSpecs
+public interface ICardWithCardKeywordSpecs
 {
     /// <summary>
     /// 关键字配置集合，每个配置定义了升级时的添加或移除行为。
     /// </summary>
-    IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade { get; }
+    IEnumerable<CardKeywordSpec> InitCardKeywords { get; }
+
+    /// <summary>
+    /// 获取卡牌的基础关键字集合（仅包含升级前就存在的关键字）。
+    /// </summary>
+    public IEnumerable<CardKeyword> GetCanonicalCardKeywords()
+    {
+        return this.InitCardKeywords.GetBaseKeywords();
+    }
 }

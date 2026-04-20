@@ -10,7 +10,6 @@ using Superstitio.Api.Card;
 using Superstitio.Api.DynamicVars;
 using Superstitio.Api.HangingCard;
 using Superstitio.Api.HangingCard.UI;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.Base;

@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Api.DynamicVars.Extensions;
-using Superstitio.Main.DynamicVars.Extensions;
 
 namespace Superstitio.Main.DynamicVars;
 

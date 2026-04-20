@@ -8,7 +8,6 @@ using Superstitio.Api.Card;
 using Superstitio.Api.Extensions;
 using Superstitio.Api.HangingCard;
 using Superstitio.Api.HangingCard.UI;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;
@@ -38,7 +37,7 @@ public class KokiHair() : MasoBaseCard(new CardInitMessage
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Ethereal
     ];

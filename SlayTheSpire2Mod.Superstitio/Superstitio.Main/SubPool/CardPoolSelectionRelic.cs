@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Saves.Runs;
 using Superstitio.Api.Utils;
 using Superstitio.Main.Base;
 using Superstitio.Main.SubPool.UI;
-using Superstitio.Main.Utils;
 
 namespace Superstitio.Main.SubPool;
 

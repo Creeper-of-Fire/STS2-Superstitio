@@ -32,7 +32,7 @@ public class CotiNavel() : MasoBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Retain
     ];

@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
-using Superstitio.Main.Base;
 using Superstitio.Api.Card;
 using Superstitio.Api.DynamicVars;
 using Superstitio.Api.Extensions;
@@ -42,7 +41,7 @@ public class DrinkPoison() : MasoBaseCard(new CardInitMessage
     private const int DecayRemovalMultiplierUpgrade = 0;
 
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Retain,
         CardKeyword.Exhaust.RemoveOnUpgrade(),
@@ -564,7 +563,7 @@ public class CruelTorture_Impale() : MasoBaseCard(new CardInitMessage
     public override IEnumerable<DynamicVarSpec> InitVarsWithUpgrade =>
     [
         new DynamicVar("DecayThreshold", DecayThreshold).WithUpgrade(DecayThresholdUpgrade),
-        new DamageSelfVar(HpLoss, ValueProp.Move).WithUpgrade(HpLossUpgrade),
+        new HpLossVar(HpLoss).WithUpgrade(HpLossUpgrade),
     ];
 
     /// <inheritdoc />

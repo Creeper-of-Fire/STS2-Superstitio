@@ -1,6 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
+﻿using MegaCrit.Sts2.Core.Models;
 
 namespace Superstitio.Api.Card;
 
@@ -61,10 +59,10 @@ public static class CardInitUtils
     /// </summary>
     private static void ApplyKeywordUpgrade(CardModel card)
     {
-        if (card is not ICardWithKeywordSpecs cardWithKeywords)
+        if (card is not ICardWithCardKeywordSpecs cardWithKeywords)
             return;
 
-        foreach (var keywordSpec in cardWithKeywords.InitKeywordsWithUpgrade)
+        foreach (var keywordSpec in cardWithKeywords.InitCardKeywords)
         {
             switch (keywordSpec.UpgradeBehavior)
             {
@@ -82,21 +80,5 @@ public static class CardInitUtils
                     break;
             }
         }
-    }
-
-    /// <summary>
-    /// 获取卡牌的基础动态变量集合。
-    /// </summary>
-    public static IEnumerable<DynamicVar> GetCanonicalVars(this ICardWithDynamicVarSpecs cardWithVars)
-    {
-        return cardWithVars.InitVarsWithUpgrade.Select(it => it.DynamicVar);
-    }
-
-    /// <summary>
-    /// 获取卡牌的基础关键字集合（仅包含升级前就存在的关键字）。
-    /// </summary>
-    public static IEnumerable<CardKeyword> GetCanonicalKeywords(this ICardWithKeywordSpecs cardWithKeywords)
-    {
-        return cardWithKeywords.InitKeywordsWithUpgrade.GetBaseKeywords();
     }
 }

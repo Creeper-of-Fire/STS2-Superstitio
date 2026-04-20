@@ -3,7 +3,7 @@ id = "Superstitio"
 name = "Superstitio Mod"
 author = "Creeper_of_Fire"
 version = "0.0.1"
-description = "Superstitio 模组"
+description = "Superstitio 模组本体"
 affects_gameplay = true
 
 # 依赖项

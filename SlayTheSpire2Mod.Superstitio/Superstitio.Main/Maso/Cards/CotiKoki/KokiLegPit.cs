@@ -6,7 +6,6 @@ using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Api.Card;
 using Superstitio.Api.DynamicVars;
 using Superstitio.Api.Extensions;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Maso.Base;
 
 namespace Superstitio.Main.Maso.Cards.CotiKoki;

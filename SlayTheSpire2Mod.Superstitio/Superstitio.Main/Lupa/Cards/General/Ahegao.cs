@@ -9,7 +9,6 @@ using Superstitio.Api.Card;
 using Superstitio.Api.Extensions;
 using Superstitio.Api.HangingCard;
 using Superstitio.Api.HangingCard.UI;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Lupa.Base;
 
 namespace Superstitio.Main.Lupa.Cards.General;

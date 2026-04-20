@@ -9,10 +9,10 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using Superstitio.Api.BaseLib.HangingCard;
 using Superstitio.Api.Card;
+using Superstitio.Api.DynamicVars;
 using Superstitio.Api.Extensions;
 using Superstitio.Api.HangingCard;
 using Superstitio.Api.HangingCard.UI;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Features.Corruptus;
 using Superstitio.Main.Maso.Base;
 using SuperstitioBaseCard = Superstitio.Main.Base.SuperstitioBaseCard;
@@ -26,7 +26,7 @@ namespace Superstitio.Main.Maso.Cards.CotiKoki;
  * 对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。
  * 移除{Block:diff()}点[sine][red]腐朽[/red][/sine]。
  * 获得{FrailPower:diff()}层[gold]脆弱[/gold]。
- * 将[gold]蛇形拳[/gold]放入手中。
+ * 将[gold]{CotiEye:diff()}[/gold]放入手中。
  * """
  *
  * Flavor = "是脑交！要是脑子有触觉就好了，哧溜。"
@@ -45,7 +45,7 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
 })
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Exhaust
     ];
@@ -56,14 +56,8 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
         new DamageVar(2, ValueProp.Move).WithUpgrade(1),
         new BlockVar(4, ValueProp.Move).WithUpgrade(1), // 这里借用BlockVar来表示移除腐朽的数值
         new PowerVar<FrailPower>(1).AddToolTips(),
-        new RepeatVar(2)
-    ];
-
-    /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        ..base.ExtraHoverTips,
-        HoverTipFactory.FromCard<CotiEye>(),
+        new RepeatVar(2),
+        new CardTitleVar<CotiEye>().AddToolTips().WithUpgrade(1),
     ];
 
     /// <inheritdoc />
@@ -94,7 +88,7 @@ public class CotiEar() : SuperstitioBaseCard(new CardInitMessage
  * {CardHangingDescription}
  * """
  *
- * HangingEffect = "将[gold]龙形拳[/gold]放入手中"
+ * HangingEffect = "将[gold]{CotiEar:diff()}[/gold]放入手中"
  *
  * Flavor = "也许是脑交。总的来说还是取决于肉棒的主人敢不敢用力吧。"
  *
@@ -111,7 +105,7 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
 }), IWithHangingConfigCard
 {
     /// <inheritdoc />
-    public override IEnumerable<CardKeywordSpec> InitKeywordsWithUpgrade =>
+    public override IEnumerable<CardKeywordSpec> InitCardKeywords =>
     [
         CardKeyword.Exhaust
     ];
@@ -121,15 +115,9 @@ public class CotiEye() : MasoBaseCard(new CardInitMessage
     [
         new DamageVar(4, ValueProp.Move).WithUpgrade(1),
         new TriggerCountVar(3),
+        new RepeatVar(2),
         new PowerVar<WeakPower>(1).AddToolTips(),
-        new RepeatVar(2)
-    ];
-
-    /// <inheritdoc />
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        ..base.ExtraHoverTips,
-        HoverTipFactory.FromCard<CotiEar>(),
+        new CardTitleVar<CotiEar>().AddToolTips().WithUpgrade(1),
     ];
 
     /// <inheritdoc />

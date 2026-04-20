@@ -5,12 +5,10 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using Superstitio.Main.Base;
 using Superstitio.Api.Card;
 using Superstitio.Api.DynamicVars;
 using Superstitio.Api.Extensions;
 using Superstitio.Api.Power;
-using Superstitio.Main.DynamicVars;
 using Superstitio.Main.Features.PowerCardPower;
 using Superstitio.Main.Lupa.Base;
 
