@@ -89,7 +89,7 @@
 
         <!-- 如果有依赖，就直接调 ilrepack，简单粗暴 -->
         <Exec Condition="'@(DependencyDlls->Count())' != '0'"
-              Command="ilrepack /parallel /target:library $(LibArgs) /out:&quot;$(MergedDllPath)&quot; &quot;$(TargetPath)&quot; @(DependencyDlls->'&quot;%(Identity)&quot;', ' ')" />
+              Command="ilrepack /parallel /target:library /xmldocs $(LibArgs) /out:&quot;$(MergedDllPath)&quot; &quot;$(TargetPath)&quot; @(DependencyDlls->'&quot;%(Identity)&quot;', ' ')"/>
 
         <!-- 如果没有依赖，直接复制 -->
         <Copy Condition="'@(DependencyDlls->Count())' == '0'" SourceFiles="$(TargetPath)" DestinationFiles="$(OutputPath)Superstitio2.dll" />

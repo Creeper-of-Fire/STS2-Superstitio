@@ -54,8 +54,11 @@ class ModBuilder:
             if list(base_output.glob("*.dll")):
                 return base_output
 
-            # 否则找子目录（如 net10.0）
-            subdirs = [d for d in base_output.iterdir() if d.is_dir()]
+            # 否则找子目录（如 net10.0），排除 netstandard
+            subdirs = [
+                d for d in base_output.iterdir() 
+                       if d.is_dir() and not d.name.startswith("netstandard")
+            ]
             if subdirs:
                 # 返回最新的子目录（按修改时间）
                 return max(subdirs, key=lambda d: d.stat().st_mtime)
