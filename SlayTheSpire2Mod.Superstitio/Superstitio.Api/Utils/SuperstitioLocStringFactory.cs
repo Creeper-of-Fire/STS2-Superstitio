@@ -1,8 +1,7 @@
-﻿using BaseLib.Extensions;
-using Godot;
+﻿using Godot;
 using MegaCrit.Sts2.Core.Localization;
 
-namespace Superstitio.Api.BaseLib.Utils;
+namespace Superstitio.Api.Utils;
 
 /// <summary>
 /// <see cref="LocStringFactory"/> 的内部静态辅助类，提供基于当前程序集前缀的默认实例和方法。
@@ -10,14 +9,14 @@ namespace Superstitio.Api.BaseLib.Utils;
 public static class SuperstitioLocStringFactory
 {
     /// <summary>
-    /// 基于 <see cref="LocStringFactory"/> 类型自动获取的程序集前缀。
+    /// 模组程序集前缀。
     /// </summary>
-    public static readonly string SuperstitioBaseLibPrefix = typeof(LocStringFactory).GetPrefix();
+    public const string SuperstitioModPrefix = "SUPERSTITIO-";
 
     /// <summary>
     /// 使用默认前缀初始化的 <see cref="LocStringFactory"/> 单例实例。
     /// </summary>
-    public static readonly LocStringFactory Instance = new(SuperstitioBaseLibPrefix);
+    public static readonly LocStringFactory Instance = new(SuperstitioModPrefix);
 
 
     /// <summary>

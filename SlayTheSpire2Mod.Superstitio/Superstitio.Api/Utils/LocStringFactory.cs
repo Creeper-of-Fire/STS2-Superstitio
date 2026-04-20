@@ -1,13 +1,24 @@
-﻿using BaseLib.Extensions;
-using MegaCrit.Sts2.Core.Localization;
+﻿using MegaCrit.Sts2.Core.Localization;
 
-namespace Superstitio.Api.BaseLib.Utils;
+namespace Superstitio.Api.Utils;
 
 /// <summary>
 /// 用于创建本地化字符串（LocString）的工厂类。
 /// </summary>
-public class LocStringFactory(string baseLibPrefix)
+public class LocStringFactory(string modPrefix)
 {
+    /// <summary>
+    /// 移除命名空间前缀。
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public static string RemovePrefix(string id)
+    {
+        string str = id;
+        int startIndex = id.IndexOf('-') + 1;
+        return str[startIndex..];
+    }
+    
     /// <summary>
     /// 通用扩展本地化表的名称。
     /// </summary>
@@ -19,9 +30,9 @@ public class LocStringFactory(string baseLibPrefix)
     public const string KeywordLocTable = "static_hover_tips";
     
     /// <summary>
-    /// 获取当前工厂使用的基础库前缀。
+    /// 获取当前工厂使用的模组前缀。
     /// </summary>
-    public string BaseLibPrefix { get; } = baseLibPrefix;
+    public string ModPrefix { get; } = modPrefix;
 
     /// <summary>
     /// 创建一个指向特定本地化表的 <see cref="LocString"/>。
@@ -32,7 +43,7 @@ public class LocStringFactory(string baseLibPrefix)
     /// <returns>构建好的 <see cref="LocString"/> 实例。</returns>
     public LocString CreateLocString(string locTable,string locPrefix, params IEnumerable<string> locEntryKeys)
     {
-        return new LocString(locTable, string.Join(".", [this.BaseLibPrefix + locPrefix.RemovePrefix(), ..locEntryKeys]));
+        return new LocString(locTable, string.Join(".", [this.ModPrefix + RemovePrefix(locPrefix), ..locEntryKeys]));
     }
 
     /// <summary>

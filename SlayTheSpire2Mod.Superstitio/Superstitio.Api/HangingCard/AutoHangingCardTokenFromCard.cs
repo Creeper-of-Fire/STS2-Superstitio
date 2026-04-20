@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.Nodes.Rooms;
 using Superstitio.Analyzer;
 using Superstitio.Api.HangingCard.UI;
 
-namespace Superstitio.Api.BaseLib.HangingCard;
+namespace Superstitio.Api.HangingCard;
 
 /// <summary>
 /// 定义卡牌基类打出后返回的牌堆类型

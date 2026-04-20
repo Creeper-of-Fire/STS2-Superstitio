@@ -1,7 +1,7 @@
 ﻿using MegaCrit.Sts2.Core.Models;
 using Superstitio.Analyzer;
 
-namespace Superstitio.Api.BaseLib.HangingCard;
+namespace Superstitio.Api.HangingCard;
 
 /// <summary>
 /// 一张卡，具有挂起效果

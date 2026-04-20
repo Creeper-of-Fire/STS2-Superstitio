@@ -95,7 +95,7 @@ flavor = "灵活跳跃的拳法，在混乱的招式中寻找胜机。"
 
 [CotiNavel]
 title = "性交-插入：肚脐"
-description = "对敌人造成{Damage:diff()}点伤害，对自身造成{Damage:diff()}点伤害。获得{VulnerablePower:diff()}层易伤。"
+description = "对全体敌人造成{Damage:diff()}点伤害，\n对自身造成{Damage:diff()}点伤害。\n获得{VulnerablePower:diff()}层易伤。"
 flavor = "洞必试，试必捅。射进腹腔里会宫外孕吗？"
 [CotiNavel.sfw]
 title = "熊形拳"

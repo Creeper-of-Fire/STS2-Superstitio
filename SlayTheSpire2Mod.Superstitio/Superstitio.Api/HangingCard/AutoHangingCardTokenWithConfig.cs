@@ -5,10 +5,9 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
-using Superstitio.Api.HangingCard;
 using Superstitio.Api.HangingCard.UI;
 
-namespace Superstitio.Api.BaseLib.HangingCard;
+namespace Superstitio.Api.HangingCard;
 
 /// <inheritdoc />
 [method: SetsRequiredMembers]

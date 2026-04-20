@@ -36,4 +36,7 @@
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="assets\Localization\zhs\static_hover_tips\hanging_card.toml" />
+    </ItemGroup>
 </Project>

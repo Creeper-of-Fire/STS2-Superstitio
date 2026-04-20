@@ -2,31 +2,14 @@
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Api.HangingCard;
-using static Superstitio.Api.BaseLib.HangingCard.HangingStaticLocs;
-using static Superstitio.Api.BaseLib.Utils.SuperstitioLocStringFactory;
+using static Superstitio.Api.HangingCard.HangingStaticLocs;
+using static Superstitio.Api.Utils.SuperstitioLocStringFactory;
 
 // ReSharper disable InconsistentNaming
 
 #pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 
-namespace Superstitio.Api.BaseLib.HangingCard;
-
-/// <summary>
-/// 挂起类型
-/// </summary>
-public enum HangingType
-{
-    /// <summary>
-    /// 伴随：每次触发时生效，直到次数耗尽
-    /// </summary>
-    Follow,
-
-    /// <summary>
-    /// 延缓：累积触发次数后生效一次
-    /// </summary>
-    Delay
-}
+namespace Superstitio.Api.HangingCard;
 
 /// <summary>
 /// 本地化文本的基础模板

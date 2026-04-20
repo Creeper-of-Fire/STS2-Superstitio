@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using Superstitio.Api.BaseLib.HangingCard;
 using Superstitio.Api.Card;
 using Superstitio.Api.Extensions;
+using Superstitio.Api.HangingCard;
 
 namespace Superstitio.Api.BaseLib;
 

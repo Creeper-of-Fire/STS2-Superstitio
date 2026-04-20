@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
-using Superstitio.Api.HangingCard;
 
-namespace Superstitio.Api.BaseLib.HangingCard;
+namespace Superstitio.Api.HangingCard;
 
 /// <summary>
 /// 挂起卡牌配置
