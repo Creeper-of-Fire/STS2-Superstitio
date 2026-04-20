@@ -6,6 +6,7 @@
   </PropertyGroup>
   <!-- 在这里集中定义所有包的版本 -->
   <ItemGroup>
+    <PackageVersion Include="Alchyr.Sts2.BaseLib" Version="3.0.6" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="ILRepack" Version="2.0.44" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />

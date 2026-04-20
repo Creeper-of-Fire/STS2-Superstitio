@@ -19,12 +19,6 @@
             <Private>false</Private>
         </Reference>
 
-        <!-- BaseLib -->
-        <Reference Include="BaseLib">
-            <HintPath>$(ModsPath)/BaseLib/BaseLib.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-
         <!-- RitsuLib -->
         <!--        <Reference Include="STS2-RitsuLib">-->
         <!--            <HintPath>$(ModsPath)/STS2-RitsuLib/STS2-RitsuLib.dll</HintPath>-->
@@ -36,5 +30,8 @@
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"/>
         <ProjectReference Include="..\Superstitio.Api\Superstitio.Api.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Alchyr.Sts2.BaseLib" />
     </ItemGroup>
 </Project>
