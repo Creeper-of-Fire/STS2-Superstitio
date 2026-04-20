@@ -1,5 +1,7 @@
 ﻿<Solution>
-  <Project Path="Superstitio.Analyzer/Superstitio.Analyzer.csproj" />
+  <Folder Name="/Analyzer/">
+    <Project Path="Superstitio.Analyzer/Superstitio.Analyzer.csproj" />
+  </Folder>
   <Project Path="Superstitio.Api.BaseLib/Superstitio.Api.BaseLib.csproj" />
   <Project Path="Superstitio.Api/Superstitio.Api.csproj" />
   <Project Path="Superstitio.Main/Superstitio.Main.csproj" />
